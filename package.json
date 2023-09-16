@@ -1,0 +1,27 @@
+{
+  "name": "charatwitch",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nw src/",
+    "prod": "nwbuild --platforms win32,win64 --buildDir dist/ src/",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-nw": "nwbuild --platform win --arch x64 --outDir dist/src --glob=false src"
+  },
+  "nwbuild": {
+    "platform": "win64",
+    "outDir": "./dist",
+    "srcDir": "./src"
+  },
+  "author": "sivertheisholt",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "node_characterai": "github:sivertheisholt/node_characterai",
+    "nw": "^0.80.0"
+  },
+  "devDependencies": {
+    "nw-builder": "^4.4.1"
+  }
+}
