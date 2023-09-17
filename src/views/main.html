@@ -4,13 +4,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link rel="stylesheet" href="../styles/style.css" />
-    <title>Breakout!</title>
+    <link rel="stylesheet" href="../styles/styles.css" />
+    <title>CharaTwitch</title>
   </head>
   <body>
-    <h1>Breakout!</h1>
-    <a hrf="https://www.w3schools.com">VG.no</a>
-    <button id="setup_characterai">Connect</button>
+    <div>
+      <button id="character_ai_connect" class="button">Connect Character.AI</button>
+      <div>
+        <label for="character_ai_access_token">Character.AI Access Token</label>
+        <input id="character_ai_access_token" />
+      </div>
+      <div>
+        <label for="character_ai_character_id">Character ID</label>
+        <input id="character_ai_character_id"/>
+      </div>
+      <button id="setup_characterai" class="button-inline">Connect</button>
+    </div>
+    <div>
+      <label for="fetch_tts_text">Text to fetch</label>
+      <input id="fetch_tts_text"/>
+      <button id="fetch_tts" class="button-inline">Fetch TTS</button>
+    </div>
     <script src="../app/index.js"></script>
   </body>
 </html>
