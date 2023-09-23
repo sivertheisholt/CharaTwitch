@@ -1,67 +1,99 @@
-require("dotenv").config()
-const CharacterAI = require('node_characterai');
-const characterAI = new CharacterAI();
-const fs = require('fs');
+require("dotenv").config();
+const CharacterAI = require("node_characterai");
+const characterAi = new CharacterAI();
+const express = require("express");
+const app = express();
+app.use(express.json());
 
-const setupBtn = document.getElementById('setup_characterai');
-const characterAiAccessTokenInput = document.getElementById("character_ai_access_token")
-const caiCharacterIdInput = document.getElementById("character_ai_character_id")
-const fetchTtsBtn = document.getElementById("fetch_tts");
-const fetchTtsTextBtn = document.getElementById("fetch_tts_text");
+const authHandler = require("../app/authHandler.js");
+const configHandler = require("../app/configHandler.js");
+const twitchIrcHandler = require("../app/twitchIrcHandler.js");
+const caiHandler = require("../app/caiHandler.js");
+
+const twitchBtn = document.getElementById("twitch_connect_btn");
+const twitchClientSecretInput = document.getElementById("twitch_client_secret");
+const twitchClientIdInput = document.getElementById("cai_client_id");
+const twitchUsername = document.getElementById("twitch_username");
 const caiConnectBtn = document.getElementById("character_ai_connect");
+const twitchAuthenticatedAlert = document.getElementById(
+  "twitch_authenticated_alert"
+);
+const caiAuthenticatedAlert = document.getElementById(
+  "cai_authenticated_alert"
+);
+const caiAccessTokenInput = document.getElementById("cai_access_token");
+const caiCharacterIdInput = document.getElementById("cai_character_id");
+const twitchChatBox = document.getElementById("twitch_chat_box");
+const caiChatBox = document.getElementById("cai_chat_box");
 
-fs.readFile("auth", "utf8", (err, data) => {
-    if(err) return console.log(err);
+let authConfig;
 
-    characterAiAccessTokenInput.value = data;
-});
+const fillAuth = (config) => {
+  if (config != null) {
+    caiAccessTokenInput.value = config.cai_access_token;
+    caiCharacterIdInput.value = config.cai_character_id;
+    twitchClientSecretInput.value = config.twitch_client_secret;
+    twitchClientIdInput.value = config.twitch_client_id;
+    twitchUsername.value = config.twitch_username;
+    authConfig = config;
+  }
+};
+configHandler.retrieveAuth("authConfig.json", fillAuth);
 
-async function setupCai() {
-    characterAI.requester.usePlus = true;
-    characterAI.requester.forceWaitingRoom = false;
-    await characterAI.authenticateWithToken(characterAiAccessTokenInput.value);
-    fs.writeFile("auth", characterAiAccessTokenInput.value, function(err) {
-        if(err) return console.log(err);
-
-        console.log("The file was saved!");
-    });
-    console.log("Cai authenticated");
+async function onMessageHandler(username, message) {
+  twitchChatBox.innerHTML += `<div class="media"><h5 class="mt-0">${username}: ${message}</h5></div>`;
+  if (message.toLowerCase().indexOf("leah") !== -1) {
+    let result = await caiHandler.sendChat(
+      characterAi,
+      caiCharacterIdInput.value,
+      message,
+      username
+    );
+    caiChatBox.innerHTML += `<div class="media"><h5 class="mt-0">${result}</h5></div>`;
+    await caiHandler.playTTS(characterAi, result);
+  }
 }
 
-async function playTTS(text)
-{
-    try {
-        var res = await characterAI.fetchTTS(22, text);
-        new Audio(`data:audio/wav;base64,${res}`).play()
-    } catch (error) {
-        console.log(error);
-    }
+async function twitchAuthCallback(success, tokenObj) {
+  if (success) {
+    twitchAuthenticatedAlert.classList.remove("hidden");
+    twitchBtn.classList.add("hidden");
+    authConfig.twitch_client_secret = twitchClientSecretInput.value;
+    authConfig.twitch_client_id = twitchClientIdInput.value;
+    authConfig.twitch_username = twitchUsername.value;
+    configHandler.saveAuth("authConfig.json", authConfig);
+    twitchIrcHandler.connectToTwitchIrc(
+      tokenObj.access_token,
+      twitchUsername.value,
+      onMessageHandler
+    );
+  } else {
+  }
 }
 
-
-async function authCai()
-{
-    var win = nw.Window.get();
-    // Create a new window and get it
-    nw.Window.open('https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=ts6ukgqnj4vu12wjtsjstyjo9shjzi&redirect_uri=http://localhost&scope=chat%3Aread+chat%3Aedit&state=c3ab8aa609ea11e793ae92361f002671', {}, function(new_win) {
-        // And listen to new window's focus event
-        new_win.on('focus', function() {
-            console.log('New window is focused');
-            fs.writeFile("test", "hi", function(err) {
-                if(err) return console.log(err);
-        
-                console.log("The file was saved!");
-            });
-        });
-        nw.Window.get().on('navigation', function(frame, url, policy) {
-            // do not open the window
-            policy.ignore();
-            // and open it in external browser
-            nw.Shell.openExternal(url);
-          });
-    })
+async function caiAuthCallback(success) {
+  if (success) {
+    caiAuthenticatedAlert.classList.remove("hidden");
+    caiConnectBtn.classList.add("hidden");
+    authConfig.cai_access_token = caiAccessTokenInput.value;
+    authConfig.cai_character_id = caiCharacterIdInput.value;
+    configHandler.saveAuth("authConfig.json", authConfig);
+  } else {
+  }
 }
 
-setupBtn.addEventListener('click', () => setupCai());
-fetchTtsBtn.addEventListener("click", () => playTTS(fetchTtsTextBtn.value));
-caiConnectBtn.addEventListener("click", () => authCai())
+caiConnectBtn.addEventListener("click", () =>
+  authHandler.authCai(characterAi, caiAccessTokenInput.value, caiAuthCallback)
+);
+twitchBtn.addEventListener("click", () =>
+  authHandler.authTwitch(
+    app,
+    twitchClientSecretInput.value,
+    twitchClientIdInput.value,
+    twitchAuthCallback
+  )
+);
+
+app.listen(3000, () =>
+  console.log("Application is now listening on port: 3000")
+);
