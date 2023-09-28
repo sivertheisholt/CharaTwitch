@@ -2,7 +2,7 @@
 
 Welcome to CharaTwitch! This project is still in EARLY DEVELOPMENT! But you are free to try it out if you wish.
 
-CharacTwitch is a way to integrate Character AI into you're stream. By connecting you're twitch and Character AI Account you can listen to chat and make you're character respond by talking.
+CharacTwitch is a way to integrate Character AI into your stream. By connecting your twitch and Character AI Account you can listen to chat and make your character respond by talking.
 
 ![Imgur](https://i.imgur.com/qQ3KZua.png)
 
