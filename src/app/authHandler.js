@@ -36,7 +36,7 @@ const authTwitch = (app, clientSecret, clientId, authCallback) => {
   );
 };
 
-const authCai = async (characterAi, accessToken, authCallback) => {
+const authCai = async (characterAi, accessToken, usePlus, authCallback) => {
   try {
     characterAi.requester.usePlus = true;
     characterAi.requester.forceWaitingRoom = false;

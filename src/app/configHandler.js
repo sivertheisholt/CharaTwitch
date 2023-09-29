@@ -4,9 +4,20 @@ const retrieveAuth = async (fileName, callback) => {
   fs.readFile(fileName, "utf8", (err, data) => {
     if (err) {
       console.error(err);
-      return null;
+      let temp = {
+        cai_access_token: "",
+        cai_character_id: "",
+        cai_use_plus: false,
+        twitch_client_secret: "",
+        twitch_client_id: "",
+        twitch_username: "",
+        twitch_trigger_word: "",
+        twich_listen_to_trigger: false,
+      };
+      return callback(temp);
+    } else {
+      callback(JSON.parse(data));
     }
-    callback(JSON.parse(data));
   });
 };
 

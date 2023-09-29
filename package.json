@@ -7,7 +7,7 @@
     "dev": "nw src/",
     "prod": "nwbuild --platforms win32,win64 --buildDir dist/ src/",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build-nw": "nwbuild --platform win --arch x64 --outDir dist/src --glob=false src"
+    "build-nw": "nwbuild --platform win --arch x64 --outDir dist/src --glob=false src --flavor=sdk"
   },
   "nwbuild": {
     "platform": "win64",
@@ -18,10 +18,10 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.3.1",
-    "express": "^4.18.2",
+    "express": "4.18.2",
     "node_characterai": "github:sivertheisholt/node_characterai#testing",
     "nw": "^0.80.0-sdk",
-    "websocket": "^1.0.34"
+    "websocket": "1.0.34"
   },
   "devDependencies": {
     "nw-builder": "^4.4.1"

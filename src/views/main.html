@@ -49,18 +49,50 @@
             </div>
           </div>
           <div class="mb-2">
-            <label for="cai_client_id" class="form-label text-primary"
+            <label for="twitch_client_id" class="form-label text-primary"
               >Client id</label
             >
             <div class="input-group">
               <input
-                id="cai_client_id"
+                id="twitch_client_id"
                 type="text"
                 class="form-control"
                 aria-describedby="basic-addon3 basic-addon4"
               />
             </div>
           </div>
+
+          <div class="mb-2">
+            <label for="twitch_trigger_word" class="form-label text-primary"
+              >Trigger word</label
+            >
+            <div class="input-group">
+              <input
+                id="twitch_trigger_word"
+                type="text"
+                class="form-control"
+                aria-describedby="basic-addon3 basic-addon4"
+              />
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <div class="input-group">
+              <input
+                class="form-check"
+                type="checkbox"
+                id="twitch_listen_trigger_word"
+                checked
+              />
+              <label
+                class="form-check-label text-primary ms-2"
+                for="twitch_listen_trigger_word"
+              >
+                Listen to trigger word
+              </label>
+            </div>
+          </div>
+
           <button id="twitch_connect_btn" class="btn btn-warning mb-2">
             Connect Twitch
           </button>
@@ -102,9 +134,22 @@
             </div>
           </div>
 
-          <button id="character_ai_connect" class="btn btn-warning">
+          <div class="mb-2">
+            <div class="input-group">
+              <input class="form-check" type="checkbox" id="cai_use_plus" />
+              <label
+                class="form-check-label text-primary ms-2"
+                for="cai_use_plus"
+              >
+                Use plus
+              </label>
+            </div>
+          </div>
+
+          <button id="cai_ai_connect" class="btn btn-warning">
             Connect Character.AI
           </button>
+
           <div
             id="cai_authenticated_alert"
             class="alert alert-success hidden"
@@ -123,7 +168,11 @@
           <div class="jumbotron text-primary">
             <h1 class="display-4">Twitch chat</h1>
           </div>
-          <div id="twitch_chat_box" class="text-primary"></div>
+          <div
+            id="twitch_chat_box"
+            style="overflow-y: scroll"
+            class="text-primary"
+          ></div>
         </div>
       </div>
       <div class="column text-center">
@@ -131,7 +180,11 @@
           <h1 class="display-4">Character AI</h1>
         </div>
       </div>
-      <div id="cai_chat_box" class="text-primary"></div>
+      <div
+        style="overflow-y: scroll"
+        id="cai_chat_box"
+        class="text-primary"
+      ></div>
     </div>
     <script src="../app/index.js"></script>
   </body>

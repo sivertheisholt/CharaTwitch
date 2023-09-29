@@ -1,6 +1,6 @@
 async function playTTS(characterAi, text) {
   try {
-    var res = await characterAi.fetchTTS(22, text);
+    var res = await characterAi.fetchTTS(4, text);
     new Audio(`data:audio/wav;base64,${res}`).play();
   } catch (error) {
     console.log(error);
