@@ -93,9 +93,15 @@
             </div>
           </div>
 
+          <div
+            id="twitch_connect_btn_spinner"
+            class="hidden spinner-border text-primary"
+            role="status"
+          ></div>
           <button id="twitch_connect_btn" class="btn btn-warning mb-2">
             Connect Twitch
           </button>
+
           <div
             id="twitch_authenticated_alert"
             class="alert alert-success hidden"
@@ -135,6 +141,16 @@
           </div>
 
           <div class="mb-2">
+            <label class="form-check-label text-primary" for="cai_use_plus">
+              Voice
+            </label>
+            <select
+              id="cai_voice"
+              class="form-select form-select-m mb-3"
+            ></select>
+          </div>
+
+          <div class="mb-2">
             <div class="input-group">
               <input class="form-check" type="checkbox" id="cai_use_plus" />
               <label
@@ -146,9 +162,22 @@
             </div>
           </div>
 
+          <div
+            id="cai_connect_btn_spinner"
+            class="hidden spinner-border text-primary"
+            role="status"
+          ></div>
           <button id="cai_ai_connect" class="btn btn-warning">
             Connect Character.AI
           </button>
+
+          <div
+            id="cai_authenticated_alert_danger"
+            class="alert alert-danger hidden"
+            role="alert"
+          >
+            Could not authenticate, check access token!
+          </div>
 
           <div
             id="cai_authenticated_alert"

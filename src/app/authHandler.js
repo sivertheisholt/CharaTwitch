@@ -1,5 +1,3 @@
-const fs = require("fs");
-
 const authTwitch = (app, clientSecret, clientId, authCallback) => {
   const redirect_uri = "http://localhost:3000/twitch";
   nw.Window.open(
@@ -38,7 +36,7 @@ const authTwitch = (app, clientSecret, clientId, authCallback) => {
 
 const authCai = async (characterAi, accessToken, usePlus, authCallback) => {
   try {
-    characterAi.requester.usePlus = true;
+    characterAi.requester.usePlus = usePlus;
     characterAi.requester.forceWaitingRoom = false;
     await characterAi.authenticateWithToken(accessToken);
     authCallback(true);

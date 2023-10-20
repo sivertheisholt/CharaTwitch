@@ -1,6 +1,6 @@
-async function playTTS(characterAi, text) {
+async function playTTS(characterAi, voiceId, text) {
   try {
-    var res = await characterAi.fetchTTS(4, text);
+    var res = await characterAi.fetchTTS(parseInt(voiceId), text);
     new Audio(`data:audio/wav;base64,${res}`).play();
   } catch (error) {
     console.log(error);
@@ -14,4 +14,9 @@ async function sendChat(characterAi, characterId, message, username) {
   return response.text;
 }
 
-module.exports = { playTTS, sendChat };
+async function fetchVoices(characterAi)
+{
+  return await characterAi.fetchTTSVoices();
+}
+
+module.exports = { playTTS, sendChat, fetchVoices };

@@ -8,6 +8,7 @@ const retrieveAuth = async (fileName, callback) => {
         cai_access_token: "",
         cai_character_id: "",
         cai_use_plus: false,
+        cai_voice: 4,
         twitch_client_secret: "",
         twitch_client_id: "",
         twitch_username: "",
