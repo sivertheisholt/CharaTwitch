@@ -14,6 +14,8 @@ You will need to input a bit of information from both Twitch and Character AI.
 
 Create a new application over at: https://dev.twitch.tv/console
 
+Redirect URI should be: http://localhost:3000/twitch
+
 Once you have created a new application you wanna make a note of the following: Client Secret & Client Id
 
 Once you have entered all the information you can simply click Connect Twitch and log in with you're twitch account.
