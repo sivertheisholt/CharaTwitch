@@ -47,4 +47,4 @@ The last part of the URL is the character ID:
 
 #### Connect
 
-Once you have entered all the information you can simply click Connect Character.AI. Sometimes this will hang and get stuck, simply restart the application and try again. The program will remember the inputs.
+Once you have entered all the information you can simply click Connect Character.AI. Sometimes this will hang and get stuck, unfortunately the only solution is to simply restart the application and try again for now.
