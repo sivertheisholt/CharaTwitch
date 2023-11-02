@@ -8,6 +8,8 @@ CharacTwitch is a way to integrate Character AI into your stream. By connecting 
 
 ## Setup
 
+Download the provided app.zip from [Releases](https://github.com/sivertheisholt/CharaTwitch/releases) and extract it. Run src.exe to start the program.
+
 You will need to input a bit of information from both Twitch and Character AI. 
 
 ### Twitch
