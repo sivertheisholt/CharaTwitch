@@ -6,9 +6,6 @@ on:
 env:
   NODE_VERSION: '20.x'                # set this to the node version to use
 
-permissions:
-  contents: read
-
 jobs:
   build:
     runs-on: ubuntu-latest
