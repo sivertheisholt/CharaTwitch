@@ -36,7 +36,19 @@ jobs:
         name: node-app
         path: ./dist/src
 
+    - name: Create Git Tag
+      run: |
+        # Create a tag name based on the commit hash
+        TAG_NAME= ${{ steps.version.outputs.version }}
+
+        # Create the tag
+        git tag $TAG_NAME
+
+        # Push the tag to the repository
+        git push origin $TAG_NAME
+
     - uses: ncipollo/release-action@v1
       with:
         artifacts: "node-app"
         body: "release"
+        tag: ${{ steps.version.outputs.version }}
