@@ -25,9 +25,38 @@ jobs:
       run: |
         npm install
         npm run build-nw
+        
+    - name: Get current version
+      id: version
+      run: echo "::set-output name=version::$(jq -r .version package.json)"
 
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v3
       with:
         name: node-app
         path: ./dist/src
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: ${{ steps.version.outputs.version }}
+        body: |
+          Changes in this Release
+          - First Change
+          - Second Change
+        draft: false
+        prerelease: false
+
+    - name: upload artifact
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./bin/node-app.zip
+        asset_name: CharaTwitch.zip
+        asset_content_type: application/zip
