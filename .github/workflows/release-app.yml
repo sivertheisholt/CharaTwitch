@@ -30,7 +30,7 @@ jobs:
     - name: Tar output
       run: |
         cd ./dist/src
-        zip -r app.zip .
+        zip -r ../app.zip .
       
     - name: Create Git Tag
       run: |
@@ -45,6 +45,6 @@ jobs:
 
     - uses: ncipollo/release-action@v1
       with:
-        artifacts: app.zip
+        artifacts: ./dist/app.zip
         body: "release"
         tag: ${{ steps.version.outputs.version }}
