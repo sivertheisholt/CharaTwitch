@@ -46,6 +46,6 @@ jobs:
 
     - uses: ncipollo/release-action@v1
       with:
-        artifacts: "${{ github.workspace }}/node-app"
+        artifacts: ${{ github.workspace }}/node-app
         body: "release"
         tag: ${{ steps.version.outputs.version }}
