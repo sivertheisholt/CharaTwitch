@@ -28,8 +28,8 @@ jobs:
       run: echo "::set-output name=version::$(jq -r .version package.json)"
 
     - name: Tar output
-      run: tar -czf app.tar.gz ./dist/src
-
+      run: zip -r app.zip ./dist/src/
+      
     - name: Create Git Tag
       run: |
         # Create a tag name based on the commit hash
@@ -43,6 +43,6 @@ jobs:
 
     - uses: ncipollo/release-action@v1
       with:
-        artifacts: app.tar.gz
+        artifacts: app.zip
         body: "release"
         tag: ${{ steps.version.outputs.version }}
