@@ -39,7 +39,7 @@ jobs:
     - name: Create Git Tag
       run: |
         # Create a tag name based on the commit hash
-        TAG_NAME= "${{ steps.version.outputs.version }}"
+        TAG_NAME="${{ steps.version.outputs.version }}"
 
         # Create the tag
         git tag $TAG_NAME
