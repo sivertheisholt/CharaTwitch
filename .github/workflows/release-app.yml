@@ -31,7 +31,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: node-app
-        path: ${{ github.workspace }}/app.zip
+        path: ./dist/src
 
     - name: Create Git Tag
       run: |
@@ -46,6 +46,6 @@ jobs:
 
     - uses: ncipollo/release-action@v1
       with:
-        artifacts: "${{ github.workspace }}/app.zip"
+        artifacts: "${{ github.workspace }}/node-app"
         body: "release"
         tag: ${{ steps.version.outputs.version }}
