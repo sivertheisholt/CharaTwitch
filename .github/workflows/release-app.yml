@@ -46,6 +46,6 @@ jobs:
 
     - uses: ncipollo/release-action@v1
       with:
-        artifacts: "node-app"
+        artifacts: "node-app.zip"
         body: "release"
         tag: ${{ steps.version.outputs.version }}
