@@ -28,7 +28,9 @@ jobs:
       run: echo "::set-output name=version::$(jq -r .version package.json)"
 
     - name: Tar output
-      run: zip -r -D app.zip ./dist/src/*
+      run: |
+        cd ./dist/src
+        zip -r app.zip .
       
     - name: Create Git Tag
       run: |
