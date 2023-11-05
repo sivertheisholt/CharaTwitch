@@ -9,9 +9,6 @@ class ExpressService {
       console.log("Application is now listening on port: 3000")
     );
   }
-  getApp() {
-    return this.app;
-  }
 }
 
 let instance = null;

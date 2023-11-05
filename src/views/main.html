@@ -22,20 +22,6 @@
           </div>
 
           <div class="mb-2">
-            <label for="twitch_username" class="form-label text-primary"
-              >Username</label
-            >
-            <div class="input-group">
-              <input
-                id="twitch_username"
-                type="text"
-                class="form-control"
-                aria-describedby="basic-addon3 basic-addon4"
-              />
-            </div>
-          </div>
-
-          <div class="mb-2">
             <label for="twitch_client_secret" class="form-label text-primary"
               >Client secret</label
             >
@@ -77,6 +63,16 @@
           </div>
 
           <div class="mb-2">
+            <label class="form-label text-primary" for="twitch_reward">
+              Reward
+            </label>
+            <select
+              id="twitch_reward"
+              class="form-select form-select-m mb-3"
+            ></select>
+          </div>
+
+          <div class="mb-2">
             <div class="input-group">
               <input
                 class="form-check"
@@ -89,6 +85,23 @@
                 for="twitch_listen_trigger_word"
               >
                 Listen to trigger word
+              </label>
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <div class="input-group">
+              <input
+                class="form-check"
+                type="checkbox"
+                id="twitch_enable_reward"
+                checked
+              />
+              <label
+                class="form-check-label text-primary ms-2"
+                for="twitch_enable_reward"
+              >
+                Enable reward
               </label>
             </div>
           </div>
@@ -141,7 +154,7 @@
           </div>
 
           <div class="mb-2">
-            <label class="form-check-label text-primary" for="cai_use_plus">
+            <label class="form-label text-primary" for="cai_voice">
               Voice
             </label>
             <select
@@ -206,7 +219,7 @@
       </div>
       <div class="column text-center">
         <div class="jumbotron text-primary">
-          <h1 class="display-4">Character AI</h1>
+          <h1 class="display-4">Character</h1>
         </div>
       </div>
       <div
@@ -215,6 +228,8 @@
         class="text-primary"
       ></div>
     </div>
+    <script src="../app/views/caiView.js"></script>
+    <script src="../app/views/twitchView.js"></script>
     <script src="../app/index.js"></script>
   </body>
 </html>

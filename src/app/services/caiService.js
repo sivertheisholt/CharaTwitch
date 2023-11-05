@@ -9,6 +9,10 @@ class CaiService {
     return this.characterAi;
   }
 
+  async fetchVoices(characterAi) {
+    return await characterAi.fetchTTSVoices();
+  }
+
   async playTTS(characterAi, voiceId, text) {
     try {
       var res = await characterAi.fetchTTS(parseInt(voiceId), text);

@@ -4,41 +4,44 @@ const configService = require("../../app/services/configService");
 
 class CaiController {
   constructor(caiView) {
+    this.caiView = caiView;
+
     this.caiService = caiService();
     this.authService = authService();
     this.configService = configService();
 
-    this.caiView = caiView;
-
     this.characterAi = this.caiService.getCharacterAi();
+
+    this.init();
   }
 
-  initActions() {
-    const caiAuthInputs = this.caiView.getCaiAuthInputs();
-    this.caiConnectBtn.addEventListener("click", () => {
+  async init() {
+    this.caiView.caiConnectBtn.addEventListener("click", async () => {
+      const caiAuthInputs = this.caiView.getCaiAuthInputs();
       this.authService.authCai(
         this.characterAi,
-        caiAuthInputs.accesstoken,
+        caiAuthInputs.accessToken,
         caiAuthInputs.usePlus,
-        this.caiAuthCallback
+        (success) => this.caiAuthCallback(success)
       );
     });
+    const caiConfig = await this.configService.getCaiConfig();
+    this.caiView.fillAuth(caiConfig);
   }
 
   async caiAuthCallback(success) {
-    if (success) {
-      this.caiView.updateCaiAuthSuccess();
-      this.configService.setCaiConfig(
-        this.caiAccessTokenInput,
-        this.caiCharacterIdInput,
-        this.caiUsePlus,
-        this.caiSelectedVoice
-      );
-      let voices = await this.caiService.fetchVoices(this.characterAi);
-      this.caiView.fillVoices(voices);
-    } else {
-      this.caiView.updateCaiAuthFailure();
-    }
+    if (!success) this.caiView.updateCaiAuthFailure();
+
+    this.caiView.updateCaiAuthSuccess();
+    const caiAuthInputs = this.caiView.getCaiAuthInputs();
+    this.configService.setCaiConfig(
+      caiAuthInputs.accessToken,
+      caiAuthInputs.characterId,
+      caiAuthInputs.usePlus,
+      caiAuthInputs.selectedVoice
+    );
+    let voices = await this.caiService.fetchVoices(this.characterAi);
+    this.caiView.fillVoices(voices);
   }
 }
 
