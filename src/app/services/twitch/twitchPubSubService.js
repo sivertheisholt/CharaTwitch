@@ -68,6 +68,7 @@ class TwitchPubSubService {
   };
 }
 
+/** @type {TwitchPubSubService | null} */
 let instance = null;
 
 function getSharedService(onRewardCb) {

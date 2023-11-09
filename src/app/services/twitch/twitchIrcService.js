@@ -66,6 +66,7 @@ class TwitchIrcService {
   }
 }
 
+/** @type {TwitchIrcService | null} */
 let instance = null;
 
 function getSharedService(onMessageCb) {

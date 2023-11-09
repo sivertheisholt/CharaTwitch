@@ -1,7 +1,7 @@
 const CaiController = require("../app/controllers/caiController");
 const TwitchController = require("../app/controllers/twitchController");
 
-console.log("App starting");
-
+// eslint-disable-next-line no-undef
 new CaiController(caiView);
+// eslint-disable-next-line no-undef
 new TwitchController(twitchView, caiView);

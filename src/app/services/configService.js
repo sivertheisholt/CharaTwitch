@@ -94,8 +94,12 @@ class ConfigService {
   }
 }
 
+/** @type {ConfigService | null} */
 let instance = null;
 
+/**
+ * @returns {ConfigService}
+ */
 function getSharedService() {
   if (!instance) {
     instance = new ConfigService();

@@ -1,28 +1,46 @@
-const twitchIrcService = require("../../app/services/twitchIrcService");
-const twitchApiService = require("../../app/services/twitchApiService");
-const caiService = require("../../app/services/caiService");
-const authService = require("../../app/services/authService");
-const configService = require("../../app/services/configService");
-const expressService = require("../../app/services/expressService");
-const twitchPubSubService = require("../../app/services/twitchPubSubService");
+/**
+ * @typedef {import("../services/twitch/TwitchService")} TwitchService
+ */
+const twitchService = require("../services/twitch/TwitchService");
+/**
+ * @typedef {import("../services/cai/caiService")} CaiService
+ */
+const caiService = require("../services/cai/caiService");
+/**
+ * @typedef {import("../services/authService")} AuthService
+ */
+const authService = require("../services/authService");
+/**
+ * @typedef {import("../services/configService")} ConfigService
+ */
+const configService = require("../services/configService");
+/**
+ * @typedef {import("../services/expressService")} ExpressService
+ */
+const expressService = require("../services/expressService");
 
 class TwitchController {
+  /**
+   * @typedef {import("../views/twitchView")} TwitchView
+   * @param {TwitchView} twitchView
+   * @typedef {import("../views/caiView")} CaiView
+   * @param {CaiView} caiView
+   */
   constructor(twitchView, caiView) {
     this.twitchView = twitchView;
-    this.caiView = caiView;
 
-    this.twitchcIrcService = twitchIrcService((username, message) =>
-      this.onMessageHandler(username, message)
-    );
-    this.twitchPubSubService = twitchPubSubService((data) =>
-      this.onRewardHandler(data)
-    );
+    this.caiView = caiView;
 
     this.authService = authService();
     this.configService = configService();
     this.expressService = expressService();
     this.caiService = caiService();
-    this.twitchApiService = twitchApiService();
+    this.twitchService = twitchService(
+      (username, message) => {
+        this.onMessageHandler(username, message);
+      },
+      (data) => this.onRewardHandler(data)
+    );
 
     this.init();
   }
@@ -43,35 +61,20 @@ class TwitchController {
     if (!success) return console.log("Could not auth twitch");
 
     const accessToken = tokenObj.access_token;
-    const userInfo = await this.twitchApiService.getUserInfo(accessToken);
-
     const twitchInputs = this.twitchView.getTwitchInputs();
+
+    const authResult = await this.twitchService.authTwitch(
+      accessToken,
+      twitchInputs.clientId
+    );
+
+    this.twitchView.fillRewards(authResult.rewards);
+
     this.configService.setTwitchConfig(
       twitchInputs.clientSecret,
       twitchInputs.clientId,
       twitchInputs.triggerWord,
       twitchInputs.listenToTriggerWord
-    );
-
-    this.twitchcIrcService.connectToTwitchIrc(
-      accessToken,
-      userInfo.preferred_username
-    );
-
-    const rewards = await this.twitchApiService.getCustomRewards(
-      userInfo.sub,
-      twitchInputs.clientId,
-      accessToken
-    );
-    this.twitchView.fillRewards(rewards);
-
-    await this.twitchPubSubService.connectToTwitchPubSub();
-    await this.twitchPubSubService.subscribeToChannelPoints(
-      accessToken,
-      userInfo.sub
-    );
-    await this.twitchPubSubService.listenToRewardRedeem((redeemData) =>
-      this.onRewardHandler(redeemData)
     );
 
     this.twitchView.updateTwitchAuthSuccess();
@@ -84,31 +87,27 @@ class TwitchController {
 
     if (message.indexOf(this.twitchView.twitchTriggerWord.value) === -1) return;
 
-    let result = await this.caiService.sendChat(
-      this.caiService.characterAi,
-      this.caiView.caiCharacterIdInput.value,
+    const result = await this.caiService.sendChat(
       message,
-      username
+      username,
+      this.caiView.caiCharacterIdInput.value
     );
+
+    const resultTTS = await this.caiService.getTTS(
+      result,
+      this.caiView.caiSelectedVoice
+    );
+
+    await this.caiService.playTTS(resultTTS);
 
     this.caiView.addCaiChat(result);
-
-    await this.caiService.playTTS(
-      this.caiService.characterAi,
-      this.caiView.caiSelectedVoice,
-      result
-    );
   }
 
   async onRewardHandler(redeemData) {
-    console.log(redeemData);
     if (redeemData.type !== "reward-redeemed") return;
 
     const redemption = redeemData.data.redemption;
     const reward = redemption.reward;
-
-    console.log(this.twitchView.twitchSelectedReward);
-    console.log(reward.id);
 
     if (redemption.user_input == undefined) return;
 
@@ -117,22 +116,20 @@ class TwitchController {
     const userDisplayName = redemption.user.display_name;
     const userInput = redemption.user_input;
 
-    console.log(userInput);
-
-    let result = await this.caiService.sendChat(
-      this.caiService.characterAi,
-      this.caiView.caiCharacterIdInput.value,
+    const result = await this.caiService.sendChat(
       userInput,
-      userDisplayName
+      userDisplayName,
+      this.caiView.caiCharacterIdInput.value
     );
+
+    const resultTTS = await this.caiService.getTTS(
+      result,
+      this.caiView.caiSelectedVoice
+    );
+
+    await this.caiService.playTTS(resultTTS);
 
     this.caiView.addCaiChat(result);
-
-    await this.caiService.playTTS(
-      this.caiService.characterAi,
-      this.caiView.caiSelectedVoice,
-      result
-    );
   }
 }
 

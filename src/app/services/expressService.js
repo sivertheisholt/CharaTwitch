@@ -11,8 +11,12 @@ class ExpressService {
   }
 }
 
+/** @type {ExpressService | null} */
 let instance = null;
 
+/**
+ * @returns {ExpressService}
+ */
 function getSharedService() {
   if (!instance) {
     instance = new ExpressService();

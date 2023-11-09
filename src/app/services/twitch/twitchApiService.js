@@ -40,6 +40,7 @@ class TwitchApiService {
   }
 }
 
+/** @type {TwitchApiService | null} */
 let instance = null;
 
 function getSharedService() {

@@ -44,6 +44,7 @@ class AuthService {
       }
     );
   }
+
   async authCai(characterAi, accessToken, usePlus, authCallback) {
     try {
       characterAi.requester.usePlus = usePlus;
@@ -57,8 +58,12 @@ class AuthService {
   }
 }
 
+/** @type {AuthService | null} */
 let instance = null;
 
+/**
+ * @returns {AuthService}
+ */
 function getSharedService() {
   if (!instance) {
     instance = new AuthService();

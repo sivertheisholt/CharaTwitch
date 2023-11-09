@@ -1,3 +1,6 @@
+/**
+ * @typedef {import("../services/configService")} ConfigService
+ */
 const configService = require("../app/services/configService");
 
 class CaiView {
