@@ -30,8 +30,8 @@ jobs:
       - name: Copy over node_modules
         run: cp -r ./node_modules ./dist/src
 
-      - name: Copy over chromium
-        run: cp -r $HOME/.cache/puppeteer/chrome/*/*/ ./dist/src/package.nw
+      - name: Copy over chromium windows installation
+        run: cp -r ./src/app/chrome-win32 ./dist/src/package.nw
 
       - name: Tar output
         run: |

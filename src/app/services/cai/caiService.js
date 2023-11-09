@@ -11,7 +11,7 @@ const authService = require("../authService");
 class CaiService {
   constructor() {
     this.characterAi = new CharacterAI();
-    this.characterAi.requester.puppeteerPath = "./chrome-win/chrome";
+    this.characterAi.requester.puppeteerPath = "./chrome-win32/chrome";
     this.caiApiService = caiApiService(this.characterAi);
     this.authService = authService();
   }
