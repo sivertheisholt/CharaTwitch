@@ -5,17 +5,17 @@ const decompress = require("decompress");
 const fs = require("fs");
 
 async function startApp() {
-  const buildId = "114.0.5735.133"; //which version you want to download
+  const buildId = "1000027"; //which version you want to download
 
   await puppeteer.install({
     cacheDir: "chrome-cache/",
     unpack: false,
-    browser: "chrome",
-    platform: "win32", //or linux, mac, mac_arm, win64
+    browser: "chromium",
+    platform: "win64", //or linux, mac, mac_arm, win64
     buildId,
   });
 
-  decompress("chrome-cache/chrome/114.0.5735.133-chrome-win32.zip", ".")
+  decompress("chrome-cache/chromium/1000027-chrome-win.zip", ".")
     .then(() => {
       console.log("Unzipped");
       fs.rmSync("chrome-cache", { recursive: true, force: true });
