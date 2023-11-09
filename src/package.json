@@ -26,5 +26,6 @@
     "node_characterai": "github:sivertheisholt/node_characterai#testing",
     "nw": "^0.80.0-sdk",
     "websocket": "1.0.34"
+    
   }
 }

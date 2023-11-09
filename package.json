@@ -23,6 +23,7 @@
     "node_characterai": "github:sivertheisholt/node_characterai",
     "node-persist": "^2.1.0",
     "nw": "^0.80.0",
+    "puppeteer": "^21.5.1",
     "websocket": "1.0.34"
   },
   "devDependencies": {
