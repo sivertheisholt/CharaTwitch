@@ -1,53 +1,56 @@
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   workflow_dispatch:
 
 env:
-  NODE_VERSION: '20.5.0'
+  NODE_VERSION: "20.5.0"
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ env.NODE_VERSION }}
-        cache: 'npm'
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
 
-    - name: npm install, build, and test
-      run: |
-        npm install
-        npm run build-nw
-        
-    - name: Get current version
-      id: version
-      run: echo "::set-output name=version::$(jq -r .version package.json)"
+      - name: npm install, build, and test
+        run: |
+          npm install
+          npm run build-nw
 
-    - name: Copy over node_modules
-      run: cp -r ./node_modules ./dist/src
+      - name: Get current version
+        id: version
+        run: echo "::set-output name=version::$(jq -r .version package.json)"
 
-    - name: Tar output
-      run: |
-        cd ./dist/src
-        zip -r ../app.zip .
-      
-    - name: Create Git Tag
-      run: |
-        # Create a tag name based on the commit hash
-        TAG_NAME="${{ steps.version.outputs.version }}"
+      - name: Copy over node_modules
+        run: cp -r ./node_modules ./dist/src
 
-        # Create the tag
-        git tag $TAG_NAME
+      - name: Copy over chromium
+        run: cp -r $HOME/.cache/puppeteer/chrome/*/*/ ./dist/src/package.nw
 
-        # Push the tag to the repository
-        git push origin $TAG_NAME
+      - name: Tar output
+        run: |
+          cd ./dist/src
+          zip -r ../app.zip .
 
-    - uses: ncipollo/release-action@v1
-      with:
-        artifacts: ./dist/app.zip
-        body: "release"
-        tag: ${{ steps.version.outputs.version }}
+      - name: Create Git Tag
+        run: |
+          # Create a tag name based on the commit hash
+          TAG_NAME="${{ steps.version.outputs.version }}"
+
+          # Create the tag
+          git tag $TAG_NAME
+
+          # Push the tag to the repository
+          git push origin $TAG_NAME
+
+      - uses: ncipollo/release-action@v1
+        with:
+          artifacts: ./dist/app.zip
+          body: "release"
+          tag: ${{ steps.version.outputs.version }}
