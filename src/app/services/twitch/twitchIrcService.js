@@ -5,19 +5,20 @@ class TwitchIrcService {
   constructor(onMessageCb) {
     this.onMessageCb = onMessageCb;
   }
+
   handlePing(connection, pingMessage) {
     connection.sendUTF(`PONG ${pingMessage}`);
   }
 
   connectToTwitchIrc(accessToken, username) {
-    client.on("connect", async function (connection) {
+    client.on("connect", async (connection) => {
       console.log("WebSocket Client Connected");
       connection.sendUTF(`PASS oauth:${accessToken}`);
       connection.sendUTF(`NICK ${username}`);
 
       connection.sendUTF(`JOIN #${username}`);
 
-      connection.on("message", async function (ircMessage) {
+      connection.on("message", async (ircMessage) => {
         try {
           ircMessage = ircMessage.utf8Data;
           const split = ircMessage.split(" ");
@@ -65,6 +66,7 @@ class TwitchIrcService {
   }
 }
 
+/** @type {TwitchIrcService | null} */
 let instance = null;
 
 function getSharedService(onMessageCb) {

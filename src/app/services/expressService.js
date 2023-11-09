@@ -9,13 +9,14 @@ class ExpressService {
       console.log("Application is now listening on port: 3000")
     );
   }
-  getApp() {
-    return this.app;
-  }
 }
 
+/** @type {ExpressService | null} */
 let instance = null;
 
+/**
+ * @returns {ExpressService}
+ */
 function getSharedService() {
   if (!instance) {
     instance = new ExpressService();
