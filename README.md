@@ -1,8 +1,10 @@
 # CharaTwitch
 
 Welcome to CharaTwitch! This project is still in EARLY DEVELOPMENT! But you are free to try it out if you wish.
-
 CharacTwitch is a way to integrate Character AI into your stream. By connecting your twitch and Character AI Account you can listen to chat and make your character respond by talking.
+
+This is more of a demo to see whats possible with LLM (Large Language Model) - If people like it, I might work on a better solution. Don't expect a full application without bugs and perfect user experience.
+WILL ONLY WORK IF YOU HAVE REWARDS ENABLED ON YOUR TWITCH CHANNEL!
 
 ![Imgur](https://i.imgur.com/fwAsbyP.png)
 
@@ -10,7 +12,7 @@ CharacTwitch is a way to integrate Character AI into your stream. By connecting 
 
 Download the provided app.zip from [Releases](https://github.com/sivertheisholt/CharaTwitch/releases) and extract it. Run src.exe to start the program.
 
-You will need to input a bit of information from both Twitch and Character AI. 
+You will need to input a bit of information from both Twitch and Character AI.
 
 ### Twitch
 
@@ -29,6 +31,7 @@ From Character AI you will need to get the access token and character id.
 Open your browser, go to the [Character.AI website](https://character.ai) in `localStorage`.
 
 To do so:
+
 1. Open the Character.AI website in your browser (https://beta.character.ai)
 2. Open the developer tools (<kbd>F12</kbd>, <kbd>Ctrl+J</kbd>, or <kbd>Cmd+J</kbd>)
 3. Go to the `Application` tab

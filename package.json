@@ -24,7 +24,7 @@
     "express": "4.18.2",
     "node_characterai": "github:sivertheisholt/node_characterai",
     "node-persist": "^2.1.0",
-    "nw": "^0.80.0",
+    "nw": "^0.82.0",
     "websocket": "1.0.34"
   },
   "devDependencies": {

@@ -4,3 +4,4 @@ cache
 .env
 authConfig.json
 .node-persist
+chrome-win
