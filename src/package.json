@@ -16,7 +16,8 @@
     "min_width": 1200,
     "max_height": 1200,
     "max_width": 1200,
-    "position": "mouse"
+    "position": "mouse",
+    "resizable": true
   },
   "author": "sivertheisholt",
   "license": "ISC",

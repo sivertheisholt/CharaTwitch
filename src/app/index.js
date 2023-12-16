@@ -5,6 +5,8 @@ const decompress = require("decompress");
 const fs = require("fs");
 
 async function startApp() {
+  const alertInitialization = document.getElementById("alert_initialization");
+  const wrapper = document.getElementById("wrapper");
   const buildId = "1000027"; //which version you want to download
 
   await puppeteer.install({
@@ -15,7 +17,7 @@ async function startApp() {
     buildId,
   });
 
-  decompress("chrome-cache/chromium/1000027-chrome-win.zip", ".")
+  await decompress("chrome-cache/chromium/1000027-chrome-win.zip", ".")
     .then(() => {
       console.log("Unzipped");
       fs.rmSync("chrome-cache", { recursive: true, force: true });
@@ -23,6 +25,9 @@ async function startApp() {
     .catch((error) => {
       console.log(error);
     });
+
+  alertInitialization.classList.add("hidden");
+  wrapper.classList.remove("hidden");
 
   // eslint-disable-next-line no-undef
   new CaiController(caiView);
