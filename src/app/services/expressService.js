@@ -5,8 +5,8 @@ app.use(express.json());
 class ExpressService {
   constructor() {
     this.app = app;
-    app.listen(3000, () =>
-      console.log("Application is now listening on port: 3000")
+    app.listen(8001, () =>
+      console.log("Application is now listening on port: 8001")
     );
   }
 }

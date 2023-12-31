@@ -6,9 +6,12 @@ CharacTwitch is a way to integrate Character AI into your stream. By connecting 
 Few things to note:
 
 - This is more of a demo to see whats possible with LLM (Large Language Model)
+- Currently "untested" in production as I don't have a twitch with channel points unfortunately.
 - Don't expect a full application without bugs and perfect user experience.
 - Will only work if you have rewards enabled on your twitch channel!
 - If people like it, I might work on a better solution.
+- I do not have access to anything you input into the program, just don't share the files with others as it does contain the config settings.
+- I cannot promise it works without CAI+ as their service is very buggy.
 
 ![Imgur](https://i.imgur.com/fwAsbyP.png)
 
@@ -22,7 +25,7 @@ You will need to input a bit of information from both Twitch and Character AI.
 
 Create a new application over at: https://dev.twitch.tv/console
 
-Redirect URI should be: http://localhost:3000/twitch
+Redirect URI should be: http://localhost:8001/twitch
 
 Once you have created a new application you wanna make a note of the following: Client Secret & Client Id
 
@@ -32,7 +35,7 @@ Once you have entered all the information you can simply click Connect Twitch an
 
 From Character AI you will need to get the access token and character id.
 
-Open your browser, go to the [Character.AI website](https://character.ai) in `localStorage`.
+To get the access token open your browser, go to the [Character.AI website](https://character.ai) in `localStorage`.
 
 To do so:
 

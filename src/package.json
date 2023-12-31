@@ -14,8 +14,6 @@
     "height": 1200,
     "min_height": 1200,
     "min_width": 1200,
-    "max_height": 1200,
-    "max_width": 1200,
     "position": "mouse",
     "resizable": true
   },

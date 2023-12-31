@@ -1,6 +1,6 @@
 class AuthService {
   authTwitch(app, clientSecret, clientId, authCallback) {
-    const redirect_uri = "http://localhost:3000/twitch";
+    const redirect_uri = "http://localhost:8001/twitch";
     // eslint-disable-next-line no-undef
     nw.Window.open(
       `https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirect_uri}&scope=channel%3Aread%3Aredemptions+chat%3Aread+chat%3Aedit&state=c3ab8aa609ea11e793ae92361f002671`,
