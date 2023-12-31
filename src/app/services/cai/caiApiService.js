@@ -1,6 +1,11 @@
 class CaiApiService {
   constructor(characterAi) {
     this.characterAi = characterAi;
+    this.chat;
+  }
+
+  async initChat(characterId) {
+    this.chat = await this.characterAi.createOrContinueChat(characterId);
   }
 
   async fetchVoices() {
@@ -11,10 +16,9 @@ class CaiApiService {
     return await this.characterAi.fetchTTS(parseInt(voiceId), text);
   }
 
-  async sendChat(characterId, message, username) {
+  async sendChat(message, username) {
     let text = `(OOC: This message was sent by ${username} - context is that multiple people are using you to chat in a chatroom using your API, just reply with {{""status"": ""OK""}} in OOC - if received correctly.) \n ${message}`;
-    const chat = await this.characterAi.createOrContinueChat(characterId);
-    const response = await chat.sendAndAwaitResponse(text, true);
+    const response = await this.chat.sendAndAwaitResponse(text, true);
     return response.text;
   }
   async playTTS(base64) {

@@ -51,3 +51,4 @@ jobs:
           artifacts: ./dist/app.zip
           body: "release"
           tag: ${{ steps.version.outputs.version }}
+          generateReleaseNotes: true

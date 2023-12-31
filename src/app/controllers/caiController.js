@@ -41,6 +41,8 @@ class CaiController {
     const voices = await this.caiService.getVoices();
     const caiAuthInputs = this.caiView.getCaiAuthInputs();
 
+    await this.caiService.initChat(caiAuthInputs.characterId);
+
     this.configService.setCaiConfig(
       caiAuthInputs.accessToken,
       caiAuthInputs.characterId,
