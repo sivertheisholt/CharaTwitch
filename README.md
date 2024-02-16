@@ -35,18 +35,21 @@ Once you have entered all the information you can simply click Connect Twitch an
 
 From Character AI you will need to get the access token and character id.
 
-To get the access token open your browser, go to the [Character.AI website](https://character.ai) in `localStorage`.
+To get it, you can open your browser, go to the [Character.AI website](https://character.ai) in `localStorage`.
 
-To do so:
+---
+### ⚠️ WARNING: DO NOT share your session token to anyone you do not trust or if you do not know what you're doing. 
+#### _Anyone with your session token could have access to your account without your consent. Do this at your own risk._
+---
 
 1. Open the Character.AI website in your browser (https://beta.character.ai)
-2. Open the developer tools (<kbd>F12</kbd>, <kbd>Ctrl+J</kbd>, or <kbd>Cmd+J</kbd>)
+2. Open the developer tools (<kbd>F12</kbd>, <kbd>Ctrl+Shift+I</kbd>, or <kbd>Cmd+J</kbd>)
 3. Go to the `Application` tab
 4. Go to the `Storage` section and click on `Local Storage`
-5. Look for the `@@auth0spajs@@::dyD3gE281MqgISG7FuIXYhL2WEknqZzv::https://auth0.character.ai/::openid profile email offline_access` key
-6. Open the body with the arrows and copy the access token (Make sure to get the full token! It's pretty long)
+5. Look for the `char_token` key
+6. Open the object, right click on value and copy your session token.
 
-![Access_Token](https://i.imgur.com/09Q9mLe.png)
+![Session_Token](https://github.com/realcoloride/node_characterai/assets/108619637/1d46db04-0744-42d2-a6d7-35152b967a82)
 
 #### Finding your character's ID
 
