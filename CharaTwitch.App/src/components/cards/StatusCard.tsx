@@ -22,7 +22,7 @@ const StatusCardComponent = ({
 					marginRight: "auto",
 				}}
 				variant="top"
-				src={`img/${pngName}`}
+				src={`/images/${pngName}`}
 			/>
 			<Card.Body>
 				<Card.Title style={{ fontSize: "16px" }}>{title}</Card.Title>
@@ -31,7 +31,7 @@ const StatusCardComponent = ({
 					<img
 						alt="Online/Offline"
 						style={{ width: "25px", marginLeft: "auto", marginRight: "auto" }}
-						src={`img/${active ? "check.png" : "cancel.png"}`}
+						src={`images/${active ? "check.png" : "cancel.png"}`}
 					/>
 				</p>
 			</Card.Body>

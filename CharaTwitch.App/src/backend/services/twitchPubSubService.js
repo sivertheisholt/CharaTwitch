@@ -1,4 +1,4 @@
-const WebSocketClient = require("websocket").client;
+import { client as WebSocketClient } from "websocket";
 
 const handlePing = (connection) => {
 	const listenJson = JSON.stringify({
@@ -7,7 +7,7 @@ const handlePing = (connection) => {
 	connection.send(listenJson);
 };
 
-const connectToTwitchPubSub = () => {
+export const connectToTwitchPubSub = () => {
 	const client = new WebSocketClient();
 	return new Promise((resolve, reject) => {
 		try {
@@ -24,7 +24,7 @@ const connectToTwitchPubSub = () => {
 	});
 };
 
-const listenToRewardRedeem = (connection, onRewardCb) => {
+export const listenToRewardRedeem = (connection, onRewardCb) => {
 	try {
 		connection.on("message", async (data) => {
 			let parsedData = JSON.parse(data.utf8Data);
@@ -38,7 +38,7 @@ const listenToRewardRedeem = (connection, onRewardCb) => {
 	}
 };
 
-const subscribeToChannelPoints = (connection, accessToken, channel_id) => {
+export const subscribeToChannelPoints = (connection, accessToken, channel_id) => {
 	return new Promise((resolve, reject) => {
 		try {
 			const topics = [`channel-points-channel-v1.${channel_id}`];
@@ -59,10 +59,4 @@ const subscribeToChannelPoints = (connection, accessToken, channel_id) => {
 			resolve(false);
 		}
 	});
-};
-
-module.exports = {
-	subscribeToChannelPoints,
-	connectToTwitchPubSub,
-	listenToRewardRedeem,
 };

@@ -1,13 +1,13 @@
-const { authTwitch } = require("../services/twitchAuthService");
-const { connectToTwitchIrc } = require("../services/twitchIrcService");
-const {
+import { authTwitch } from "../services/twitchAuthService";
+import { connectToTwitchIrc } from "../services/twitchIrcService";
+import {
 	connectToTwitchPubSub,
 	subscribeToChannelPoints,
 	listenToRewardRedeem,
-} = require("../services/twitchPubSubService");
-const { getUserInfo, getCustomRewards } = require("../services/twitchApiService");
-const { setTwitchConfig, getItem } = require("../services/config/configService");
-const { sendChat, fetchTTS, playTTS } = require("../services/cai/caiApiService");
+} from "../services/twitchPubSubService";
+import { getUserInfo, getCustomRewards } from "../services/twitchApiService";
+import { setTwitchConfig, getItem } from "../services/config/configService";
+import { sendChat, fetchTTS } from "../services/cai/caiApiService";
 
 const onTwitchAuth = async (socket, arg, expressApp, caiObject) => {
 	const { client_id, client_secret, trigger_word, listen_to_trigger_word } = arg;
@@ -82,4 +82,4 @@ const onTwitchAuth = async (socket, arg, expressApp, caiObject) => {
 	});
 };
 
-module.exports = { onTwitchAuth };
+export default { onTwitchAuth };

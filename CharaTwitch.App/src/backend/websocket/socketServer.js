@@ -1,15 +1,10 @@
-const { Server } = require("socket.io");
+import { Server } from "socket.io";
+import CharacterAI from "node_characterai";
+import { getTwitchConfig, getCaiConfig, setItem } from "../services/config/configService";
+import { onTwitchAuth } from "../managers/twitchManager";
+import { onCaiAuth } from "../managers/caiManager";
 
-const CharacterAI = require("node_characterai");
-const {
-	getTwitchConfig,
-	getCaiConfig,
-	setItem,
-} = require("../services/config/configService");
-const { onTwitchAuth } = require("../managers/twitchManager");
-const { onCaiAuth } = require("../managers/caiManager");
-
-const startSocketServer = (server, expressApp) => {
+export const startSocketServer = (server, expressApp) => {
 	const cai = new CharacterAI();
 	const caiObject = {
 		cai: cai,
@@ -59,5 +54,3 @@ const startSocketServer = (server, expressApp) => {
 
 	return io;
 };
-
-module.exports = { startSocketServer };

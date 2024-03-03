@@ -1,4 +1,4 @@
-const authCai = async (characterAi, accessToken) => {
+export const authCai = async (characterAi, accessToken) => {
 	try {
 		characterAi.requester.usePlus = true;
 		characterAi.requester.forceWaitingRoom = false;
@@ -9,5 +9,3 @@ const authCai = async (characterAi, accessToken) => {
 		return false;
 	}
 };
-
-module.exports = { authCai };

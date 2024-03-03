@@ -1,10 +1,10 @@
-const WebSocketClient = require("websocket").client;
+import { client as WebSocketClient } from "websocket";
 
 const handlePing = (connection, pingMessage) => {
 	connection.sendUTF(`PONG ${pingMessage}`);
 };
 
-const connectToTwitchIrc = (
+export const connectToTwitchIrc = (
 	accessToken,
 	username,
 	onConnectedCb,
@@ -68,5 +68,3 @@ const connectToTwitchIrc = (
 
 	client.connect("ws://irc-ws.chat.twitch.tv:80");
 };
-
-module.exports = { connectToTwitchIrc };

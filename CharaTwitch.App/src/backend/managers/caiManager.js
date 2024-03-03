@@ -1,8 +1,8 @@
-const { authCai } = require("../services/cai/caiAuthService");
-const { initChat, fetchVoices } = require("../services/cai/caiApiService");
-const { setCaiConfig } = require("../services/config/configService");
+import { authCai } from "../services/cai/caiAuthService";
+import { initChat, fetchVoices } from "../services/cai/caiApiService";
+import { setCaiConfig } from "../services/config/configService";
 
-const onCaiAuth = async (socket, arg, cai, caiObject) => {
+export const onCaiAuth = async (socket, arg, cai, caiObject) => {
 	const { access_token, character_id } = arg;
 	await setCaiConfig(access_token, character_id);
 
@@ -17,5 +17,3 @@ const onCaiAuth = async (socket, arg, cai, caiObject) => {
 	});
 	socket.emit("caiAccountStatus", true);
 };
-
-module.exports = { onCaiAuth };

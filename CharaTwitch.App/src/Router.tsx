@@ -5,17 +5,18 @@ import { HomePage } from "./pages/HomePage";
 import { DefaultLayout } from "./components/layouts/DefaultLayout";
 import { ConfigPage } from "./pages/ConfigPage";
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface RouterProps {}
 
 const RouterComponent = (props: RouterProps) => {
 	const router = createBrowserRouter([
 		{
-			path: "/",
+			path: "/main_window",
 			element: <DefaultLayout children={<HomePage />} />,
 			errorElement: <ErrorPage />,
 		},
 		{
-			path: "/config",
+			path: "/main_window/config",
 			element: <DefaultLayout children={<ConfigPage />} />,
 			errorElement: <ErrorPage />,
 		},
