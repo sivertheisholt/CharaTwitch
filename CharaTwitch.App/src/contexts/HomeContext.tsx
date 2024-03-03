@@ -15,6 +15,7 @@ const HomeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 	const [twitchCustomRedeems, setTwitchCustomRedeems] = useState<Array<any>>([]);
 	const [caiAccountStatus, setCaiAccountStatus] = useState(false);
 	const [caiVoices, setCaiVoices] = useState<Array<any>>([]);
+	const [caiMessages, setCaiMessages] = useState<Array<string>>([]);
 
 	useEffect(() => {
 		if (socket !== null) {
@@ -41,15 +42,19 @@ const HomeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 			const twitchPubSubListener = (arg: any) => {
 				setTwitchPubSubStatus(arg as boolean);
 			};
-			const caiMessageListener = (arg: any) => {
-				console.log(arg);
-			};
 			const caiAccountStatusListener = (arg: any) => {
 				setCaiAccountStatus(arg as boolean);
 			};
 			const caiAuthCbListener = (arg: any) => {
 				console.log(arg);
 				setCaiVoices(arg.voices);
+			};
+			const caiMessageListener = (arg: any) => {
+				console.log(arg);
+				const tempArray = [...caiMessages];
+				tempArray.unshift(arg.message);
+				setCaiMessages(tempArray);
+				new Audio(`data:audio/wav;base64,${arg.audio}`).play();
 			};
 
 			socket.on("twitchAuthCb", twitchAuthCbListener);
@@ -60,6 +65,7 @@ const HomeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 			socket.on("caiMessage", caiMessageListener);
 			socket.on("caiAccountStatus", caiAccountStatusListener);
 			socket.on("caiAuthCb", caiAuthCbListener);
+			socket.on("caiMessage", caiMessageListener);
 
 			return () => {
 				// Clean up event listeners when component unmounts
@@ -71,9 +77,10 @@ const HomeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 				socket.off("caiMessage", caiMessageListener);
 				socket.off("caiAccountStatus", caiAccountStatusListener);
 				socket.off("caiAuthCb", caiAuthCbListener);
+				socket.off("caiMessage", caiMessageListener);
 			};
 		}
-	}, [socket, twitchMessages, twitchRedeems]);
+	}, [caiMessages, socket, twitchMessages, twitchRedeems]);
 
 	return (
 		<HomeContext.Provider
@@ -94,6 +101,8 @@ const HomeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 				setCaiAccountStatus,
 				caiVoices,
 				setCaiVoices,
+				caiMessages,
+				setCaiMessages,
 			}}
 		>
 			{children}

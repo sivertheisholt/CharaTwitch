@@ -21,6 +21,7 @@ const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =
 			console.log("Connected to server");
 			setSocket(newSocket);
 		});
+
 		// Clean up the socket connection when the component unmounts
 		return () => {
 			newSocket.disconnect();

@@ -17,6 +17,7 @@ const HomePageComponent = (props: HomePageProps) => {
 		twitchPubSubStatus,
 		twitchAccountStatus,
 		caiAccountStatus,
+		caiMessages,
 	} = useContext(HomeContext) as HomeContextType;
 	return (
 		<>
@@ -81,9 +82,14 @@ const HomePageComponent = (props: HomePageProps) => {
 				</Col>
 			</Row>
 			<Row style={{ height: "40%" }}>
-				<Col>
+				<Col style={{ height: "100%", overflowY: "auto" }}>
 					<h1>Character AI</h1>
 					<hr className="hr" />
+					{caiMessages.map((message) => (
+						<Alert key={uuidv4()} variant={"primary"}>
+							{message}
+						</Alert>
+					))}
 				</Col>
 				<Col md="auto">
 					<div style={{ height: "100%" }} className="vr"></div>

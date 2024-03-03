@@ -25,10 +25,14 @@ const ConfigPageComponent = (props: ConfigPageProps) => {
 		setTwitchtriggerWord,
 		twitchListenToTriggerWord,
 		setTwitchListenToTriggerWord,
+		twitchSelectedRedeem,
+		setTwitchSelectedRedeem,
 		caiAccessToken,
 		setCaiAccessToken,
 		caiCharacterId,
 		setCaiCharacterId,
+		caiSelectedVoice,
+		setCaiSelectedVoice,
 	} = useContext(ConfigContext) as ConfigContextType;
 
 	const handleTwitchClientSecretChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,15 +49,26 @@ const ConfigPageComponent = (props: ConfigPageProps) => {
 	) => {
 		setTwitchListenToTriggerWord(event.target.checked);
 	};
+	const handleTwitchSelectRedeem = (event: React.ChangeEvent<HTMLSelectElement>) => {
+		const selectedRedeem = event.target.value;
+		socket?.emit("twitchSelectRedeem", selectedRedeem);
+		setTwitchSelectedRedeem(selectedRedeem);
+	};
 	const handleCaiAccessToken = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setCaiAccessToken(event.target.value);
 	};
 	const handleCaiCharacterId = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setCaiCharacterId(event.target.value);
 	};
+	const handleCaiSelectVoice = (event: React.ChangeEvent<HTMLSelectElement>) => {
+		const selectedVoice = event.target.value;
+		console.log(selectedVoice);
+		socket?.emit("caiSelectVoice", selectedVoice);
+		setCaiSelectedVoice(parseInt(selectedVoice));
+	};
 
 	const authTwitch = () => {
-		socket?.emit("authTwitch", {
+		socket?.emit("twitchAuth", {
 			client_secret: twitchClientSecret,
 			client_id: twitchClientId,
 			trigger_word: twitchTriggerWord,
@@ -62,7 +77,7 @@ const ConfigPageComponent = (props: ConfigPageProps) => {
 	};
 
 	const authCai = () => {
-		socket?.emit("authCai", {
+		socket?.emit("caiAuth", {
 			access_token: caiAccessToken,
 			character_id: caiCharacterId,
 		});
@@ -109,7 +124,11 @@ const ConfigPageComponent = (props: ConfigPageProps) => {
 						id="custom-switch"
 						label="Listen to trigger word"
 					/>
-					<Form.Select aria-label="Default select example">
+					<Form.Select
+						onChange={handleTwitchSelectRedeem}
+						value={twitchSelectedRedeem}
+						aria-label="Default select example"
+					>
 						{twitchCustomRedeems.map((redeem) => (
 							<option key={redeem.id} value={redeem.id}>
 								{redeem.title}
@@ -148,7 +167,11 @@ const ConfigPageComponent = (props: ConfigPageProps) => {
 							aria-describedby="cai-character-id"
 						/>
 					</InputGroup>
-					<Form.Select aria-label="Default select example">
+					<Form.Select
+						onChange={handleCaiSelectVoice}
+						value={caiSelectedVoice}
+						aria-label="Default select example"
+					>
 						{caiVoices.map((voice) => (
 							<option key={voice.id} value={voice.id}>
 								{voice.name}

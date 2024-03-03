@@ -3,52 +3,42 @@ on:
     branches: ["main"]
   workflow_dispatch:
 
-env:
-  NODE_VERSION: "20.5.0"
-
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
+  release:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: "npm"
+          node-version: 20
 
       - name: npm install, build, and test
         run: |
+          cd ./CharaTwitch.App
           npm install
-          npm run build-nw
+          npm run build
+
+      - name: Copy over react build
+        run: cp -r ./CharaTwitch.App/build/ ./CharaTwitch.App/public
 
       - name: Get current version
         id: version
         run: echo "::set-output name=version::$(jq -r .version package.json)"
 
-      - name: Copy over node_modules
-        run: cp -r ./node_modules ./dist/src
-
-      - name: Tar output
-        run: |
-          cd ./dist/src
-          zip -r ../app.zip .
-
-      - name: Create Git Tag
-        run: |
-          # Create a tag name based on the commit hash
-          TAG_NAME="${{ steps.version.outputs.version }}"
-
-          # Create the tag
-          git tag $TAG_NAME
-
-          # Push the tag to the repository
-          git push origin $TAG_NAME
-
-      - uses: ncipollo/release-action@v1
+      - name: Build/release Electron app
+        uses: samuelmeuli/action-electron-builder@v1
         with:
-          artifacts: ./dist/app.zip
-          body: "release"
-          tag: ${{ steps.version.outputs.version }}
-          generateReleaseNotes: true
+          # GitHub token, automatically provided to the action
+          # (No need to define this secret in the repo settings)
+          github_token: ${{ secrets.github_token }}
+
+          # If the commit is tagged with a version (e.g. "v1.0.0"),
+          # release the app after building
+          release: ${{ steps.version.outputs.version }}

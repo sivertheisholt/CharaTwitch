@@ -15,4 +15,6 @@ export type HomeContextType = {
 	setCaiAccountStatus: React.Dispatch<React.SetStateAction<boolean>>;
 	caiVoices: Array<any>;
 	setCaiVoices: React.Dispatch<React.SetStateAction<any[]>>;
+	caiMessages: Array<string>;
+	setCaiMessages: React.Dispatch<React.SetStateAction<string[]>>;
 };

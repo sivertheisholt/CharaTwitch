@@ -12,8 +12,10 @@ const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =
 	const [twitchTriggerWord, setTwitchtriggerWord] = useState<string>("");
 	const [twitchListenToTriggerWord, setTwitchListenToTriggerWord] =
 		useState<boolean>(false);
+	const [twitchSelectedRedeem, setTwitchSelectedRedeem] = useState<string>("");
 	const [caiAccessToken, setCaiAccessToken] = useState<string>("");
 	const [caiCharacterId, setCaiCharacterId] = useState<string>("");
+	const [caiSelectedVoice, setCaiSelectedVoice] = useState<number>(0);
 
 	useEffect(() => {
 		if (socket != null) {
@@ -24,8 +26,10 @@ const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =
 				setTwitchClientSecret(twitch_config.client_secret);
 				setTwitchtriggerWord(twitch_config.trigger_word);
 				setTwitchListenToTriggerWord(twitch_config.listen_to_trigger_word);
+				setTwitchSelectedRedeem(twitch_config.selected_redeem);
 				setCaiAccessToken(cai_config.access_token);
 				setCaiCharacterId(cai_config.character_id);
+				setCaiSelectedVoice(cai_config.selected_voice);
 			});
 		}
 	}, [socket]);
@@ -41,10 +45,14 @@ const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =
 				setTwitchtriggerWord,
 				twitchListenToTriggerWord,
 				setTwitchListenToTriggerWord,
+				twitchSelectedRedeem,
+				setTwitchSelectedRedeem,
 				caiAccessToken,
 				setCaiAccessToken,
 				caiCharacterId,
 				setCaiCharacterId,
+				caiSelectedVoice,
+				setCaiSelectedVoice,
 			}}
 		>
 			{children}
