@@ -2,25 +2,29 @@ const { app, BrowserWindow } = require("electron");
 const { startSocketServer } = require("./websocket/socketServer");
 const express = require("express");
 const { createServer } = require("node:http");
+const { initStorage } = require("./services/config/configService");
 
 const expressApp = express();
 const server = createServer(expressApp);
 
-server.listen(5000, () => {
-  console.log("server running at http://localhost:5000");
+server.listen(8001, () => {
+  console.log("server running at http://localhost:8001");
 });
 
 // Spinning the HTTP server and the WebSocket server.
-const io = startSocketServer(server);
+startSocketServer(server, expressApp);
+
+initStorage();
 
 function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
-    width: 1200,
+    width: 1100,
     height: 1200,
     webPreferences: {
       nodeIntegration: true,
     },
+    accelerator: "hardware",
   });
 
   win.removeMenu();
@@ -49,11 +53,7 @@ app.on("window-all-closed", () => {
 app.on("activate", () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
   }
 });
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.

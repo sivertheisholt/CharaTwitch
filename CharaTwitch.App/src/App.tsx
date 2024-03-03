@@ -1,22 +1,24 @@
 import "./App.css";
 import { Router } from "./Router";
 import { NavBar } from "./components/navbar/NavBar";
-import useSocket from "./hooks/useSocket";
+import ConfigProvider from "./contexts/ConfigContext";
+import HomeProvider from "./contexts/HomeContext";
+import SocketProvider from "./contexts/SocketContext";
 
 function App() {
-  const socket = useSocket("http://localhost:5000");
-
-  socket?.on("hello", (arg) => {
-    console.log(arg); // world
-  });
-
-  return (
-    <div style={{ backgroundColor: "#212529", height: "100vh" }}>
-      <Router>
-        <NavBar />
-      </Router>
-    </div>
-  );
+	return (
+		<div style={{ backgroundColor: "#212529", height: "100vh" }}>
+			<SocketProvider>
+				<HomeProvider>
+					<ConfigProvider>
+						<Router>
+							<NavBar />
+						</Router>
+					</ConfigProvider>
+				</HomeProvider>
+			</SocketProvider>
+		</div>
+	);
 }
 
 export default App;

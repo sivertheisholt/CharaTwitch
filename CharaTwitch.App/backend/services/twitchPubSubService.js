@@ -1,79 +1,68 @@
 const WebSocketClient = require("websocket").client;
-const client = new WebSocketClient();
 
-class TwitchPubSubService {
-  constructor() {
-    this.connection = null;
-  }
+const handlePing = (connection) => {
+  const listenJson = JSON.stringify({
+    type: "PING",
+  });
+  connection.send(listenJson);
+};
 
-  connectToTwitchPubSub = () => {
-    return new Promise((resolve, reject) => {
-      try {
-        client.on("connect", async (connection) => {
-          this.connection = connection;
-          resolve();
-        });
-        client.connect("wss://pubsub-edge.twitch.tv");
-      } catch (err) {
-        console.log(err);
-        reject(err);
+const connectToTwitchPubSub = () => {
+  const client = new WebSocketClient();
+  return new Promise((resolve, reject) => {
+    try {
+      client.on("connect", async (connection) => {
+        setInterval(function () {
+          handlePing(connection);
+        }, 4 * 60 * 1000);
+        resolve(connection);
+      });
+      client.connect("wss://pubsub-edge.twitch.tv");
+    } catch (err) {
+      reject(null);
+    }
+  });
+};
+
+const listenToRewardRedeem = (connection, onRewardCb) => {
+  try {
+    connection.on("message", async (data) => {
+      let parsedData = JSON.parse(data.utf8Data);
+      if (parsedData.data !== undefined) {
+        const redeemDataMessage = JSON.parse(parsedData.data.message);
+        onRewardCb(redeemDataMessage);
       }
     });
-  };
-
-  handlePing(connection, pingMessage) {
-    connection.sendUTF(`PONG ${pingMessage}`);
+  } catch (err) {
+    console.log(err);
   }
+};
 
-  listenToRewardRedeem(onRewardCb) {
-    return new Promise((resolve, reject) => {
-      try {
-        this.connection.on("message", async (data) => {
-          let parsedData = JSON.parse(data.utf8Data);
-          if (parsedData.data !== undefined) {
-            const redeemDataMessage = JSON.parse(parsedData.data.message);
-            onRewardCb(redeemDataMessage);
-          }
-        });
-        resolve();
-      } catch (err) {
-        console.log(err);
-        reject(err);
-      }
-    });
-  }
+const subscribeToChannelPoints = (connection, accessToken, channel_id) => {
+  return new Promise((resolve, reject) => {
+    try {
+      const topics = [`channel-points-channel-v1.${channel_id}`];
 
-  subscribeToChannelPoints(accessToken, channel_id) {
-    return new Promise((resolve, reject) => {
-      try {
-        const topics = [`channel-points-channel-v1.${channel_id}`];
+      let listenJson = JSON.stringify({
+        type: "LISTEN",
+        data: {
+          topics,
+          auth_token: accessToken,
+        },
+      });
 
-        let listenJson = JSON.stringify({
-          type: "LISTEN",
-          data: {
-            topics,
-            auth_token: accessToken,
-          },
-        });
+      connection.send(listenJson);
 
-        this.connection.send(listenJson);
+      resolve(true);
+    } catch (err) {
+      console.log(err);
+      resolve(false);
+    }
+  });
+};
 
-        resolve();
-      } catch (err) {
-        console.log(err);
-        reject(err);
-      }
-    });
-  }
-}
-
-let instance = null;
-
-function getSharedService(onRewardCb) {
-  if (!instance) {
-    instance = new TwitchPubSubService(onRewardCb);
-  }
-  return instance;
-}
-
-module.exports = getSharedService;
+module.exports = {
+  subscribeToChannelPoints,
+  connectToTwitchPubSub,
+  listenToRewardRedeem,
+};
