@@ -19,17 +19,16 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Change to App Directory
-        run: cd ./CharaTwitch.App
-
       - name: Install Dependencies
         run: npm install
+        working-directory: ./CharaTwitch.App
 
       - name: Build Electron App
         run: npx electron-forge make --platform=win32
+        working-directory: ./CharaTwitch.App
 
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: electron-artifacts
-          path: /CharaTwitch.App/out/
+          path: ./CharaTwitch.App/out/
