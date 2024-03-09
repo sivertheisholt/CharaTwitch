@@ -1,6 +1,7 @@
 import React from "react";
 import { useRouteError } from "react-router-dom";
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ErrorPageProps {}
 
 const ErrorPageComponent = (props: ErrorPageProps) => {

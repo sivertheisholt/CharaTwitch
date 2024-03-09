@@ -9,7 +9,7 @@ import { getUserInfo, getCustomRewards } from "../services/twitchApiService";
 import { setTwitchConfig, getItem } from "../services/config/configService";
 import { sendChat, fetchTTS } from "../services/cai/caiApiService";
 
-const onTwitchAuth = async (socket, arg, expressApp, caiObject) => {
+export const onTwitchAuth = async (socket, arg, expressApp, caiObject) => {
 	const { client_id, client_secret, trigger_word, listen_to_trigger_word } = arg;
 
 	await setTwitchConfig(client_id, client_secret, trigger_word, listen_to_trigger_word);
@@ -81,5 +81,3 @@ const onTwitchAuth = async (socket, arg, expressApp, caiObject) => {
 		custom_redeems: customRedeems,
 	});
 };
-
-export default { onTwitchAuth };

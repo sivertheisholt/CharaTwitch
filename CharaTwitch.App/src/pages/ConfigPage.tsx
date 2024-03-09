@@ -11,6 +11,7 @@ import { HomeContextType } from "../types/HomeContextType";
 import { ConfigContext } from "../contexts/ConfigContext";
 import { ConfigContextType } from "../types/ConfigContextType";
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ConfigPageProps {}
 
 const ConfigPageComponent = (props: ConfigPageProps) => {

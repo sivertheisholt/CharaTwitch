@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import { HomeContext } from "../contexts/HomeContext";
 import { HomeContextType } from "../types/HomeContextType";
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface HomePageProps {}
 
 const HomePageComponent = (props: HomePageProps) => {

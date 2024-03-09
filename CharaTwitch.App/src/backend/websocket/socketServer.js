@@ -1,11 +1,12 @@
 import { Server } from "socket.io";
-import CharacterAI from "node_characterai";
+// eslint-disable-next-line import/no-unresolved
+import CharacterAi from "node_characterai";
 import { getTwitchConfig, getCaiConfig, setItem } from "../services/config/configService";
 import { onTwitchAuth } from "../managers/twitchManager";
 import { onCaiAuth } from "../managers/caiManager";
 
 export const startSocketServer = (server, expressApp) => {
-	const cai = new CharacterAI();
+	const cai = new CharacterAi();
 	const caiObject = {
 		cai: cai,
 		caiChat: null,

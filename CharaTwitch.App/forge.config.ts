@@ -26,7 +26,7 @@ const config: ForgeConfig = {
 		new AutoUnpackNativesPlugin({}),
 		new WebpackPlugin({
 			devContentSecurityPolicy:
-				"default-src 'self' 'unsafe-eval' 'unsafe-inline' static: http: https: ws:",
+				"media-src 'self' data: audio/wav; default-src 'self' 'unsafe-eval' 'unsafe-inline' static: http: https: ws: ",
 			mainConfig,
 			renderer: {
 				config: rendererConfig,

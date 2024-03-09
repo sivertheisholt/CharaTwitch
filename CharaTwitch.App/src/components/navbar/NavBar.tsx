@@ -14,10 +14,10 @@ const NavBarComponent = (props: NavBarProps) => {
 				<Navbar.Toggle aria-controls="basic-navbar-nav" />
 				<Navbar.Collapse id="basic-navbar-nav">
 					<Nav className="me-auto">
-						<Nav.Link as={NavLink} to="/">
+						<Nav.Link as={NavLink} to="/main_window">
 							Home
 						</Nav.Link>
-						<Nav.Link as={NavLink} to="/config">
+						<Nav.Link as={NavLink} to="/main_window/config">
 							Config
 						</Nav.Link>
 					</Nav>
