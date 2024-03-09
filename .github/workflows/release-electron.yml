@@ -20,7 +20,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Change to App Directory
-        run: cd /CharaTwitch.App
+        run: cd ./CharaTwitch.App
 
       - name: Install Dependencies
         run: npm install
