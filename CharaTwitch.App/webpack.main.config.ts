@@ -13,6 +13,7 @@ export const mainConfig: Configuration = {
 		puppeteer: "puppeteer",
 		"puppeteer-extra": "puppeteer-extra",
 		"puppeteer-extra-plugin-stealth": "puppeteer-extra-plugin-stealth",
+		"@puppeteer/browsers": "@puppeteer/browsers",
 	},
 	// Put your normal webpack config below here
 	module: {
