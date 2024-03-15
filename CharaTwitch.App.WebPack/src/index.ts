@@ -12,6 +12,7 @@ import path from "path";
 import fs from "fs";
 import decompress from "decompress";
 import { install, Browser, BrowserPlatform } from "@puppeteer/browsers";
+import axios from "axios";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
@@ -51,7 +52,7 @@ async function installChrome() {
 }
 
 const createWindow = async () => {
-	await installChrome();
+	//await installChrome();
 
 	// Create the browser window.
 	const mainWindow = new BrowserWindow({
@@ -73,6 +74,22 @@ const createWindow = async () => {
 
 	// Open the DevTools.
 	mainWindow.webContents.openDevTools();
+
+	// Send a GET request to an endpoint
+	axios
+		.get("https://beta.character.ai/chat/character/categories/", {
+			headers: {
+				Authorization: `Token c049a14a2084f7696ebbd856a21910b750d453c1`,
+				"User-Agent":
+					"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36",
+			},
+		})
+		.then((response) => {
+			console.log("Response:", response.data);
+		})
+		.catch((error) => {
+			console.error("Error:", error);
+		});
 };
 
 // This method will be called when Electron has finished

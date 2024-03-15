@@ -9,12 +9,6 @@ export const mainConfig: Configuration = {
 	 * that runs in the main process.
 	 */
 	entry: "./src/index.ts",
-	externals: {
-		puppeteer: "puppeteer",
-		"puppeteer-extra": "puppeteer-extra",
-		"puppeteer-extra-plugin-stealth": "puppeteer-extra-plugin-stealth",
-		"@puppeteer/browsers": "@puppeteer/browsers",
-	},
 	// Put your normal webpack config below here
 	module: {
 		rules,

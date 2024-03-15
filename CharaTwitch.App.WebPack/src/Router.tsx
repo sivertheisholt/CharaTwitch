@@ -11,12 +11,12 @@ export interface RouterProps {}
 const RouterComponent = (props: RouterProps) => {
 	const router = createBrowserRouter([
 		{
-			path: "/",
+			path: "/main_window",
 			element: <DefaultLayout children={<HomePage />} />,
 			errorElement: <ErrorPage />,
 		},
 		{
-			path: "/config",
+			path: "/main_window/config",
 			element: <DefaultLayout children={<ConfigPage />} />,
 			errorElement: <ErrorPage />,
 		},

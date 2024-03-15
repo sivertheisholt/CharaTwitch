@@ -1,4 +1,5 @@
-.node-persist/*
+.node-persist
+chrome-win
 
 # Logs
 logs
