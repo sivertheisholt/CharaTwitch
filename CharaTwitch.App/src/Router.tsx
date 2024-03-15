@@ -1,5 +1,5 @@
 import React from "react";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { RouterProvider, createHashRouter } from "react-router-dom";
 import { ErrorPage } from "./pages/ErrorPage";
 import { HomePage } from "./pages/HomePage";
 import { DefaultLayout } from "./components/layouts/DefaultLayout";
@@ -9,7 +9,7 @@ import { ConfigPage } from "./pages/ConfigPage";
 export interface RouterProps {}
 
 const RouterComponent = (props: RouterProps) => {
-	const router = createBrowserRouter([
+	const router = createHashRouter([
 		{
 			path: "/",
 			element: <DefaultLayout children={<HomePage />} />,
