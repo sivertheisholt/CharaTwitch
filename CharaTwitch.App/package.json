@@ -1,8 +1,8 @@
 {
   "name": "charatwitch.app",
   "productName": "charatwitch.app",
-  "version": "1.0.0",
-  "description": "My Electron application description",
+  "version": "0.2.0",
+  "description": "Integrate Character AI into your stream!",
   "main": ".vite/build/main.js",
   "scripts": {
     "start": "electron-forge start",
