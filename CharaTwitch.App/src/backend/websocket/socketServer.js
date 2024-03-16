@@ -1,16 +1,10 @@
 import { Server } from "socket.io";
 // eslint-disable-next-line import/no-unresolved
-import CharacterAi from "node_characterai";
 import { getTwitchConfig, getCaiConfig, setItem } from "../services/config/configService";
 import { onTwitchAuth } from "../managers/twitchManager";
 import { onCaiAuth } from "../managers/caiManager";
 
 export const startSocketServer = (server, expressApp) => {
-	const cai = new CharacterAi();
-	const caiObject = {
-		cai: cai,
-		caiChat: null,
-	};
 	const io = new Server(server, {
 		cors: {
 			origin: "http://localhost:5173",
@@ -34,7 +28,7 @@ export const startSocketServer = (server, expressApp) => {
 		 * Twitch
 		 ************************************************************/
 		socket.on("twitchAuth", async (arg) => {
-			onTwitchAuth(socket, arg, expressApp, caiObject);
+			onTwitchAuth(socket, arg, expressApp);
 		});
 
 		socket.on("twitchSelectRedeem", async (arg) => {
@@ -45,7 +39,7 @@ export const startSocketServer = (server, expressApp) => {
 		 * Cai
 		 ************************************************************/
 		socket.on("caiAuth", async (arg) => {
-			onCaiAuth(socket, arg, cai, caiObject);
+			onCaiAuth(socket, arg);
 		});
 
 		socket.on("caiSelectVoice", async (arg) => {

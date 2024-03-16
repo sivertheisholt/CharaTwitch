@@ -1,21 +1,52 @@
-export const fetchVoices = async (characterAi) => {
-	return await characterAi.fetchTTSVoices();
+import axios from "axios";
+
+const axiosClient = (baseUrl, accessToken) => {
+	return axios.create({
+		baseURL: baseUrl,
+		timeout: 60000, // Adjust timeout as needed
+		headers: {
+			"Content-Type": "application/json",
+			Authorization: accessToken,
+		},
+	});
 };
 
-export const fetchTTS = async (characterAi, voiceId, text) => {
-	return await characterAi.fetchTTS(parseInt(voiceId), text);
+export const checkServer = async (baseUrl, accessToken) => {
+	const client = axiosClient(baseUrl, accessToken);
+	const res = await client.get("/health");
+	if (res.status != 200) return false;
+	return true;
 };
 
-export const sendChat = async (chat, message, username) => {
+export const fetchVoices = async (baseUrl, accessToken) => {
+	const client = axiosClient(baseUrl, accessToken);
+	const res = await client.get("/voices");
+	if (res.status != 200) return null;
+	return res.data;
+};
+
+export const fetchTTS = async (baseUrl, accessToken, voiceId, text) => {
+	const client = axiosClient(baseUrl, accessToken);
+	const res = await client.post("/tts", {
+		voice_id: parseInt(voiceId),
+		text: text,
+	});
+	if (res.status != 200) return null;
+	return res.data;
+};
+
+export const sendChat = async (baseUrl, accessToken, characterId, message, username) => {
 	let text = `(OOC: This message was sent by ${username} - context is that multiple people are using you to chat in a chatroom using your API, just reply with {{""status"": ""OK""}} in OOC - if received correctly.) \n ${message}`;
-	const response = await chat.sendAndAwaitResponse(text, true);
-	return response.text;
+	const client = axiosClient(baseUrl, accessToken);
+	const res = await client.post("/chat", {
+		character_id: characterId,
+		text: text,
+	});
+	console.log(res);
+	if (res.status != 200) return null;
+	return res.data;
 };
 
 export const playTTS = (base64) => {
 	new Audio(`data:audio/wav;base64,${base64}`).play();
-};
-
-export const initChat = async (characterAi, characterId) => {
-	return await characterAi.createOrContinueChat(characterId);
 };

@@ -9,7 +9,7 @@ import { getUserInfo, getCustomRewards } from "../services/twitchApiService";
 import { setTwitchConfig, getItem } from "../services/config/configService";
 import { sendChat, fetchTTS } from "../services/cai/caiApiService";
 
-export const onTwitchAuth = async (socket, arg, expressApp, caiObject) => {
+export const onTwitchAuth = async (socket, arg, expressApp) => {
 	const { client_id, client_secret, trigger_word, listen_to_trigger_word } = arg;
 
 	await setTwitchConfig(client_id, client_secret, trigger_word, listen_to_trigger_word);
@@ -52,18 +52,26 @@ export const onTwitchAuth = async (socket, arg, expressApp, caiObject) => {
 	listenToRewardRedeem(pubSubConnection, async (rewardData) => {
 		const selectedRedeem = await getItem("twitch_selected_redeem");
 		const selectedVoice = await getItem("cai_selected_voice");
-		console.log(selectedVoice);
-		console.log(rewardData.data.redemption.reward.id);
+		const caiAccessToken = await getItem("cai_access_token");
+		const caiBaseUrl = await getItem("cai_base_url");
+		const caiCharacterId = await getItem("cai_character_id");
 		if (
 			selectedRedeem === rewardData.data.redemption.reward.id &&
 			rewardData.data.redemption.reward.is_user_input_required
 		) {
 			const chatResponse = await sendChat(
-				caiObject.caiChat,
+				caiBaseUrl,
+				caiAccessToken,
+				caiCharacterId,
 				rewardData.data.user_input,
 				rewardData.data.redemption.user.display_name
 			);
-			const audioBase64 = await fetchTTS(caiObject.cai, selectedVoice, chatResponse);
+			const audioBase64 = await fetchTTS(
+				caiBaseUrl,
+				caiAccessToken,
+				selectedVoice,
+				chatResponse
+			);
 
 			socket.emit("caiMessage", {
 				audio: audioBase64,

@@ -4,9 +4,6 @@ import { startSocketServer } from "./backend/websocket/socketServer";
 import { initStorage } from "./backend/services/config/configService";
 import express from "express";
 import { createServer } from "node:http";
-import { install, Browser, BrowserPlatform } from "@puppeteer/browsers";
-import fs from "fs";
-import decompress from "decompress";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
@@ -26,25 +23,6 @@ startSocketServer(server, expressApp);
 // Initiate storage
 initStorage();
 
-async function installChrome() {
-	const buildId = "1000027";
-	await install({
-		cacheDir: "chrome-cache/",
-		unpack: false,
-		browser: Browser.CHROMIUM,
-		platform: BrowserPlatform.WIN64,
-		buildId,
-	});
-	await decompress("chrome-cache/chromium/1000027-chrome-win.zip", ".")
-		.then(() => {
-			console.log("Unzipped");
-			fs.rmSync("chrome-cache", { recursive: true, force: true });
-		})
-		.catch((error) => {
-			console.log(error);
-		});
-}
-
 const createWindow = async () => {
 	// Create the browser window.
 	const mainWindow = new BrowserWindow({
@@ -63,8 +41,6 @@ const createWindow = async () => {
 			path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`)
 		);
 	}
-
-	await installChrome();
 
 	// Open the DevTools.
 	mainWindow.webContents.openDevTools();

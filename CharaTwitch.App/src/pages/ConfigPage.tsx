@@ -14,6 +14,7 @@ import { ConfigContextType } from "../types/ConfigContextType";
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ConfigPageProps {}
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ConfigPageComponent = (props: ConfigPageProps) => {
 	const { socket } = useContext(SocketContext) as SocketContextType;
 	const { twitchCustomRedeems, caiVoices } = useContext(HomeContext) as HomeContextType;
@@ -34,6 +35,8 @@ const ConfigPageComponent = (props: ConfigPageProps) => {
 		setCaiCharacterId,
 		caiSelectedVoice,
 		setCaiSelectedVoice,
+		caiBaseUrl,
+		setCaiBaseUrl,
 	} = useContext(ConfigContext) as ConfigContextType;
 
 	const handleTwitchClientSecretChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,6 +64,9 @@ const ConfigPageComponent = (props: ConfigPageProps) => {
 	const handleCaiCharacterId = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setCaiCharacterId(event.target.value);
 	};
+	const handleCaiBaseUrl = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setCaiBaseUrl(event.target.value);
+	};
 	const handleCaiSelectVoice = (event: React.ChangeEvent<HTMLSelectElement>) => {
 		const selectedVoice = event.target.value;
 		console.log(selectedVoice);
@@ -81,6 +87,7 @@ const ConfigPageComponent = (props: ConfigPageProps) => {
 		socket?.emit("caiAuth", {
 			access_token: caiAccessToken,
 			character_id: caiCharacterId,
+			base_url: caiBaseUrl,
 		});
 	};
 
@@ -163,6 +170,16 @@ const ConfigPageComponent = (props: ConfigPageProps) => {
 						<Form.Control
 							value={caiCharacterId}
 							onChange={handleCaiCharacterId}
+							placeholder="Username"
+							aria-label="Username"
+							aria-describedby="cai-character-id"
+						/>
+					</InputGroup>
+					<InputGroup className="mb-3">
+						<InputGroup.Text id="cai-base-url">Server</InputGroup.Text>
+						<Form.Control
+							value={caiBaseUrl}
+							onChange={handleCaiBaseUrl}
 							placeholder="Username"
 							aria-label="Username"
 							aria-describedby="cai-character-id"

@@ -15,4 +15,6 @@ export type ConfigContextType = {
 	setCaiCharacterId: React.Dispatch<React.SetStateAction<string>>;
 	caiSelectedVoice: number;
 	setCaiSelectedVoice: React.Dispatch<React.SetStateAction<number>>;
+	caiBaseUrl: string;
+	setCaiBaseUrl: React.Dispatch<React.SetStateAction<string>>;
 };

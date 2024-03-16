@@ -53,10 +53,10 @@ export const getTwitchConfig = async () => {
 	return await initializeConfig(configObject);
 };
 
-export const setCaiConfig = async (accessToken, characterId, usePlus) => {
+export const setCaiConfig = async (accessToken, characterId, baseUrl) => {
 	await _setItem("cai_access_token", accessToken);
 	await _setItem("cai_character_id", characterId);
-	await _setItem("cai_use_plus", usePlus);
+	await _setItem("cai_base_url", baseUrl);
 };
 
 export const getCaiConfig = async () => {
@@ -65,6 +65,7 @@ export const getCaiConfig = async () => {
 		character_id: await _getItem("cai_character_id"),
 		use_plus: await _getItem("cai_use_plus"),
 		selected_voice: await _getItem("cai_selected_voice"),
+		base_url: await _getItem("cai_base_url"),
 	};
 	return await initializeConfig(configObject);
 };
