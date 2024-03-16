@@ -17,6 +17,8 @@ Few things to note:
 
 ## Setup
 
+This requires you to setup your own Character AI service with a REST API. More information on this coming.
+
 Download the provided app.zip from [Releases](https://github.com/sivertheisholt/CharaTwitch/releases) and extract it. Run src.exe to start the program.
 
 You will need to input a bit of information from both Twitch and Character AI.
