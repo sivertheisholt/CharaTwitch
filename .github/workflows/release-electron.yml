@@ -32,4 +32,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: electron-artifacts
-          path: ./CharaTwitch.App/out/
+          path: ./CharaTwitch.App/out/make/squirrel.windows/x64/
