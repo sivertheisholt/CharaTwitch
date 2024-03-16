@@ -4,7 +4,6 @@ import { setCaiConfig } from "../services/config/configService";
 export const onCaiAuth = async (socket, arg) => {
 	const { access_token, character_id, base_url } = arg;
 	await setCaiConfig(access_token, character_id, base_url);
-	console.log(base_url);
 	const res = await checkServer(base_url, access_token);
 	if (!res) return socket.emit("caiAuthCb", null);
 

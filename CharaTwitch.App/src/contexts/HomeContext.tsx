@@ -20,18 +20,15 @@ const HomeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 	useEffect(() => {
 		if (socket !== null) {
 			const twitchAuthCbListener = (arg: any) => {
-				console.log(arg.custom_redeems);
 				setTwitchAccountStatus(true);
 				setTwitchCustomRedeems(arg.custom_redeems);
 			};
 			const twitchMessageListener = (arg: any) => {
-				console.log(arg);
 				const tempArray = [...twitchMessages];
 				tempArray.unshift({ username: arg.username, message: arg.message });
 				setTwitchMessages(tempArray);
 			};
 			const twitchRedeemListener = (arg: any) => {
-				console.log(arg);
 				const tempArray = [...twitchRedeems];
 				tempArray.unshift({ username: arg.username, reward: arg.reward });
 				setTwitchRedeems(tempArray);
@@ -46,11 +43,9 @@ const HomeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 				setCaiAccountStatus(arg as boolean);
 			};
 			const caiAuthCbListener = (arg: any) => {
-				console.log(arg);
 				setCaiVoices(arg.voices);
 			};
 			const caiMessageListener = (arg: any) => {
-				console.log(arg);
 				const tempArray = [...caiMessages];
 				tempArray.unshift(arg.message);
 				setCaiMessages(tempArray);
@@ -65,7 +60,6 @@ const HomeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 			socket.on("caiMessage", caiMessageListener);
 			socket.on("caiAccountStatus", caiAccountStatusListener);
 			socket.on("caiAuthCb", caiAuthCbListener);
-			socket.on("caiMessage", caiMessageListener);
 
 			return () => {
 				// Clean up event listeners when component unmounts

@@ -69,7 +69,6 @@ const ConfigPageComponent = (props: ConfigPageProps) => {
 	};
 	const handleCaiSelectVoice = (event: React.ChangeEvent<HTMLSelectElement>) => {
 		const selectedVoice = event.target.value;
-		console.log(selectedVoice);
 		socket?.emit("caiSelectVoice", selectedVoice);
 		setCaiSelectedVoice(parseInt(selectedVoice));
 	};

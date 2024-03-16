@@ -22,7 +22,7 @@ const StatusCardComponent = ({
 					marginRight: "auto",
 				}}
 				variant="top"
-				src={`/images/${pngName}`}
+				src={`images/${pngName}`}
 			/>
 			<Card.Body>
 				<Card.Title style={{ fontSize: "16px" }}>{title}</Card.Title>

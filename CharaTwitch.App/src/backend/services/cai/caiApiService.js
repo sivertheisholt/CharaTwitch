@@ -3,7 +3,7 @@ import axios from "axios";
 const axiosClient = (baseUrl, accessToken) => {
 	return axios.create({
 		baseURL: baseUrl,
-		timeout: 60000, // Adjust timeout as needed
+		timeout: 60000,
 		headers: {
 			"Content-Type": "application/json",
 			Authorization: accessToken,
@@ -42,7 +42,6 @@ export const sendChat = async (baseUrl, accessToken, characterId, message, usern
 		character_id: characterId,
 		text: text,
 	});
-	console.log(res);
 	if (res.status != 200) return null;
 	return res.data;
 };
