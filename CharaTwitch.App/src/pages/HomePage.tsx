@@ -6,10 +6,13 @@ import Alert from "react-bootstrap/esm/Alert";
 import { v4 as uuidv4 } from "uuid";
 import { HomeContext } from "../contexts/HomeContext";
 import { HomeContextType } from "../types/HomeContextType";
+import RingLoader from "react-spinners/RingLoader";
+import { CustomScroll } from "react-custom-scroll";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface HomePageProps {}
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const HomePageComponent = (props: HomePageProps) => {
 	const {
 		twitchMessages,
@@ -19,7 +22,9 @@ const HomePageComponent = (props: HomePageProps) => {
 		twitchAccountStatus,
 		caiAccountStatus,
 		caiMessages,
+		caiProcessing,
 	} = useContext(HomeContext) as HomeContextType;
+
 	return (
 		<>
 			<Row style={{ height: "20%" }}>
@@ -60,14 +65,16 @@ const HomePageComponent = (props: HomePageProps) => {
 				</Col>
 			</Row>
 			<Row style={{ height: "40%" }}>
-				<Col style={{ height: "100%", overflowY: "auto" }}>
+				<Col style={{ height: "100%", width: "50%" }}>
 					<h1>Twitch chat</h1>
 					<hr className="hr" />
-					{twitchMessages.map((twitch) => (
-						<Alert key={uuidv4()} variant={"primary"}>
-							{twitch.username}: {twitch.message}
-						</Alert>
-					))}
+					<CustomScroll heightRelativeToParent="calc(100% - 85px)">
+						{twitchMessages.map((twitch) => (
+							<Alert key={uuidv4()} variant={"primary"}>
+								{twitch.username}: {twitch.message}
+							</Alert>
+						))}
+					</CustomScroll>
 				</Col>
 				<Col md="auto">
 					<div style={{ height: "100%" }} className="vr"></div>
@@ -75,30 +82,44 @@ const HomePageComponent = (props: HomePageProps) => {
 				<Col style={{ height: "100%", overflowY: "auto" }}>
 					<h1>Twitch Redeems</h1>
 					<hr className="hr" />
-					{twitchRedeems.map((redeem) => (
-						<Alert key={uuidv4()} variant={"primary"}>
-							{redeem.username}: {redeem.reward}
-						</Alert>
-					))}
+					<CustomScroll heightRelativeToParent="calc(100% - 85px)">
+						{twitchRedeems.map((redeem) => (
+							<Alert key={uuidv4()} variant={"primary"}>
+								{redeem.username}: {redeem.reward}
+							</Alert>
+						))}
+					</CustomScroll>
 				</Col>
 			</Row>
 			<Row style={{ height: "40%" }}>
-				<Col style={{ height: "100%", overflowY: "auto" }}>
+				<Col style={{ height: "100%" }}>
 					<h1>Character AI</h1>
 					<hr className="hr" />
-					{caiMessages.map((message) => (
-						<Alert key={uuidv4()} variant={"primary"}>
-							{message}
-						</Alert>
-					))}
+					<CustomScroll heightRelativeToParent="calc(100% - 85px)">
+						{caiMessages.map((message) => (
+							<Alert key={uuidv4()} variant={"primary"}>
+								{message}
+							</Alert>
+						))}
+					</CustomScroll>
 				</Col>
 				<Col md="auto">
 					<div style={{ height: "100%" }} className="vr"></div>
 				</Col>
-				<Col>
+				<Col style={{ height: "100%" }}>
 					<h1>Status</h1>
 					<hr className="hr" />
-					<h1>Processing request...</h1>
+					<div
+						style={{ height: "calc(100% - 71px)" }}
+						className="d-flex justify-content-center align-items-center"
+					>
+						<RingLoader
+							color="#36d7b7"
+							loading={caiProcessing}
+							size={200}
+							aria-label="Loading Spinner"
+						/>
+					</div>
 				</Col>
 			</Row>
 		</>

@@ -3,10 +3,6 @@ export type ConfigContextType = {
 	setTwitchClientSecret: React.Dispatch<React.SetStateAction<string>>;
 	twitchClientId: string;
 	setTwitchClientId: React.Dispatch<React.SetStateAction<string>>;
-	twitchTriggerWord: string;
-	setTwitchtriggerWord: React.Dispatch<React.SetStateAction<string>>;
-	twitchListenToTriggerWord: boolean;
-	setTwitchListenToTriggerWord: React.Dispatch<React.SetStateAction<boolean>>;
 	twitchSelectedRedeem: string;
 	setTwitchSelectedRedeem: React.Dispatch<React.SetStateAction<string>>;
 	caiAccessToken: string;

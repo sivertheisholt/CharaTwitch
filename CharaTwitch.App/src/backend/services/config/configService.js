@@ -30,23 +30,15 @@ export const getItem = async (key) => {
 	return await _getItem(key);
 };
 
-export const setTwitchConfig = async (
-	clientId,
-	clientSecret,
-	triggerWord,
-	listenToTriggerWord
-) => {
+export const setTwitchConfig = async (clientId, clientSecret) => {
 	await _setItem("twitch_client_id", clientId);
 	await _setItem("twitch_client_secret", clientSecret);
-	await _setItem("twitch_trigger_word", triggerWord);
-	await _setItem("twitch_listen_to_trigger_word", listenToTriggerWord);
 };
 
 export const getTwitchConfig = async () => {
 	const configObject = {
 		client_id: await _getItem("twitch_client_id"),
 		client_secret: await _getItem("twitch_client_secret"),
-		trigger_word: await _getItem("twitch_trigger_word"),
 		listen_to_trigger_word: await _getItem("twitch_listen_to_trigger_word"),
 		selected_redeem: await _getItem("twitch_selected_redeem"),
 	};

@@ -10,7 +10,7 @@ const NavBarComponent = (props: NavBarProps) => {
 	return (
 		<Navbar expand="lg" data-bs-theme="dark" className="bg-body-tertiary">
 			<Container>
-				<Navbar.Brand href="#home">CharaTwitch</Navbar.Brand>
+				<Navbar.Brand>CharaTwitch</Navbar.Brand>
 				<Navbar.Toggle aria-controls="basic-navbar-nav" />
 				<Navbar.Collapse id="basic-navbar-nav">
 					<Nav className="me-auto">

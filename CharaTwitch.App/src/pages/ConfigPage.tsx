@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import Button from "react-bootstrap/esm/Button";
 import Col from "react-bootstrap/esm/Col";
 import Form from "react-bootstrap/esm/Form";
@@ -10,23 +10,23 @@ import { HomeContext } from "../contexts/HomeContext";
 import { HomeContextType } from "../types/HomeContextType";
 import { ConfigContext } from "../contexts/ConfigContext";
 import { ConfigContextType } from "../types/ConfigContextType";
+import Alert from "react-bootstrap/esm/Alert";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ConfigPageProps {}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ConfigPageComponent = (props: ConfigPageProps) => {
+	const [connectingTwitch, setConnectingTwitch] = useState(false);
+	const [connectingCai, setConnectingCai] = useState(false);
 	const { socket } = useContext(SocketContext) as SocketContextType;
-	const { twitchCustomRedeems, caiVoices } = useContext(HomeContext) as HomeContextType;
+	const { twitchCustomRedeems, caiVoices, caiAccountStatus, twitchAccountStatus } =
+		useContext(HomeContext) as HomeContextType;
 	const {
 		twitchClientSecret,
 		setTwitchClientSecret,
 		twitchClientId,
 		setTwitchClientId,
-		twitchTriggerWord,
-		setTwitchtriggerWord,
-		twitchListenToTriggerWord,
-		setTwitchListenToTriggerWord,
 		twitchSelectedRedeem,
 		setTwitchSelectedRedeem,
 		caiAccessToken,
@@ -44,14 +44,6 @@ const ConfigPageComponent = (props: ConfigPageProps) => {
 	};
 	const handleTwitchClientIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setTwitchClientId(event.target.value);
-	};
-	const handleTwitchTriggerWordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setTwitchtriggerWord(event.target.value);
-	};
-	const handleTwitchListenToTriggerWord = (
-		event: React.ChangeEvent<HTMLInputElement>
-	) => {
-		setTwitchListenToTriggerWord(event.target.checked);
 	};
 	const handleTwitchSelectRedeem = (event: React.ChangeEvent<HTMLSelectElement>) => {
 		const selectedRedeem = event.target.value;
@@ -74,15 +66,15 @@ const ConfigPageComponent = (props: ConfigPageProps) => {
 	};
 
 	const authTwitch = () => {
+		setConnectingTwitch(true);
 		socket?.emit("twitchAuth", {
 			client_secret: twitchClientSecret,
 			client_id: twitchClientId,
-			trigger_word: twitchTriggerWord,
-			listen_to_trigger_word: twitchListenToTriggerWord,
 		});
 	};
 
 	const authCai = () => {
+		setConnectingCai(true);
 		socket?.emit("caiAuth", {
 			access_token: caiAccessToken,
 			character_id: caiCharacterId,
@@ -96,17 +88,22 @@ const ConfigPageComponent = (props: ConfigPageProps) => {
 				<Col>
 					<h1>Twitch config</h1>
 					<hr className="hr" />
+					<label className="fs-4">
+						<strong>Client Secret</strong>
+					</label>
 					<InputGroup size="lg" className="mb-3">
-						<InputGroup.Text id="twitch-client-secret">Client secret</InputGroup.Text>
 						<Form.Control
+							type="password"
 							value={twitchClientSecret}
 							onChange={handleTwitchClientSecretChange}
 							aria-label="Small"
 							aria-describedby="twitch-client-secret"
 						/>
 					</InputGroup>
+					<label className="fs-4">
+						<strong>Client ID</strong>
+					</label>
 					<InputGroup size="lg" className="mb-3">
-						<InputGroup.Text id="twitch-client-id">Client id</InputGroup.Text>
 						<Form.Control
 							value={twitchClientId}
 							onChange={handleTwitchClientIdChange}
@@ -114,24 +111,11 @@ const ConfigPageComponent = (props: ConfigPageProps) => {
 							aria-describedby="twitch-client-secret"
 						/>
 					</InputGroup>
-					<InputGroup size="lg" className="mb-3">
-						<InputGroup.Text id="twitch-trigger-word">Trigger word</InputGroup.Text>
-						<Form.Control
-							value={twitchTriggerWord}
-							onChange={handleTwitchTriggerWordChange}
-							aria-label="Small"
-							aria-describedby="twitch-trigger-word"
-						/>
-					</InputGroup>
-
-					<Form.Check
-						checked={twitchListenToTriggerWord}
-						onChange={handleTwitchListenToTriggerWord}
-						type="switch"
-						id="custom-switch"
-						label="Listen to trigger word"
-					/>
+					<label className="fs-4">
+						<strong>Redeems</strong>
+					</label>
 					<Form.Select
+						size="lg"
 						onChange={handleTwitchSelectRedeem}
 						value={twitchSelectedRedeem}
 						aria-label="Default select example"
@@ -142,10 +126,16 @@ const ConfigPageComponent = (props: ConfigPageProps) => {
 							</option>
 						))}
 					</Form.Select>
-					<div className="d-grid gap-2">
-						<Button onClick={authTwitch} variant="primary" size="lg">
-							Connect
-						</Button>
+					<div className="d-grid gap-2 mt-4">
+						{twitchAccountStatus ? (
+							<Alert variant={"success"}>Connected</Alert>
+						) : connectingTwitch ? (
+							<Alert variant={"warning"}>Connecting...</Alert>
+						) : (
+							<Button onClick={authTwitch} variant="primary" size="lg">
+								Connect
+							</Button>
+						)}
 					</div>
 				</Col>
 				<Col md="auto">
@@ -154,9 +144,12 @@ const ConfigPageComponent = (props: ConfigPageProps) => {
 				<Col>
 					<h1>CAI config</h1>
 					<hr className="hr" />
-					<InputGroup className="mb-3">
-						<InputGroup.Text id="cai-access-token">Access token</InputGroup.Text>
+					<label className="fs-4">
+						<strong>Access Token</strong>
+					</label>
+					<InputGroup className="mb-3" size="lg">
 						<Form.Control
+							type="password"
 							value={caiAccessToken}
 							onChange={handleCaiAccessToken}
 							placeholder="Username"
@@ -164,8 +157,10 @@ const ConfigPageComponent = (props: ConfigPageProps) => {
 							aria-describedby="cai-access-token"
 						/>
 					</InputGroup>
-					<InputGroup className="mb-3">
-						<InputGroup.Text id="cai-character-id">Character ID</InputGroup.Text>
+					<label className="fs-4">
+						<strong>Character ID</strong>
+					</label>
+					<InputGroup className="mb-3" size="lg">
 						<Form.Control
 							value={caiCharacterId}
 							onChange={handleCaiCharacterId}
@@ -174,8 +169,10 @@ const ConfigPageComponent = (props: ConfigPageProps) => {
 							aria-describedby="cai-character-id"
 						/>
 					</InputGroup>
-					<InputGroup className="mb-3">
-						<InputGroup.Text id="cai-base-url">Server</InputGroup.Text>
+					<label className="fs-4">
+						<strong>Server</strong>
+					</label>
+					<InputGroup className="mb-3" size="lg">
 						<Form.Control
 							value={caiBaseUrl}
 							onChange={handleCaiBaseUrl}
@@ -184,7 +181,11 @@ const ConfigPageComponent = (props: ConfigPageProps) => {
 							aria-describedby="cai-character-id"
 						/>
 					</InputGroup>
+					<label className="fs-4">
+						<strong>Voices</strong>
+					</label>
 					<Form.Select
+						size="lg"
 						onChange={handleCaiSelectVoice}
 						value={caiSelectedVoice}
 						aria-label="Default select example"
@@ -195,10 +196,16 @@ const ConfigPageComponent = (props: ConfigPageProps) => {
 							</option>
 						))}
 					</Form.Select>
-					<div className="d-grid gap-2">
-						<Button onClick={authCai} variant="primary" size="lg">
-							Connect
-						</Button>
+					<div className="d-grid gap-2 mt-4">
+						{caiAccountStatus ? (
+							<Alert variant={"success"}>Connected</Alert>
+						) : connectingCai ? (
+							<Alert variant={"warning"}>Connecting...</Alert>
+						) : (
+							<Button onClick={authCai} variant="primary" size="lg">
+								Connect
+							</Button>
+						)}
 					</div>
 				</Col>
 			</Row>

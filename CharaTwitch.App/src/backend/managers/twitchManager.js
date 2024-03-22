@@ -1,5 +1,5 @@
 import { authTwitch } from "../services/twitchAuthService";
-import { connectToTwitchIrc } from "../services/twitchIrcService";
+import { TwitchIrc } from "../services/twitchIrcService";
 import {
 	connectToTwitchPubSub,
 	subscribeToChannelPoints,
@@ -23,7 +23,7 @@ export const onTwitchAuth = async (socket, arg, expressApp) => {
 	const customRedeems = await getCustomRewards(sub, client_id, access_token);
 	if (customRedeems == null) return socket.emit("twitchAuthCb", null);
 
-	connectToTwitchIrc(
+	const twitchIrc = new TwitchIrc(
 		access_token,
 		preferred_username,
 		() => {
@@ -40,12 +40,15 @@ export const onTwitchAuth = async (socket, arg, expressApp) => {
 		}
 	);
 
+	twitchIrc.connectToTwitchIrc();
+
 	const pubSubConnection = await connectToTwitchPubSub();
 	const subResult = await subscribeToChannelPoints(
 		pubSubConnection,
 		access_token,
 		"228957703"
 	);
+
 	if (subResult) socket.emit("twitchPubSub", true);
 	else socket.emit("twitchPubSub", false);
 
@@ -59,11 +62,16 @@ export const onTwitchAuth = async (socket, arg, expressApp) => {
 			selectedRedeem === rewardData.data.redemption.reward.id &&
 			rewardData.data.redemption.reward.is_user_input_required
 		) {
+			socket.emit("twitchRedeem", {
+				username: rewardData.data.redemption.user.display_name,
+				reward: rewardData.data.redemption.reward.title,
+			});
+
 			const chatResponse = await sendChat(
 				caiBaseUrl,
 				caiAccessToken,
 				caiCharacterId,
-				rewardData.data.user_input,
+				rewardData.data.redemption.user_input,
 				rewardData.data.redemption.user.display_name
 			);
 			const audioBase64 = await fetchTTS(
@@ -77,12 +85,9 @@ export const onTwitchAuth = async (socket, arg, expressApp) => {
 				audio: audioBase64,
 				message: chatResponse,
 			});
-		}
 
-		socket.emit("twitchRedeem", {
-			username: rewardData.data.redemption.user.display_name,
-			reward: rewardData.data.redemption.reward.title,
-		});
+			twitchIrc.sendMessage(chatResponse);
+		}
 	});
 
 	socket.emit("twitchAuthCb", {

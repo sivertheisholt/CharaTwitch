@@ -16,6 +16,7 @@ const HomeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 	const [caiAccountStatus, setCaiAccountStatus] = useState(false);
 	const [caiVoices, setCaiVoices] = useState<Array<any>>([]);
 	const [caiMessages, setCaiMessages] = useState<Array<string>>([]);
+	const [caiProcessing, setCaiProcessing] = useState(false);
 
 	useEffect(() => {
 		if (socket !== null) {
@@ -32,6 +33,7 @@ const HomeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 				const tempArray = [...twitchRedeems];
 				tempArray.unshift({ username: arg.username, reward: arg.reward });
 				setTwitchRedeems(tempArray);
+				setCaiProcessing(true);
 			};
 			const twitchIrcListener = (arg: any) => {
 				setTwitchIrcStatus(arg as boolean);
@@ -49,6 +51,7 @@ const HomeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 				const tempArray = [...caiMessages];
 				tempArray.unshift(arg.message);
 				setCaiMessages(tempArray);
+				setCaiProcessing(false);
 				new Audio(`data:audio/wav;base64,${arg.audio}`).play();
 			};
 
@@ -71,7 +74,6 @@ const HomeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 				socket.off("caiMessage", caiMessageListener);
 				socket.off("caiAccountStatus", caiAccountStatusListener);
 				socket.off("caiAuthCb", caiAuthCbListener);
-				socket.off("caiMessage", caiMessageListener);
 			};
 		}
 	}, [caiMessages, socket, twitchMessages, twitchRedeems]);
@@ -97,6 +99,7 @@ const HomeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 				setCaiVoices,
 				caiMessages,
 				setCaiMessages,
+				caiProcessing,
 			}}
 		>
 			{children}

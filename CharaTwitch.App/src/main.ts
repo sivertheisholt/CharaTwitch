@@ -42,6 +42,8 @@ const createWindow = async () => {
 		);
 	}
 
+	mainWindow.removeMenu();
+
 	// Open the DevTools.
 	mainWindow.webContents.openDevTools();
 };
