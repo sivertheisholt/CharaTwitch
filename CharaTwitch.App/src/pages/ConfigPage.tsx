@@ -96,7 +96,8 @@ const ConfigPageComponent = (props: ConfigPageProps) => {
 							type="password"
 							value={twitchClientSecret}
 							onChange={handleTwitchClientSecretChange}
-							aria-label="Small"
+							placeholder="Client Secret"
+							aria-label="Client Secret"
 							aria-describedby="twitch-client-secret"
 						/>
 					</InputGroup>
@@ -107,7 +108,8 @@ const ConfigPageComponent = (props: ConfigPageProps) => {
 						<Form.Control
 							value={twitchClientId}
 							onChange={handleTwitchClientIdChange}
-							aria-label="Small"
+							placeholder="Client ID"
+							aria-label="Client ID"
 							aria-describedby="twitch-client-secret"
 						/>
 					</InputGroup>
@@ -152,8 +154,8 @@ const ConfigPageComponent = (props: ConfigPageProps) => {
 							type="password"
 							value={caiAccessToken}
 							onChange={handleCaiAccessToken}
-							placeholder="Username"
-							aria-label="Username"
+							placeholder="Access Token"
+							aria-label="Access Token"
 							aria-describedby="cai-access-token"
 						/>
 					</InputGroup>
@@ -164,8 +166,8 @@ const ConfigPageComponent = (props: ConfigPageProps) => {
 						<Form.Control
 							value={caiCharacterId}
 							onChange={handleCaiCharacterId}
-							placeholder="Username"
-							aria-label="Username"
+							placeholder="Character ID"
+							aria-label="Character ID"
 							aria-describedby="cai-character-id"
 						/>
 					</InputGroup>
@@ -176,8 +178,8 @@ const ConfigPageComponent = (props: ConfigPageProps) => {
 						<Form.Control
 							value={caiBaseUrl}
 							onChange={handleCaiBaseUrl}
-							placeholder="Username"
-							aria-label="Username"
+							placeholder="Server"
+							aria-label="Server"
 							aria-describedby="cai-character-id"
 						/>
 					</InputGroup>

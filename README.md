@@ -1,25 +1,26 @@
 # CharaTwitch
 
 Welcome to CharaTwitch! This project is still in EARLY DEVELOPMENT! But you are free to try it out if you wish.
-CharacTwitch is a way to integrate Character AI into your stream. By connecting your twitch and Character AI Account you can listen to chat and make your character respond by talking.
+CharacTwitch is a way to integrate Character AI into your stream. By connecting your Twitch and Character AI Account you can listen to redeems and make your character respond by talking.
 
 Few things to note:
 
 - This is more of a demo to see whats possible with LLM (Large Language Model)
-- Currently "untested" in production as I don't have a twitch with channel points unfortunately.
+- Currently "untested" in production as I don't have a twitch with channel points.
 - Don't expect a full application without bugs and perfect user experience.
 - Will only work if you have rewards enabled on your twitch channel!
-- If people like it, I might work on a better solution.
-- I do not have access to anything you input into the program, just don't share the files with others as it does contain the config settings.
+- If people like it, I might continue working on the project.
 - I cannot promise it works without CAI+ as their service is very buggy.
 
-![Imgur](https://i.imgur.com/fwAsbyP.png)
+### ⚠️ WARNING: DO NOT share the application folder with anyone you do not trust or if you do not know what you're doing.
+
+![Imgur](https://imgur.com/a/XnuUxBH)
 
 ## Setup
 
-This requires you to setup your own Character AI service with a REST API. More information on this coming.
+NB: You are required to setup your own Character AI service with a REST API. I might find a better solution for this in the future.
 
-Download the provided app.zip from [Releases](https://github.com/sivertheisholt/CharaTwitch/releases) and extract it. Run src.exe to start the program.
+Download the provided app.zip from [Releases](https://github.com/sivertheisholt/CharaTwitch/releases) and extract it. Run the exe to start the program.
 
 You will need to input a bit of information from both Twitch and Character AI.
 
@@ -31,7 +32,7 @@ Redirect URI should be: http://localhost:8001/twitch
 
 Once you have created a new application you wanna make a note of the following: Client Secret & Client Id
 
-Once you have entered all the information you can simply click Connect Twitch and log in with you're twitch account.
+Once you have entered all the information you can simply click connect and log in with you're twitch account.
 
 ### Character AI
 
@@ -40,8 +41,11 @@ From Character AI you will need to get the access token and character id.
 To get it, you can open your browser, go to the [Character.AI website](https://character.ai) in `localStorage`.
 
 ---
-### ⚠️ WARNING: DO NOT share your session token to anyone you do not trust or if you do not know what you're doing. 
+
+### ⚠️ WARNING: DO NOT share your session token to anyone you do not trust or if you do not know what you're doing.
+
 #### _Anyone with your session token could have access to your account without your consent. Do this at your own risk._
+
 ---
 
 1. Open the Character.AI website in your browser (https://beta.character.ai)
@@ -62,6 +66,4 @@ For example, if you go to the chat page of the character `Test Character` you wi
 The last part of the URL is the character ID:
 ![Character_ID](https://i.imgur.com/nd86fN4.png)
 
-#### Connect
-
-Once you have entered all the information you can simply click Connect Character.AI. Sometimes this will hang and get stuck, unfortunately the only solution is to simply restart the application and try again for now.
+Once you have entered all the information you can simply click connect Character.AI.
