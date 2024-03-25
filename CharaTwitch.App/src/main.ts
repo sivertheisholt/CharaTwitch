@@ -26,8 +26,8 @@ initStorage();
 const createWindow = async () => {
 	// Create the browser window.
 	const mainWindow = new BrowserWindow({
-		height: 1200,
-		width: 1100,
+		height: 1000,
+		width: 1000,
 		webPreferences: {
 			preload: path.join(__dirname, "preload.js"),
 		},
@@ -44,8 +44,9 @@ const createWindow = async () => {
 
 	mainWindow.removeMenu();
 
-	// Open the DevTools.
-	mainWindow.webContents.openDevTools();
+	if (process.env.NODE_ENV === "development") {
+		mainWindow.webContents.openDevTools();
+	}
 };
 
 // This method will be called when Electron has finished
