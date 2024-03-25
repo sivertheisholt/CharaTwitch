@@ -32,14 +32,16 @@ jobs:
         id: version
         run: echo "::set-output name=version::$(jq -r .version CharaTwitch.App/package.json)"
 
-      - name: Tar output
-        run: |
-          cd ./CharaTwitch.App/out/make/squirrel.windows/x64/
-          zip -r ../CharaTwitch.zip .
+      - name: Archive Release
+        uses: thedoctor0/zip-release@0.7.5
+        with:
+          path: "./CharaTwitch.App/out/make/squirrel.windows/x64/"
+          type: "zip"
+          filename: "CharaTwitch.zip"
 
       - uses: ncipollo/release-action@v1
         with:
-          artifacts: ./CharaTwitch.App/out/make/squirrel.windows/CharaTwitch.zip
+          artifacts: CharaTwitch.zip
           body: "release"
           tag: ${{ steps.version.outputs.version }}
           generateReleaseNotes: true
