@@ -32,8 +32,9 @@ jobs:
         id: version
         run: echo "::set-output name=version::$(jq -r .version CharaTwitch.App/package.json)"
 
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
+      - uses: ncipollo/release-action@v1
         with:
-          name: electron-artifacts
-          path: ./CharaTwitch.App/out/make/squirrel.windows/x64/
+          artifacts: ./CharaTwitch.App/out/make/squirrel.windows/x64/
+          body: "release"
+          tag: ${{ steps.version.outputs.version }}
+          generateReleaseNotes: true

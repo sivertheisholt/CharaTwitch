@@ -27,41 +27,33 @@ const HomePageComponent = (props: HomePageProps) => {
 
 	return (
 		<>
-			<Row style={{ height: "20%" }}>
+			<Row
+				className=" justify-content-center align-items-center"
+				style={{ height: "20%" }}
+			>
 				<Col>
-					<Row
-						className=" justify-content-center align-items-center"
-						style={{ flexWrap: "nowrap", height: "100%" }}
-					>
-						<Col>
-							<StatusCard
-								active={twitchAccountStatus}
-								title="Twitch Account"
-								pngName="twitch-logo.png"
-							/>
-						</Col>
-						<Col>
-							<StatusCard
-								active={twitchIrcStatus}
-								title="Twitch IRC"
-								pngName="twitch-logo.png"
-							/>
-						</Col>
-						<Col>
-							<StatusCard
-								active={twitchPubSubStatus}
-								title="Twitch Redeems"
-								pngName="twitch-logo.png"
-							/>
-						</Col>
-						<Col>
-							<StatusCard
-								active={caiAccountStatus}
-								title="Character AI"
-								pngName="cai.ico"
-							/>
-						</Col>
-					</Row>
+					<StatusCard
+						active={twitchAccountStatus}
+						title="Twitch Account"
+						pngName="twitch-logo.png"
+					/>
+				</Col>
+				<Col>
+					<StatusCard
+						active={twitchIrcStatus}
+						title="Twitch IRC"
+						pngName="twitch-logo.png"
+					/>
+				</Col>
+				<Col>
+					<StatusCard
+						active={twitchPubSubStatus}
+						title="Twitch Redeems"
+						pngName="twitch-logo.png"
+					/>
+				</Col>
+				<Col>
+					<StatusCard active={caiAccountStatus} title="Character AI" pngName="cai.ico" />
 				</Col>
 			</Row>
 			<Row style={{ height: "40%" }}>

@@ -27,7 +27,7 @@ const StatusCardComponent = ({
 			<Card.Body>
 				<Card.Title style={{ fontSize: "16px" }}>{title}</Card.Title>
 				<p>
-					Status:
+					Status:&nbsp;
 					<img
 						alt="Online/Offline"
 						style={{ width: "25px", marginLeft: "auto", marginRight: "auto" }}
