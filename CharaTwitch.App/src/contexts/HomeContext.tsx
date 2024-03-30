@@ -52,7 +52,7 @@ const HomeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 				tempArray.unshift(arg.message);
 				setCaiMessages(tempArray);
 				setCaiProcessing(false);
-				if (arg.audio != null || arg.audio != undefined) {
+				if (arg.audio != null && arg.audio != undefined) {
 					new Audio(`data:audio/wav;base64,${arg.audio}`).play();
 				}
 			};
