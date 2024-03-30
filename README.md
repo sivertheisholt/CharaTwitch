@@ -14,7 +14,7 @@ Few things to note:
 
 ### ⚠️ WARNING: DO NOT share the application folder with anyone you do not trust or if you do not know what you're doing.
 
-![Imgur](https://imgur.com/a/XnuUxBH)
+![Imgur](https://imgur.com/IbzwPnz.png)
 
 ## Setup
 
