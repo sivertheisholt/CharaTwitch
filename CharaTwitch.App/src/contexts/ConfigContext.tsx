@@ -5,6 +5,7 @@ import { ConfigContextType } from "../types/ConfigContextType";
 
 // Create a context for the socket
 export const ConfigContext = createContext<ConfigContextType | null>(null);
+
 const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	const { socket } = useContext(SocketContext) as SocketContextType;
 	const [twitchClientSecret, setTwitchClientSecret] = useState<string>("");

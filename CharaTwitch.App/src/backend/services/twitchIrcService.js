@@ -15,7 +15,7 @@ export class TwitchIrc {
 	};
 
 	sendMessage = (message) => {
-		this.connection.sendUTF(`PRIVMSG ${message}`);
+		this.connection.sendUTF(`PRIVMSG #${this.username} :${message}`);
 	};
 
 	connectToTwitchIrc = () => {

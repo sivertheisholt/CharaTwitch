@@ -2,9 +2,11 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { HomeContextType } from "../types/HomeContextType";
 import { SocketContext } from "./SocketContext";
 import { SocketContextType } from "../types/SocketContextType";
+import { CustomRedeem } from "../types/twitch/CustomRedeem";
 
 // Create a context for the socket
 export const HomeContext = createContext<HomeContextType | null>(null);
+
 const HomeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	const { socket } = useContext(SocketContext) as SocketContextType;
 	const [twitchAccountStatus, setTwitchAccountStatus] = useState(false);
@@ -22,7 +24,10 @@ const HomeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 		if (socket !== null) {
 			const twitchAuthCbListener = (arg: any) => {
 				setTwitchAccountStatus(true);
-				setTwitchCustomRedeems(arg.custom_redeems);
+				const customRedeemsWithUserInput = arg.custom_redeems.filter(
+					(redeem: CustomRedeem) => redeem.is_user_input_required === true
+				);
+				setTwitchCustomRedeems(customRedeemsWithUserInput);
 			};
 			const twitchMessageListener = (arg: any) => {
 				const tempArray = [...twitchMessages];
@@ -52,7 +57,7 @@ const HomeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 				tempArray.unshift(arg.message);
 				setCaiMessages(tempArray);
 				setCaiProcessing(false);
-				if (arg.audio != null && arg.audio != undefined) {
+				if (arg.audio) {
 					new Audio(`data:audio/wav;base64,${arg.audio}`).play();
 				}
 			};
