@@ -34,7 +34,6 @@ export class ActionManager {
 	};
 	askQuestion = async (question: string) => {
 		await setItem("character_question", question);
-
 		if (isPlaying()) return;
 		start();
 

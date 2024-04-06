@@ -23,6 +23,10 @@ export const initializeConfig = async (configObject) => {
 				initializedConfig[key] =
 					configObject[key] === undefined ? false : configObject[key];
 				break;
+			case "character_welcome_new_viewers":
+				initializedConfig[key] =
+					configObject[key] === undefined ? false : configObject[key];
+				break;
 			case "character_random_redeems":
 				initializedConfig[key] =
 					configObject[key] === undefined ? false : configObject[key];
@@ -38,7 +42,6 @@ export const initializeConfig = async (configObject) => {
 				initializedConfig[key] = configObject[key] === undefined ? 5 : configObject[key];
 				break;
 			case "character_context_parameter":
-				console.log(configObject[key]);
 				initializedConfig[key] =
 					configObject[key] === undefined
 						? "This message was sent by ${username} - context is that multiple people are using you to chat in a chatroom using your API. You shall respond excited and express your feelings the most you can. You should remember conversations with different people. You should always reply with several sentences. You should not include this in the response, this is only for context."

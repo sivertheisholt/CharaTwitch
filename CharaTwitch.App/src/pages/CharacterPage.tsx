@@ -22,6 +22,7 @@ import {
 	CHARACTER_DO_INTRO,
 	CHARACTER_ASK_QUESTION,
 	CHARACTER_CONTEXT_PARAMETER,
+	CHARACTER_WELCOME_NEW_VIEWERS_CHANGE,
 } from "../Socket/Events";
 
 export interface CharacterPageProps {}
@@ -48,6 +49,8 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 		setCharacterRandomTalkingFrequency,
 		characterContextParameter,
 		setCharacterContextParameter,
+		characterWelcomeNewViewers,
+		setCharacterWelcomeNewViewers,
 	} = useContext(CharacterContext) as CharacterContextType;
 	const { socket } = useContext(SocketContext) as SocketContextType;
 
@@ -70,6 +73,11 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 		const checked = event.target.checked;
 		socket.emit(CHARACTER_WELCOME_RAIDERS_CHANGE, checked);
 		setCharacterWelcomeRaiders(checked);
+	};
+	const handleWelcomeNewViewersChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const checked = event.target.checked;
+		socket.emit(CHARACTER_WELCOME_NEW_VIEWERS_CHANGE, checked);
+		setCharacterWelcomeNewViewers(checked);
 	};
 	const handleRandomRedeemFrequencyChange = (value: number) => {
 		socket.emit(CHARACTER_RANDOM_REDEEMS_FREQUENCY_CHANGE, value);
@@ -240,6 +248,19 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 											<Form.Check
 												onChange={handleWelcomeRaidersChange}
 												checked={characterWelcomeRaiders}
+											/>
+										</InputGroup>
+									</Col>
+								</Row>
+								<Row>
+									<Col>
+										<label className="fs-6">
+											<strong>Welcome new viwers</strong>
+										</label>
+										<InputGroup data-bs-theme="light" className="mb-3" size="sm">
+											<Form.Check
+												onChange={handleWelcomeNewViewersChange}
+												checked={characterWelcomeNewViewers}
 											/>
 										</InputGroup>
 									</Col>

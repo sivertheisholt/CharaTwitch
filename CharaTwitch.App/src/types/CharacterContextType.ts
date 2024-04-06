@@ -19,4 +19,6 @@ export type CharacterContextType = {
 	setCharacterRandomTalkingFrequency: React.Dispatch<React.SetStateAction<number>>;
 	characterContextParameter: string;
 	setCharacterContextParameter: React.Dispatch<React.SetStateAction<string>>;
+	characterWelcomeNewViewers: boolean;
+	setCharacterWelcomeNewViewers: React.Dispatch<React.SetStateAction<boolean>>;
 };

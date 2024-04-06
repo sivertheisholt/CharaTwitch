@@ -17,6 +17,7 @@ import {
 	CHARACTER_RANDOM_TALKING_FREQUENCY_CHANGE,
 	CHARACTER_RANDOM_REDEEMS_FREQUENCY_CHANGE,
 	CHARACTER_CONFIG,
+	CHARACTER_WELCOME_NEW_VIEWERS_CHANGE,
 } from "../../Socket/Events";
 
 export const startSocketServer = (server: any, expressApp: Express) => {
@@ -87,6 +88,9 @@ export const startSocketServer = (server: any, expressApp: Express) => {
 		});
 		socket.on(CHARACTER_RANDOM_TALKING_FREQUENCY_CHANGE, async (arg) => {
 			await setItem("character_random_talking_frequency", arg);
+		});
+		socket.on(CHARACTER_WELCOME_NEW_VIEWERS_CHANGE, async (arg) => {
+			await setItem("character_welcome_new_viewers", arg);
 		});
 	});
 
