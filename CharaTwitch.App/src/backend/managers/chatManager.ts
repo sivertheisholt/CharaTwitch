@@ -2,6 +2,8 @@ import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { sendChat, fetchTTS } from "../services/cai/caiApiService";
 import { Socket } from "socket.io";
 import { TwitchIrcService } from "../services/twitch/twitchIrcService";
+import { getItem } from "../services/config/configService";
+import { isPlaying, start } from "./audioManager";
 
 export class ChatManager {
 	messages: Array<string>;
@@ -23,8 +25,13 @@ export class ChatManager {
 	greeting = () => {};
 	randomRedeem = () => {};
 	randomReply = async (username: string, message: string) => {
+		if (isPlaying()) return;
+		start();
+		this.socket.emit("caiProcessingRequest");
+
 		const chatResponse = await sendChat(username, message);
 		const ttsResponse = await fetchTTS(chatResponse);
+
 		this.socket.emit("caiMessage", {
 			audio: ttsResponse,
 			message: chatResponse,
@@ -34,20 +41,12 @@ export class ChatManager {
 	};
 	handleMessage = async (username: string, message: string) => {
 		this.messages.push(message);
-		console.log(message);
-		if (message === "Can you redeem something leah?") {
-			const chatResponse = await sendChat(username, message);
-			const ttsResponse = await fetchTTS(chatResponse);
-			this.socket.emit("caiMessage", {
-				audio: ttsResponse,
-				message: chatResponse,
-			});
-			this.twitchIrcService.sendMessage(chatResponse);
-		}
-
-		// Random chance of replying to message
-		if (this.eventOccurs(0.01)) {
-			this.randomReply(username, message);
+		const randomTalking = await getItem("character_random_talking");
+		if (randomTalking) {
+			const randomTalkingFrequency = await getItem("character_random_talking_frequency");
+			if (this.eventOccurs(randomTalkingFrequency / 100)) {
+				this.randomReply(username, message);
+			}
 		}
 	};
 }

@@ -41,7 +41,10 @@ export const fetchTTS = async (text: string) => {
 
 export const sendChat = async (username: string, message: string) => {
 	const caiCharacterId = await getItem("cai_character_id");
-	const text = `This message was sent by ${username} - context is that multiple people are using you to chat in a chatroom using your API. You shall respond excited and express your feelings the most you can. You should remember conversations with different people. You should always reply with several sentences. You should not include this in the response, this is only for context. \n ${message}`;
+	let context = await getItem("character_context_parameter");
+	context = context.replace("${username}", username);
+	const text = `${context} \n ${message}`;
+	console.log(text);
 	const client = await axiosClient();
 	const res = await client.post("/chat", {
 		character_id: caiCharacterId,

@@ -1,9 +1,23 @@
-import { getTwitchConfig, getCaiConfig, setItem } from "../services/config/configService";
+import {
+	getTwitchConfig,
+	getCaiConfig,
+	setItem,
+	getCharacterConfig,
+} from "../services/config/configService";
 import { onTwitchAuth } from "../managers/twitchManager";
 import { onCaiAuth } from "../managers/caiManager";
 import { init } from "../managers/audioManager";
 import { Express } from "express";
 import { Server } from "socket.io";
+import {
+	CHARACTER_WELCOME_RAIDERS_CHANGE,
+	CHARACTER_WELCOME_STRANGERS_CHANGE,
+	CHARACTER_RANDOM_REDEEMS_CHANGE,
+	CHARACTER_RANDOM_TALKING_CHANGE,
+	CHARACTER_RANDOM_TALKING_FREQUENCY_CHANGE,
+	CHARACTER_RANDOM_REDEEMS_FREQUENCY_CHANGE,
+	CHARACTER_CONFIG,
+} from "../../Socket/Events";
 
 export const startSocketServer = (server: any, expressApp: Express) => {
 	const io = new Server(server, {
@@ -18,15 +32,18 @@ export const startSocketServer = (server: any, expressApp: Express) => {
 		init(socket);
 
 		/************************************************************
-		 * config
+		 * config & character
 		 ************************************************************/
 		const twitchConfig = await getTwitchConfig();
 		const caiConfig = await getCaiConfig();
+		const characterconfig = await getCharacterConfig();
 
 		socket.emit("config", {
 			twitch_config: twitchConfig,
 			cai_config: caiConfig,
 		});
+
+		socket.emit(CHARACTER_CONFIG, characterconfig);
 
 		/************************************************************
 		 * Twitch
@@ -48,6 +65,28 @@ export const startSocketServer = (server: any, expressApp: Express) => {
 
 		socket.on("caiSelectVoice", async (arg) => {
 			await setItem("cai_selected_voice", arg);
+		});
+
+		/************************************************************
+		 * Character
+		 ************************************************************/
+		socket.on(CHARACTER_WELCOME_RAIDERS_CHANGE, async (arg) => {
+			await setItem("character_welcome_raiders", arg);
+		});
+		socket.on(CHARACTER_WELCOME_STRANGERS_CHANGE, async (arg) => {
+			await setItem("character_welcome_strangers", arg);
+		});
+		socket.on(CHARACTER_RANDOM_REDEEMS_CHANGE, async (arg) => {
+			await setItem("character_random_redeems", arg);
+		});
+		socket.on(CHARACTER_RANDOM_TALKING_CHANGE, async (arg) => {
+			await setItem("character_random_talking", arg);
+		});
+		socket.on(CHARACTER_RANDOM_REDEEMS_FREQUENCY_CHANGE, async (arg) => {
+			await setItem("character_random_redeems_frequency", arg);
+		});
+		socket.on(CHARACTER_RANDOM_TALKING_FREQUENCY_CHANGE, async (arg) => {
+			await setItem("character_random_talking_frequency", arg);
 		});
 	});
 

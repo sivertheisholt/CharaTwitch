@@ -9,6 +9,18 @@ const config: ForgeConfig = {
 	packagerConfig: {
 		asar: true,
 	},
+	publishers: [
+		{
+			name: "@electron-forge/publisher-github",
+			config: {
+				repository: {
+					owner: "sivertheisholt",
+					name: "CharaTwitch",
+				},
+				prerelease: true,
+			},
+		},
+	],
 	rebuildConfig: {},
 	makers: [
 		new MakerSquirrel({}),

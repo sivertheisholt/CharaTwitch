@@ -10,6 +10,19 @@ import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import { CharacterContext } from "../contexts/CharacterContext";
 import { CharacterContextType } from "../types/CharacterContextType";
+import { SocketContext } from "../contexts/SocketContext";
+import { SocketContextType } from "../types/SocketContextType";
+import {
+	CHARACTER_WELCOME_RAIDERS_CHANGE,
+	CHARACTER_WELCOME_STRANGERS_CHANGE,
+	CHARACTER_RANDOM_REDEEMS_CHANGE,
+	CHARACTER_RANDOM_TALKING_CHANGE,
+	CHARACTER_RANDOM_REDEEMS_FREQUENCY_CHANGE,
+	CHARACTER_RANDOM_TALKING_FREQUENCY_CHANGE,
+	CHARACTER_DO_INTRO,
+	CHARACTER_ASK_QUESTION,
+	CHARACTER_CONTEXT_PARAMETER,
+} from "../Socket/Events";
 
 export interface CharacterPageProps {}
 
@@ -36,33 +49,63 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 		characterContextParameter,
 		setCharacterContextParameter,
 	} = useContext(CharacterContext) as CharacterContextType;
+	const { socket } = useContext(SocketContext) as SocketContextType;
 
 	const handleRandomRedeemChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setCharacterRandomRedeems(event.target.checked);
+		const checked = event.target.checked;
+		socket.emit(CHARACTER_RANDOM_REDEEMS_CHANGE, checked);
+		setCharacterRandomRedeems(checked);
 	};
 	const handleRandomTalkingChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setCharacterRandomTalking(event.target.checked);
+		const checked = event.target.checked;
+		socket.emit(CHARACTER_RANDOM_TALKING_CHANGE, checked);
+		setCharacterRandomTalking(checked);
 	};
 	const handleWelcomeStrangersChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setCharacterWelcomeStrangers(event.target.checked);
+		const checked = event.target.checked;
+		socket.emit(CHARACTER_WELCOME_STRANGERS_CHANGE, checked);
+		setCharacterWelcomeStrangers(checked);
 	};
 	const handleWelcomeRaidersChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setCharacterWelcomeRaiders(event.target.checked);
+		const checked = event.target.checked;
+		socket.emit(CHARACTER_WELCOME_RAIDERS_CHANGE, checked);
+		setCharacterWelcomeRaiders(checked);
 	};
 	const handleRandomRedeemFrequencyChange = (value: number) => {
+		socket.emit(CHARACTER_RANDOM_REDEEMS_FREQUENCY_CHANGE, value);
 		setCharacterRandomRedeemsFrequency(value);
 	};
 	const handleRandomTalkingFrequencyChange = (value: number) => {
+		socket.emit(CHARACTER_RANDOM_TALKING_FREQUENCY_CHANGE, value);
 		setCharacterRandomTalkingFrequency(value);
 	};
 	const handleContextParamChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setCharacterContextParameter(event.target.value);
+		const value = event.target.value;
+		setCharacterContextParameter(value);
 	};
 	const handleIntroParamChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setCharacterIntroParam(event.target.value);
+		const value = event.target.value;
+		setCharacterIntroParam(value);
 	};
 	const handleQuestionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setCharacterQuestion(event.target.value);
+		const value = event.target.value;
+		setCharacterQuestion(value);
+	};
+	const handleSelectRedeem = (event: React.ChangeEvent<HTMLSelectElement>) => {
+		const selectedRedeem = event.target.value;
+		setCharacterSelectedRedeem(selectedRedeem);
+	};
+
+	const handleDoIntro = () => {
+		socket.emit(CHARACTER_DO_INTRO, characterIntroParam);
+	};
+
+	const handleAskQuestion = () => {
+		socket.emit(CHARACTER_ASK_QUESTION, characterQuestion);
+	};
+
+	const handleSaveContextParam = () => {
+		socket.emit(CHARACTER_CONTEXT_PARAMETER, characterContextParameter);
 	};
 
 	return (
@@ -71,7 +114,7 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 				<Col>
 					<h1>Actions</h1>
 					<hr className="hr" />
-					<Card className="mb-2" data-bs-theme="dark">
+					<Card style={{ display: "none" }} className="mb-2" data-bs-theme="dark">
 						<Card.Body>
 							<label className="fs-6">
 								<strong>Redeems</strong>
@@ -82,9 +125,8 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 								size="sm"
 								aria-label="Default select example"
 								value={characterSelectedRedeem}
-							>
-								<option>A message from chad</option>
-							</Form.Select>
+								onChange={handleSelectRedeem}
+							></Form.Select>
 							<div className="d-flex justify-content-center">
 								<Button className="w-100" variant="primary" size="sm">
 									Redeem selected
@@ -104,14 +146,16 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 							<InputGroup className="mb-3" size="sm">
 								<Form.Control
 									data-bs-theme="light"
+									style={{ height: "100px" }}
 									as="textarea"
 									placeholder="What to ask"
+									maxLength={250}
 									value={characterQuestion}
 									onChange={handleQuestionChange}
 								/>
 							</InputGroup>
 							<div className="d-grid gap-2 mt-4">
-								<Button variant="primary" size="sm">
+								<Button variant="primary" size="sm" onClick={handleAskQuestion}>
 									Ask question
 								</Button>
 							</div>
@@ -126,14 +170,16 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 							<InputGroup className="mb-3" size="sm">
 								<Form.Control
 									data-bs-theme="light"
+									style={{ height: "100px" }}
 									as="textarea"
 									placeholder="Message sent for character to respond to"
+									maxLength={1000}
 									value={characterIntroParam}
 									onChange={handleIntroParamChange}
 								/>
 							</InputGroup>
 							<div className="d-grid gap-2 mt-4">
-								<Button variant="primary" size="sm">
+								<Button variant="primary" size="sm" onClick={handleDoIntro}>
 									Do intro
 								</Button>
 							</div>
@@ -153,7 +199,7 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 								<Row>
 									<Col>
 										<label className="fs-6">
-											<strong>Random redeems</strong>
+											<strong>Random redeems (OFF)</strong>
 										</label>
 										<InputGroup data-bs-theme="light" className="mb-3" size="sm">
 											<Form.Check
@@ -204,19 +250,21 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 
 					<Card className="mb-2" data-bs-theme="dark">
 						<Card.Body>
-							<label className="fs-6">
-								<strong>Redeems frequency</strong>
-							</label>
-							<Slider
-								className="h-100 w-100 mt-2"
-								max={100}
-								min={0}
-								step={5}
-								value={characterRandomRedeemsFrequency}
-								onChange={handleRandomRedeemFrequencyChange}
-							/>
+							<div style={{ display: "none", margin: 0, padding: 0 }}>
+								<label className="fs-6">
+									<strong>Redeems frequency</strong>
+								</label>
+								<Slider
+									className="h-100 w-100 mt-2"
+									max={100}
+									min={0}
+									step={5}
+									value={characterRandomRedeemsFrequency}
+									onChange={handleRandomRedeemFrequencyChange}
+								/>
+							</div>
 
-							<label className="fs-6 mt-4">
+							<label className="fs-6">
 								<strong>Talking frequency</strong>
 							</label>
 							<Slider
@@ -241,12 +289,18 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 									style={{ height: "200px" }}
 									data-bs-theme="light"
 									as="textarea"
+									maxLength={500}
 									value={characterContextParameter}
 									onChange={handleContextParamChange}
 									placeholder="This message was sent by ${username} - context is that multiple people are using you to chat in a chatroom using your API.  You shall respond excited and express your feelings the most you can.  You should remember conversations with different people. You should always reply with several sentences. You should not include this in the response, this is only for context."
 								/>
 							</InputGroup>
-							<Button className="w-100" variant="primary" size="sm">
+							<Button
+								className="w-100"
+								variant="primary"
+								size="sm"
+								onClick={handleSaveContextParam}
+							>
 								Save
 							</Button>
 						</Card.Body>

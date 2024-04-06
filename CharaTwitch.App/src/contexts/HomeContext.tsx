@@ -38,7 +38,6 @@ const HomeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 				const tempArray = [...twitchRedeems];
 				tempArray.unshift({ username: arg.username, reward: arg.reward });
 				setTwitchRedeems(tempArray);
-				setCaiProcessing(true);
 			};
 			const twitchIrcListener = (arg: any) => {
 				setTwitchIrcStatus(arg as boolean);
@@ -56,16 +55,21 @@ const HomeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 				const tempArray = [...caiMessages];
 				tempArray.unshift(arg.message);
 				setCaiMessages(tempArray);
-				setCaiProcessing(false);
 				if (arg.audio) {
-					const audio = new Audio(`data:audio/wav;base64,${arg.audio}`);
+					// eslint-disable-next-line prefer-const
+					let audio = new Audio(`data:audio/wav;base64,${arg.audio}`);
 					// Add an event listener for the 'ended' event
 					audio.onended = function () {
 						console.log("Audio playback finished.");
-						socket.emit("audioOnEnded", true);
+						socket.emit("audioOnEnded");
+						setCaiProcessing(false);
 					};
 					audio.play();
 				}
+			};
+
+			const caiProcessingRequestListener = () => {
+				setCaiProcessing(true);
 			};
 
 			socket.on("twitchAuthCb", twitchAuthCbListener);
@@ -76,7 +80,7 @@ const HomeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 			socket.on("caiMessage", caiMessageListener);
 			socket.on("caiAccountStatus", caiAccountStatusListener);
 			socket.on("caiAuthCb", caiAuthCbListener);
-
+			socket.on("caiProcessingRequest", caiProcessingRequestListener);
 			return () => {
 				// Clean up event listeners when component unmounts
 				socket.off("twitchAuthCb", twitchAuthCbListener);
@@ -87,6 +91,7 @@ const HomeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 				socket.off("caiMessage", caiMessageListener);
 				socket.off("caiAccountStatus", caiAccountStatusListener);
 				socket.off("caiAuthCb", caiAuthCbListener);
+				socket.off("caiProcessingRequest", caiProcessingRequestListener);
 			};
 		}
 	}, [caiMessages, socket, twitchMessages, twitchRedeems]);

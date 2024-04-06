@@ -3,6 +3,7 @@ import { getItem } from "../services/config/configService";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { fetchTTS, sendChat } from "../services/cai/caiApiService";
 import { TwitchIrcService } from "../services/twitch/twitchIrcService";
+import { isPlaying, start } from "./audioManager";
 
 export class RewardManager {
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>;
@@ -16,6 +17,7 @@ export class RewardManager {
 	}
 	onRewardCb = async (rewardData: any) => {
 		const selectedRedeem = await getItem("twitch_selected_redeem");
+
 		if (
 			selectedRedeem === rewardData.data.redemption.reward.id &&
 			rewardData.data.redemption.reward.is_user_input_required
@@ -24,6 +26,11 @@ export class RewardManager {
 				username: rewardData.data.redemption.user.display_name,
 				reward: rewardData.data.redemption.reward.title,
 			});
+
+			if (isPlaying()) return;
+			start();
+
+			this.socket.emit("caiProcessingRequest");
 
 			const chatResponse = await sendChat(
 				rewardData.data.redemption.user.display_name,

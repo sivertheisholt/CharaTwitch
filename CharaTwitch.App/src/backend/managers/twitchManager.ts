@@ -7,6 +7,7 @@ import { RewardManager } from "./rewardManager";
 import { Express } from "express";
 import { Socket } from "socket.io/dist/socket";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
+import { ActionManager } from "./actionManager";
 
 export const onTwitchAuth = async (
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>,
@@ -39,6 +40,8 @@ export const onTwitchAuth = async (
 			rewardManager.onRewardCb
 		);
 		await twitchPubSubService.init();
+
+		const actionManager = new ActionManager(socket);
 
 		socket.emit("twitchAuthCb", {
 			custom_redeems: customRedeems,
