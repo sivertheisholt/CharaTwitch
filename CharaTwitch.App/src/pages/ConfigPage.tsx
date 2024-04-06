@@ -10,12 +10,12 @@ export interface ConfigPageProps {}
 const ConfigPageComponent = (props: ConfigPageProps) => {
 	return (
 		<>
-			<Row style={{ height: "100%" }}>
+			<Row className="h-100">
 				<Col>
 					<TwitchConfig />
 				</Col>
 				<Col md="auto">
-					<div style={{ height: "100%" }} className="vr"></div>
+					<div className="vr h-100"></div>
 				</Col>
 				<Col>
 					<CaiConfig />

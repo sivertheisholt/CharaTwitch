@@ -1,6 +1,11 @@
 import { BrowserWindow } from "electron";
+import { Express } from "express";
 
-export const authTwitch = async (expressApp, clientId, clientSecret) => {
+export const authTwitch = async (
+	expressApp: Express,
+	clientId: string,
+	clientSecret: string
+): Promise<any> => {
 	const redirectUri = "http://localhost:8001/twitch";
 	const twitchUrl = `https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=channel%3Aread%3Aredemptions+chat%3Aread+chat%3Aedit&state=c3ab8aa609ea11e793ae92361f002671`;
 
@@ -19,16 +24,16 @@ export const authTwitch = async (expressApp, clientId, clientSecret) => {
 };
 
 export const getToken = (
-	expressApp,
-	twitchAuthWindow,
-	clientId,
-	clientSecret,
-	redirectUri
+	expressApp: Express,
+	twitchAuthWindow: BrowserWindow,
+	clientId: string,
+	clientSecret: string,
+	redirectUri: string
 ) => {
 	return new Promise((resolve, reject) => {
-		expressApp.get("/twitch", async (req, res) => {
+		expressApp.get("/twitch", async (req) => {
 			try {
-				let code = req.query.code;
+				const code: string = req.query.code as string;
 				twitchAuthWindow.close();
 				const requestBody = new URLSearchParams({
 					client_id: clientId,

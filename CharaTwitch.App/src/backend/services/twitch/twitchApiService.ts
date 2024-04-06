@@ -1,6 +1,10 @@
 import axios from "axios";
 
-export const getCustomRewards = async (userId, clientId, accessToken) => {
+export const getCustomRewards = async (
+	userId: string,
+	clientId: string,
+	accessToken: string
+) => {
 	try {
 		return await axios
 			.get(
@@ -21,7 +25,7 @@ export const getCustomRewards = async (userId, clientId, accessToken) => {
 	}
 };
 
-export const getUserInfo = async (accessToken) => {
+export const getUserInfo = async (accessToken: string) => {
 	try {
 		return await axios
 			.get("https://id.twitch.tv/oauth2/userinfo", {

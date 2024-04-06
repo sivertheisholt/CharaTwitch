@@ -58,7 +58,13 @@ const HomeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 				setCaiMessages(tempArray);
 				setCaiProcessing(false);
 				if (arg.audio) {
-					new Audio(`data:audio/wav;base64,${arg.audio}`).play();
+					const audio = new Audio(`data:audio/wav;base64,${arg.audio}`);
+					// Add an event listener for the 'ended' event
+					audio.onended = function () {
+						console.log("Audio playback finished.");
+						socket.emit("audioOnEnded", true);
+					};
+					audio.play();
 				}
 			};
 

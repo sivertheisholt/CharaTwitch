@@ -4,6 +4,7 @@ import { ErrorPage } from "./pages/ErrorPage";
 import { HomePage } from "./pages/HomePage";
 import { DefaultLayout } from "./components/layouts/DefaultLayout";
 import { ConfigPage } from "./pages/ConfigPage";
+import { CharacterPage } from "./pages/CharacterPage";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface RouterProps {}
@@ -13,6 +14,11 @@ const RouterComponent = (props: RouterProps) => {
 		{
 			path: "/",
 			element: <DefaultLayout children={<HomePage />} />,
+			errorElement: <ErrorPage />,
+		},
+		{
+			path: "/character",
+			element: <DefaultLayout children={<CharacterPage />} />,
 			errorElement: <ErrorPage />,
 		},
 		{

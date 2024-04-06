@@ -1,10 +1,11 @@
-import { Server } from "socket.io";
-// eslint-disable-next-line import/no-unresolved
 import { getTwitchConfig, getCaiConfig, setItem } from "../services/config/configService";
 import { onTwitchAuth } from "../managers/twitchManager";
 import { onCaiAuth } from "../managers/caiManager";
+import { init } from "../managers/audioManager";
+import { Express } from "express";
+import { Server } from "socket.io";
 
-export const startSocketServer = (server, expressApp) => {
+export const startSocketServer = (server: any, expressApp: Express) => {
 	const io = new Server(server, {
 		cors: {
 			origin: "http://localhost:5173",
@@ -13,6 +14,9 @@ export const startSocketServer = (server, expressApp) => {
 
 	io.on("connection", async (socket) => {
 		console.log("Client connected");
+
+		init(socket);
+
 		/************************************************************
 		 * config
 		 ************************************************************/

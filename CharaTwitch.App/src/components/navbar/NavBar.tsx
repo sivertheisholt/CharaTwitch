@@ -15,6 +15,9 @@ const NavBarComponent = (props: NavBarProps) => {
 					<Nav.Link as={NavLink} to="/">
 						Home
 					</Nav.Link>
+					<Nav.Link as={NavLink} to="/character">
+						Character
+					</Nav.Link>
 					<Nav.Link as={NavLink} to="/config">
 						Config
 					</Nav.Link>
