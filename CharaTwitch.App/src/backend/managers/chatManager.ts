@@ -24,7 +24,7 @@ export class ChatManager {
 		const randomNumber = Math.random();
 		return randomNumber < probability;
 	};
-	newViewer = async (username: string) => {
+	newViewer = async (username: string, messageId: string) => {
 		if (isPlaying()) return;
 		start();
 		this.socket.emit("caiProcessingRequest");
@@ -41,11 +41,11 @@ export class ChatManager {
 			message: chatResponse,
 		});
 
-		this.twitchIrcService.sendMessage(chatResponse);
+		this.twitchIrcService.sendMessage(chatResponse, messageId);
 	};
 	greeting = () => {};
 	randomRedeem = () => {};
-	randomReply = async (username: string, message: string) => {
+	randomReply = async (username: string, message: string, messageId: string) => {
 		if (isPlaying()) return;
 		start();
 		this.socket.emit("caiProcessingRequest");
@@ -58,21 +58,22 @@ export class ChatManager {
 			message: chatResponse,
 		});
 
-		this.twitchIrcService.sendMessage(chatResponse);
+		this.twitchIrcService.sendMessage(chatResponse, messageId);
 	};
-	handleMessage = async (username: string, message: string) => {
+	handleMessage = async (username: string, message: string, messageId: string) => {
+		if (message.startsWith("!")) return;
 		this.messages.push(message);
 		const welcomeNewViewers = await getItem("character_welcome_new_viewers");
 		if (welcomeNewViewers && !this.users.has(username)) {
 			this.users.set(username, username);
-			this.newViewer(username);
+			this.newViewer(username, messageId);
 			return;
 		}
 		const randomTalking = await getItem("character_random_talking");
 		if (randomTalking) {
 			const randomTalkingFrequency = await getItem("character_random_talking_frequency");
 			if (this.eventOccurs(randomTalkingFrequency / 100)) {
-				this.randomReply(username, message);
+				this.randomReply(username, message, messageId);
 			}
 		}
 	};

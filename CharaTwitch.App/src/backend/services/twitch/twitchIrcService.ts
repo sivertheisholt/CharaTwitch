@@ -1,7 +1,8 @@
-import { Message, client as WebSocketClient, connection } from "websocket";
+import { Message, client as WebSocketClient, client, connection } from "websocket";
 import { Socket } from "socket.io/dist/socket";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { ChatManager } from "../../managers/chatManager";
+import { parseMessage } from "../../helpers/twitchIrcMessageParser";
 
 export class TwitchIrcService {
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>;
@@ -24,8 +25,14 @@ export class TwitchIrcService {
 		this.connection.sendUTF(`PONG ${pingMessage}`);
 	};
 
-	sendMessage = (message: string) => {
-		this.connection.sendUTF(`PRIVMSG #${this.username} :${message}`);
+	sendMessage = (message: string, messageId: string = "") => {
+		if (messageId === "") {
+			this.connection.sendUTF(`PRIVMSG #${this.username} :${message}`);
+		} else {
+			this.connection.sendUTF(
+				`@reply-parent-msg-id=${messageId} PRIVMSG #${this.username} :${message}`
+			);
+		}
 	};
 
 	onMessage = async (message: Message) => {
@@ -33,28 +40,30 @@ export class TwitchIrcService {
 			if (message.type != "utf8") return;
 
 			const ircMessage = message.utf8Data;
-			const split = ircMessage.split(" ");
+			const parsedMessage = parseMessage(ircMessage);
 
-			if (split.length < 1) return;
-			if (split[0] === "PING") {
-				this.handlePing(split[1]);
-				return;
-			}
-
-			switch (split[1]) {
+			switch (parsedMessage.command.command) {
 				case "PRIVMSG": {
-					const exclamationPointPosition = split[0].indexOf("!");
-					const username = split[0].substring(1, exclamationPointPosition - 1);
-					// Skip the first character, the first colon, then find the next colon
-					const secondColonPosition = ircMessage.indexOf(":", 1); // the 1 here is what skips the first character
-					const message = ircMessage.substring(secondColonPosition + 1).trimEnd(); // Everything past the second colon
-					this.chatManager.handleMessage(username, message);
+					if (this.username === parsedMessage.source.nick) break;
+					this.chatManager.handleMessage(
+						parsedMessage.source.nick,
+						parsedMessage.parameters,
+						parsedMessage.tags.id
+					);
 					this.socket.emit("twitchMessage", {
-						username: username,
-						message: message,
+						username: parsedMessage.source.nick,
+						message: parsedMessage.parameters,
 					});
 					break;
 				}
+				case "PING":
+					console.log(parsedMessage);
+					this.handlePing(parsedMessage.parameters);
+					break;
+				case "RECONNECT":
+					this.connection.close();
+					this.connectToTwitchIrc();
+					break;
 				default:
 					break;
 			}
@@ -72,6 +81,7 @@ export class TwitchIrcService {
 			connection.sendUTF(`PASS oauth:${this.accessToken}`);
 			connection.sendUTF(`NICK ${this.username}`);
 			connection.sendUTF(`JOIN #${this.username}`);
+			connection.sendUTF("CAP REQ :twitch.tv/commands twitch.tv/tags");
 
 			connection.on("message", async (ircMessage) => {
 				this.onMessage(ircMessage);
