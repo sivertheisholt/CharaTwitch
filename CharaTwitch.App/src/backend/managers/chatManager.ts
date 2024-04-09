@@ -24,7 +24,7 @@ export class ChatManager {
 		const randomNumber = Math.random();
 		return randomNumber < probability;
 	};
-	newViewer = async (username: string, messageId: string) => {
+	newViewer = async (username: string, message: string, messageId: string) => {
 		if (isPlaying()) return;
 		start();
 		this.socket.emit("caiProcessingRequest");
@@ -32,7 +32,7 @@ export class ChatManager {
 		const chatResponse = await sendChat(
 			username,
 			`Leah, welcome ${username} to the stream! They just popped in.`,
-			"Respond with a warm welcome to the new viewer. You should not include this in the response, this is only for context."
+			`Respond with a quick welcome message to the new viewer ${username}. This was ${username} message: ${message}. You should not include this in the response, this is only for context.`
 		);
 		const ttsResponse = await fetchTTS(chatResponse);
 
@@ -66,15 +66,17 @@ export class ChatManager {
 		const welcomeNewViewers = await getItem("character_welcome_new_viewers");
 		if (welcomeNewViewers && !this.users.has(username)) {
 			this.users.set(username, username);
-			this.newViewer(username, messageId);
+			this.newViewer(username, message, messageId);
 			return;
 		}
+
+		if (message.trim().split(/\s+/).length < 3) return;
+
 		const randomTalking = await getItem("character_random_talking");
-		if (randomTalking) {
-			const randomTalkingFrequency = await getItem("character_random_talking_frequency");
-			if (this.eventOccurs(randomTalkingFrequency / 100)) {
-				this.randomReply(username, message, messageId);
-			}
-		}
+		if (!randomTalking) return;
+
+		const randomTalkingFrequency = await getItem("character_random_talking_frequency");
+		if (this.eventOccurs(randomTalkingFrequency / 100))
+			this.randomReply(username, message, messageId);
 	};
 }
