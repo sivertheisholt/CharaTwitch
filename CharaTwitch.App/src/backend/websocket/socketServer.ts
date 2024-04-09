@@ -18,6 +18,7 @@ import {
 	CHARACTER_RANDOM_REDEEMS_FREQUENCY_CHANGE,
 	CHARACTER_CONFIG,
 	CHARACTER_WELCOME_NEW_VIEWERS_CHANGE,
+	CHARACTER_CONTEXT_PARAMETER,
 } from "../../Socket/Events";
 
 export const startSocketServer = (server: any, expressApp: Express) => {
@@ -91,6 +92,9 @@ export const startSocketServer = (server: any, expressApp: Express) => {
 		});
 		socket.on(CHARACTER_WELCOME_NEW_VIEWERS_CHANGE, async (arg) => {
 			await setItem("character_welcome_new_viewers", arg);
+		});
+		socket.on(CHARACTER_CONTEXT_PARAMETER, async (arg) => {
+			await setItem("character_context_parameter", arg);
 		});
 	});
 

@@ -47,10 +47,9 @@ export const sendChat = async (
 	const caiCharacterId = await getItem("cai_character_id");
 	if (context == "") {
 		context = await getItem("character_context_parameter");
-		context = context.replace("${username}", username);
 	}
-	const text = `${context} \n ${message}`;
-	console.log(text);
+	context = context.replace("${username}", username);
+	const text = `(${context})\n${message}`;
 	const client = await axiosClient();
 	const res = await client.post("/chat", {
 		character_id: caiCharacterId,

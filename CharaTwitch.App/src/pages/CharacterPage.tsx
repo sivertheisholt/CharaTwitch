@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import Button from "react-bootstrap/esm/Button";
 import Card from "react-bootstrap/esm/Card";
 import Col from "react-bootstrap/esm/Col";
@@ -24,6 +24,7 @@ import {
 	CHARACTER_CONTEXT_PARAMETER,
 	CHARACTER_WELCOME_NEW_VIEWERS_CHANGE,
 } from "../Socket/Events";
+import Alert from "react-bootstrap/esm/Alert";
 
 export interface CharacterPageProps {}
 
@@ -53,6 +54,10 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 		setCharacterWelcomeNewViewers,
 	} = useContext(CharacterContext) as CharacterContextType;
 	const { socket } = useContext(SocketContext) as SocketContextType;
+
+	const [saveContext, setSaveContext] = useState(false);
+	const [startIntro, setStartIntro] = useState(false);
+	const [startQuestion, setStartQuestion] = useState(false);
 
 	const handleRandomRedeemChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const checked = event.target.checked;
@@ -106,14 +111,20 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 
 	const handleDoIntro = () => {
 		socket.emit(CHARACTER_DO_INTRO, characterIntroParam);
+		setStartIntro(true);
+		setTimeout(() => setStartIntro(false), 5000);
 	};
 
 	const handleAskQuestion = () => {
 		socket.emit(CHARACTER_ASK_QUESTION, characterQuestion);
+		setStartQuestion(true);
+		setTimeout(() => setStartQuestion(false), 5000);
 	};
 
 	const handleSaveContextParam = () => {
 		socket.emit(CHARACTER_CONTEXT_PARAMETER, characterContextParameter);
+		setSaveContext(true);
+		setTimeout(() => setSaveContext(false), 3000);
 	};
 
 	return (
@@ -163,9 +174,13 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 								/>
 							</InputGroup>
 							<div className="d-grid gap-2 mt-4">
-								<Button variant="primary" size="sm" onClick={handleAskQuestion}>
-									Ask question
-								</Button>
+								{startQuestion ? (
+									<Alert variant={"success"}>Started!</Alert>
+								) : (
+									<Button variant="primary" size="sm" onClick={handleAskQuestion}>
+										Ask question
+									</Button>
+								)}
 							</div>
 						</Card.Body>
 					</Card>
@@ -187,9 +202,13 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 								/>
 							</InputGroup>
 							<div className="d-grid gap-2 mt-4">
-								<Button variant="primary" size="sm" onClick={handleDoIntro}>
-									Do intro
-								</Button>
+								{startIntro ? (
+									<Alert variant={"success"}>Started!</Alert>
+								) : (
+									<Button variant="primary" size="sm" onClick={handleDoIntro}>
+										Do intro
+									</Button>
+								)}
 							</div>
 						</Card.Body>
 					</Card>
@@ -316,14 +335,18 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 									placeholder="This message was sent by ${username} - context is that multiple people are using you to chat in a chatroom using your API.  You shall respond excited and express your feelings the most you can.  You should remember conversations with different people. You should always reply with several sentences. You should not include this in the response, this is only for context."
 								/>
 							</InputGroup>
-							<Button
-								className="w-100"
-								variant="primary"
-								size="sm"
-								onClick={handleSaveContextParam}
-							>
-								Save
-							</Button>
+							{saveContext ? (
+								<Alert variant={"success"}>Saved!</Alert>
+							) : (
+								<Button
+									className="w-100"
+									variant="primary"
+									size="sm"
+									onClick={handleSaveContextParam}
+								>
+									Save
+								</Button>
+							)}
 						</Card.Body>
 					</Card>
 				</Col>

@@ -49,8 +49,17 @@ export class ChatManager {
 		if (isPlaying()) return;
 		start();
 		this.socket.emit("caiProcessingRequest");
+		let context = await getItem("character_context_parameter");
+		context += `Previous messages for context: `;
 
-		const chatResponse = await sendChat(username, message);
+		const lastTenMessages: string[] = this.messages.slice(
+			Math.max(this.messages.length - 10, 0)
+		);
+		lastTenMessages.forEach((message) => {
+			context += message;
+		});
+
+		const chatResponse = await sendChat(username, message, context);
 		const ttsResponse = await fetchTTS(chatResponse);
 
 		this.socket.emit("caiMessage", {
@@ -62,7 +71,7 @@ export class ChatManager {
 	};
 	handleMessage = async (username: string, message: string, messageId: string) => {
 		if (message.startsWith("!")) return;
-		this.messages.push(message);
+		this.messages.push(`username: ${username}, message: ${message}`);
 		const welcomeNewViewers = await getItem("character_welcome_new_viewers");
 		if (welcomeNewViewers && !this.users.has(username)) {
 			this.users.set(username, username);

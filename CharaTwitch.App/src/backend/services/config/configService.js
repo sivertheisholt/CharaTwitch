@@ -44,7 +44,7 @@ export const initializeConfig = async (configObject) => {
 			case "character_context_parameter":
 				initializedConfig[key] =
 					configObject[key] === undefined
-						? "This message was sent by ${username} - context is that multiple people are using you to chat in a chatroom using your API. You shall respond excited and express your feelings the most you can. You should remember conversations with different people. You should always reply with several sentences. You should not include this in the response, this is only for context."
+						? "This message was sent by ${username} - multiple people are using you to chat on twitch stream. You shall respond excited and express your feelings the most you can. You should remember conversations with different people. You should always reply with several sentences."
 						: configObject[key];
 				await _setItem("character_context_parameter", initializedConfig[key]);
 				break;
