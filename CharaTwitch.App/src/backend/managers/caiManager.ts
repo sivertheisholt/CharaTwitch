@@ -1,7 +1,14 @@
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
-import { fetchVoices, checkServer } from "../services/cai/caiApiService";
-import { setCaiConfig } from "../services/config/configService";
+import {
+	fetchVoices,
+	checkServer,
+	sendChat,
+	fetchTTS,
+} from "../services/cai/caiApiService";
+import { getItem, setCaiConfig, setItem } from "../services/config/configService";
 import { Socket } from "socket.io/dist/socket";
+import { isPlaying, start } from "./audioManager";
+import { CAI_PROCESSING_REQUEST } from "../../Socket/Events";
 
 export const onCaiAuth = async (
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>,
@@ -19,4 +26,60 @@ export const onCaiAuth = async (
 		voices: voices,
 	});
 	socket.emit("caiAccountStatus", true);
+};
+
+export const startInteractionAudioOnly = async (
+	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>,
+	message: string
+) => {
+	if (isPlaying()) return;
+	start();
+	socket.emit(CAI_PROCESSING_REQUEST, true);
+
+	const audioBase64 = await fetchTTS(message);
+	if (audioBase64 == null) {
+		socket.emit(CAI_PROCESSING_REQUEST, false);
+		return;
+	}
+
+	socket.emit("caiMessage", {
+		audio: audioBase64,
+		message: message,
+	});
+};
+
+export const startInteraction = async (
+	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>,
+	username: string,
+	message: string,
+	context: string = ""
+) => {
+	if (isPlaying()) return;
+	start();
+	socket.emit(CAI_PROCESSING_REQUEST, true);
+
+	if (context == "") {
+		context = await getItem("character_context_parameter");
+	}
+	context = context.replace("${username}", username);
+	const finalMessage = `(${context})\n${message}`;
+
+	const caiResponse = await sendChat(username, finalMessage, context);
+	if (caiResponse == null) {
+		socket.emit(CAI_PROCESSING_REQUEST, false);
+		return null;
+	}
+
+	const audioBase64 = await fetchTTS(caiResponse);
+	if (audioBase64 == null) {
+		socket.emit(CAI_PROCESSING_REQUEST, false);
+		return null;
+	}
+
+	socket.emit("caiMessage", {
+		audio: audioBase64,
+		message: caiResponse,
+	});
+
+	return caiResponse;
 };

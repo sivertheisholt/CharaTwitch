@@ -39,21 +39,12 @@ export const fetchTTS = async (text: string) => {
 	return res.data;
 };
 
-export const sendChat = async (
-	username: string,
-	message: string,
-	context: string = ""
-) => {
+export const sendChat = async (username: string, message: string, context: string) => {
 	const caiCharacterId = await getItem("cai_character_id");
-	if (context == "") {
-		context = await getItem("character_context_parameter");
-	}
-	context = context.replace("${username}", username);
-	const text = `(${context})\n${message}`;
 	const client = await axiosClient();
 	const res = await client.post("/chat", {
 		character_id: caiCharacterId,
-		text: text,
+		text: message,
 	});
 	if (res.status != 200) return null;
 	return res.data;

@@ -3,6 +3,7 @@ import { HomeContextType } from "../types/HomeContextType";
 import { SocketContext } from "./SocketContext";
 import { SocketContextType } from "../types/SocketContextType";
 import { CustomRedeem } from "../types/twitch/CustomRedeem";
+import { CAI_PROCESSING_REQUEST } from "../Socket/Events";
 
 // Create a context for the socket
 export const HomeContext = createContext<HomeContextType | null>(null);
@@ -68,8 +69,8 @@ const HomeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 				}
 			};
 
-			const caiProcessingRequestListener = () => {
-				setCaiProcessing(true);
+			const caiProcessingRequestListener = (arg: boolean) => {
+				setCaiProcessing(arg);
 			};
 
 			socket.on("twitchAuthCb", twitchAuthCbListener);
@@ -80,7 +81,7 @@ const HomeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 			socket.on("caiMessage", caiMessageListener);
 			socket.on("caiAccountStatus", caiAccountStatusListener);
 			socket.on("caiAuthCb", caiAuthCbListener);
-			socket.on("caiProcessingRequest", caiProcessingRequestListener);
+			socket.on(CAI_PROCESSING_REQUEST, caiProcessingRequestListener);
 			return () => {
 				// Clean up event listeners when component unmounts
 				socket.off("twitchAuthCb", twitchAuthCbListener);
@@ -91,7 +92,7 @@ const HomeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 				socket.off("caiMessage", caiMessageListener);
 				socket.off("caiAccountStatus", caiAccountStatusListener);
 				socket.off("caiAuthCb", caiAuthCbListener);
-				socket.off("caiProcessingRequest", caiProcessingRequestListener);
+				socket.off(CAI_PROCESSING_REQUEST, caiProcessingRequestListener);
 			};
 		}
 	}, [caiMessages, socket, twitchMessages, twitchRedeems]);

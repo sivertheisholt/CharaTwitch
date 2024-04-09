@@ -1,9 +1,8 @@
 import { Socket } from "socket.io/dist/socket";
 import { getItem } from "../services/config/configService";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
-import { fetchTTS, sendChat } from "../services/cai/caiApiService";
 import { TwitchIrcService } from "../services/twitch/twitchIrcService";
-import { isPlaying, start } from "./audioManager";
+import { startInteraction } from "./caiManager";
 
 export class RewardManager {
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>;
@@ -27,23 +26,14 @@ export class RewardManager {
 				reward: rewardData.data.redemption.reward.title,
 			});
 
-			if (isPlaying()) return;
-			start();
-
-			this.socket.emit("caiProcessingRequest");
-
-			const chatResponse = await sendChat(
+			const caiResponse = await startInteraction(
+				this.socket,
 				rewardData.data.redemption.user.display_name,
 				rewardData.data.redemption.user_input
 			);
-			const audioBase64 = await fetchTTS(chatResponse);
+			if (caiResponse == null) return;
 
-			this.socket.emit("caiMessage", {
-				audio: audioBase64,
-				message: chatResponse,
-			});
-
-			this.twitchIrcService.sendMessage(chatResponse);
+			this.twitchIrcService.sendMessage(caiResponse);
 		}
 	};
 }

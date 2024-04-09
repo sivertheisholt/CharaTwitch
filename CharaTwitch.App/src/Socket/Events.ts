@@ -1,3 +1,6 @@
+// CAI
+export const CAI_PROCESSING_REQUEST = "caiProcessingRequest";
+
 // Character page
 export const CHARACTER_SELECTED_REDEEM_CHANGE = "characterSelectedRedeemChange"; // When select new redeem
 export const CHARACTER_RANDOM_REDEEMS_CHANGE = "characterRandomRedeemsChange"; // Enable random redeems

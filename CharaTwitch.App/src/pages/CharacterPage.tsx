@@ -274,7 +274,7 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 								<Row>
 									<Col>
 										<label className="fs-6">
-											<strong>Welcome new viwers</strong>
+											<strong>Welcome new viewers</strong>
 										</label>
 										<InputGroup data-bs-theme="light" className="mb-3" size="sm">
 											<Form.Check

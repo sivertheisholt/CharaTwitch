@@ -104,6 +104,7 @@ export const getCharacterConfig = async () => {
 		character_random_talking: await _getItem("character_random_talking"),
 		character_welcome_strangers: await _getItem("character_welcome_raiders"),
 		character_welcome_raiders: await _getItem("character_welcome_strangers"),
+		character_welcome_new_viewers: await _getItem("character_welcome_new_viewers"),
 		character_random_redeems_frequency: await _getItem(
 			"character_random_redeems_frequency"
 		),
