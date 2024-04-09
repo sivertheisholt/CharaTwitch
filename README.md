@@ -5,24 +5,64 @@ CharacTwitch is a way to integrate Character AI into your stream. By connecting 
 
 Few things to note:
 
-- This is more of a demo to see whats possible with LLM (Large Language Model)
-- Currently "untested" in production as I don't have a twitch with channel points.
 - Don't expect a full application without bugs and perfect user experience.
 - Will only work if you have rewards enabled on your twitch channel!
-- If people like it, I might continue working on the project.
 - I cannot promise it works without CAI+ as their service is very buggy.
-
-### ⚠️ WARNING: DO NOT share the application folder with anyone you do not trust or if you do not know what you're doing.
 
 ![Imgur](https://imgur.com/IbzwPnz.png)
 
 ## Setup
 
-NB: You are required to setup your own Character AI service with a REST API. I might find a better solution for this in the future.
+---
+#### ⚠️ WARNING: DO NOT share the application folder with anyone you do not trust or if you do not know what you're doing.
 
-Download the provided app.zip from [Releases](https://github.com/sivertheisholt/CharaTwitch/releases) and extract it. Run the exe to start the program.
+##### _Anyone with your config files could have access to your twitch/cai account without your consent. Do this at your own risk._
+---
+
+NB: You are required to setup your own Character AI service with a REST API. I might find a better solution for this in the future. See section under for required API docs.
+
+Download the provided CharaTwitch.zip from [Releases](https://github.com/sivertheisholt/CharaTwitch/releases) and extract it. Run the exe to install the program.
 
 You will need to input a bit of information from both Twitch and Character AI.
+
+### CAI REST API
+
+This document outlines the API endpoints utilized by CharaTwitch.
+
+#### 1. `/health`
+
+- **Method**: GET
+- **Description**: Checks the health status of the server.
+- **Returns**:
+  - `true` if the server is healthy (status code: 200)
+  - `false` if the server is not healthy (status code: other than 200)
+
+#### 2. `/voices`
+
+- **Method**: GET
+- **Description**: Fetches the available voices.
+- **Returns**:
+  - An array of voice data if successful (status code: 200)
+  - 
+#### 3. `/tts`
+
+- **Method**: POST
+- **Description**: Converts text to speech (TTS) using the selected voice.
+- **Parameters**:
+  - `voice_id`: ID of the selected voice
+  - `text`: Text to be converted to speech
+- **Returns**:
+  - Speech data if successful (status code: 200)
+
+#### 4. `/chat`
+
+- **Method**: POST
+- **Description**: Sends a chat message.
+- **Parameters**:
+  - `character_id`: ID of the character
+  - `text`: Message text
+- **Returns**:
+  - Response data if successful (status code: 200)
 
 ### Twitch
 
@@ -51,11 +91,11 @@ To get it, you can open your browser, go to the [Character.AI website](https://c
 1. Open the Character.AI website in your browser (https://beta.character.ai)
 2. Open the developer tools (<kbd>F12</kbd>, <kbd>Ctrl+Shift+I</kbd>, or <kbd>Cmd+J</kbd>)
 3. Go to the `Application` tab
-4. Go to the `Storage` section and click on `Local Storage`
-5. Look for the `char_token` key
+4. Go to the `Storage` section and click on `Cookies`
+5. Look for the `HTTP_AUTH` key
 6. Open the object, right click on value and copy your session token.
 
-![Session_Token](https://github.com/realcoloride/node_characterai/assets/108619637/1d46db04-0744-42d2-a6d7-35152b967a82)
+![Session_Token](https://private-user-images.githubusercontent.com/108619637/316632501-4933b8f9-4063-477a-bc65-4b5f7b76216a.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MTI2ODgwODAsIm5iZiI6MTcxMjY4Nzc4MCwicGF0aCI6Ii8xMDg2MTk2MzcvMzE2NjMyNTAxLTQ5MzNiOGY5LTQwNjMtNDc3YS1iYzY1LTRiNWY3Yjc2MjE2YS5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjQwNDA5JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI0MDQwOVQxODM2MjBaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT0yZmM1NzA3NzQ0N2M5YmU5ZWQ1MGI0M2QwZGFlMzE0MjA3MmNlNDE4MzkxNTYyN2E1OTg4MDRlNWJhYzEwMWU4JlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCZhY3Rvcl9pZD0wJmtleV9pZD0wJnJlcG9faWQ9MCJ9.Ohll_wyZeMUzjiGUUeHEX3XtYPKLXNOCYos0098USfo))
 
 #### Finding your character's ID
 
