@@ -1,7 +1,7 @@
 {
   "name": "charatwitch.app",
   "productName": "charatwitch.app",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "description": "Integrate Character AI into your stream!",
   "main": ".vite/build/main.js",
   "repository": "https://github.com/sivertheisholt/CharaTwitch",
@@ -60,7 +60,6 @@
     "react-spinners": "^0.13.8",
     "socket.io": "^4.7.4",
     "socket.io-client": "^4.7.4",
-    "update-electron-app": "^3.0.0",
     "uuid": "^9.0.1",
     "websocket": "^1.0.34",
     "ws": "^8.16.0"

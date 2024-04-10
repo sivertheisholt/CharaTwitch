@@ -1,7 +1,18 @@
 import { init, setItem as _setItem, getItem as _getItem } from "node-persist";
+import fs from "fs";
 
 export const initStorage = () => {
-	init(/* options ... */);
+	let dir =
+		process.env.APPDATA ||
+		(process.platform == "darwin"
+			? process.env.HOME + "/Library/Preferences"
+			: process.env.HOME + "/.local/share");
+
+	dir += "CharaTwitch/config";
+
+	init({
+		dir: dir,
+	});
 };
 
 export const initializeConfig = async (configObject) => {
