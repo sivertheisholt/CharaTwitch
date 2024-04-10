@@ -19,7 +19,7 @@ import {
 	CHARACTER_CONFIG,
 	CHARACTER_WELCOME_NEW_VIEWERS_CHANGE,
 	CHARACTER_CONTEXT_PARAMETER,
-} from "../../Socket/Events";
+} from "../../socket/Events";
 
 export const startSocketServer = (server: any, expressApp: Express) => {
 	const io = new Server(server, {

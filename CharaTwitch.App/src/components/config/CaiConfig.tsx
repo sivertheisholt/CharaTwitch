@@ -18,8 +18,6 @@ const CaiConfigComponent = (props: CaiConfigProps) => {
 	const [connectingCai, setConnectingCai] = useState(false);
 	const { caiVoices, caiAccountStatus } = useContext(HomeContext) as HomeContextType;
 	const {
-		caiAccessToken,
-		setCaiAccessToken,
 		caiCharacterId,
 		setCaiCharacterId,
 		caiSelectedVoice,
@@ -31,7 +29,6 @@ const CaiConfigComponent = (props: CaiConfigProps) => {
 	const authCai = () => {
 		setConnectingCai(true);
 		socket?.emit("caiAuth", {
-			access_token: caiAccessToken,
 			character_id: caiCharacterId,
 			base_url: caiBaseUrl,
 		});
@@ -40,9 +37,6 @@ const CaiConfigComponent = (props: CaiConfigProps) => {
 		const selectedVoice = event.target.value;
 		socket?.emit("caiSelectVoice", selectedVoice);
 		setCaiSelectedVoice(parseInt(selectedVoice));
-	};
-	const handleCaiAccessToken = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setCaiAccessToken(event.target.value);
 	};
 	const handleCaiCharacterId = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setCaiCharacterId(event.target.value);
@@ -54,17 +48,6 @@ const CaiConfigComponent = (props: CaiConfigProps) => {
 		<>
 			<h1>CAI config</h1>
 			<hr className="hr" />
-			<label className="fs-4">
-				<strong>Access Token</strong>
-			</label>
-			<InputGroup className="mb-3" size="lg">
-				<Form.Control
-					type="password"
-					value={caiAccessToken}
-					onChange={handleCaiAccessToken}
-					placeholder="Access Token"
-				/>
-			</InputGroup>
 			<label className="fs-4">
 				<strong>Character ID</strong>
 			</label>

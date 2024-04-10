@@ -23,7 +23,7 @@ import {
 	CHARACTER_ASK_QUESTION,
 	CHARACTER_CONTEXT_PARAMETER,
 	CHARACTER_WELCOME_NEW_VIEWERS_CHANGE,
-} from "../Socket/Events";
+} from "../socket/Events";
 import Alert from "react-bootstrap/esm/Alert";
 
 export interface CharacterPageProps {}
@@ -167,7 +167,7 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 									data-bs-theme="light"
 									style={{ height: "100px" }}
 									as="textarea"
-									placeholder="What to ask"
+									placeholder="Question"
 									maxLength={250}
 									value={characterQuestion}
 									onChange={handleQuestionChange}
@@ -195,7 +195,7 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 									data-bs-theme="light"
 									style={{ height: "100px" }}
 									as="textarea"
-									placeholder="Message sent for character to respond to"
+									placeholder="Text to speech"
 									maxLength={1000}
 									value={characterIntroParam}
 									onChange={handleIntroParamChange}

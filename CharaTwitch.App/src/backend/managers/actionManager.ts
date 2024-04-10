@@ -1,6 +1,6 @@
 import { Socket } from "socket.io/dist/socket";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
-import { CHARACTER_ASK_QUESTION, CHARACTER_DO_INTRO } from "../../Socket/Events";
+import { CHARACTER_ASK_QUESTION, CHARACTER_DO_INTRO } from "../../socket/Events";
 import { setItem } from "../services/config/configService";
 import { startInteraction, startInteractionAudioOnly } from "./caiManager";
 

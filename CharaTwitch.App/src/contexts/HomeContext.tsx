@@ -3,7 +3,7 @@ import { HomeContextType } from "../types/HomeContextType";
 import { SocketContext } from "./SocketContext";
 import { SocketContextType } from "../types/SocketContextType";
 import { CustomRedeem } from "../types/twitch/CustomRedeem";
-import { CAI_PROCESSING_REQUEST } from "../Socket/Events";
+import { CAI_PROCESSING_REQUEST } from "../socket/Events";
 
 // Create a context for the socket
 export const HomeContext = createContext<HomeContextType | null>(null);

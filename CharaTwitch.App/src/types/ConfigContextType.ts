@@ -5,8 +5,6 @@ export type ConfigContextType = {
 	setTwitchClientId: React.Dispatch<React.SetStateAction<string>>;
 	twitchSelectedRedeem: string;
 	setTwitchSelectedRedeem: React.Dispatch<React.SetStateAction<string>>;
-	caiAccessToken: string;
-	setCaiAccessToken: React.Dispatch<React.SetStateAction<string>>;
 	caiCharacterId: string;
 	setCaiCharacterId: React.Dispatch<React.SetStateAction<string>>;
 	caiSelectedVoice: number;

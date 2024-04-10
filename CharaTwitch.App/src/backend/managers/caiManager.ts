@@ -8,14 +8,20 @@ import {
 import { getItem, setCaiConfig, setItem } from "../services/config/configService";
 import { Socket } from "socket.io/dist/socket";
 import { isPlaying, start } from "./audioManager";
-import { CAI_PROCESSING_REQUEST } from "../../Socket/Events";
+import { CAI_PROCESSING_REQUEST } from "../../socket/Events";
+import { authCai } from "../services/cai/caiAuthService";
 
 export const onCaiAuth = async (
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>,
 	arg: any
 ) => {
-	const { access_token, character_id, base_url } = arg;
+	const { character_id, base_url } = arg;
+
+	const access_token = await authCai();
+	if (access_token == null) return socket.emit("caiAuthCb", null);
+
 	await setCaiConfig(access_token, character_id, base_url);
+
 	const res = await checkServer();
 	if (!res) return socket.emit("caiAuthCb", null);
 

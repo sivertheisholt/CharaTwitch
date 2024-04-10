@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { SocketContext } from "./SocketContext";
 import { SocketContextType } from "../types/SocketContextType";
 import { CharacterContextType } from "../types/CharacterContextType";
-import { CHARACTER_CONFIG } from "../Socket/Events";
+import { CHARACTER_CONFIG } from "../socket/Events";
 
 // Create a context for the socket
 export const CharacterContext = createContext<CharacterContextType | null>(null);
