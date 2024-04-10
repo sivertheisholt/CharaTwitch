@@ -9,17 +9,9 @@ Few things to note:
 - Will only work if you have rewards enabled on your twitch channel!
 - I cannot promise it works without CAI+ as their service is very buggy.
 
-![Imgur](https://imgur.com/IbzwPnz.png)
+![Imgur](https://github.com/sivertheisholt/CharaTwitch/blob/main/assets/CharaTwitchFull.png)
 
 ## Setup
-
----
-
-#### ⚠️ WARNING: DO NOT share the application folder with anyone you do not trust or if you do not know what you're doing.
-
-##### _Anyone with your config files could have access to your twitch/cai account without your consent. Do this at your own risk._
-
----
 
 NB: You are required to setup your own Character AI service with a REST API. I might find a better solution for this in the future. See section under for required API docs.
 
@@ -30,14 +22,14 @@ You will need to input a bit of information from both Twitch and Character AI.
 ### CAI REST API
 
 This document outlines the API endpoints utilized by CharaTwitch.
+You can find/use my own implementation here: https://github.com/sivertheisholt/CustomCharacterAi
 
 #### 1. `/health`
 
 - **Method**: GET
 - **Description**: Checks the health status of the server.
 - **Returns**:
-  - `true` if the server is healthy (status code: 200)
-  - `false` if the server is not healthy (status code: other than 200)
+  - if the server is healthy (status code: 200)
 
 #### 2. `/voices`
 
@@ -45,7 +37,6 @@ This document outlines the API endpoints utilized by CharaTwitch.
 - **Description**: Fetches the available voices.
 - **Returns**:
   - An array of voice data if successful (status code: 200)
-  -
 
 #### 3. `/tts`
 
@@ -79,7 +70,7 @@ Once you have entered all the information you can simply click connect and log i
 
 ### Character AI
 
-From Character AI you will need to get the character id. Once you have filled in everything, click connect and log in to character AI in the window that pops up.
+From Character AI you will need to get the character id and server base URL. Once you have filled in everything, click connect and log in to character AI in the window that pops up.
 
 Once logged in, navigate to a random chat (This is to force the page to set the HTTP_AUTHORIZATION cookie needed)
 
@@ -87,9 +78,8 @@ Once logged in, navigate to a random chat (This is to force the page to set the 
 
 You can find your character ID in the URL of a Character's chat page.
 
-For example, if you go to the chat page of the character `Test Character` you will see the URL `https://beta.character.ai/chat?char=8_1NyR8w1dOXmI1uWaieQcd147hecbdIK7CeEAIrdJw`.
+For example, if you go to the chat page of the character `Test Character` you will see the URL `https://character.ai/chat/T9ZeWjFhG6wovhXSWcuxsX310Oj2H6NJnYxH2JJAgu8`.
 
 The last part of the URL is the character ID:
-![Character_ID](https://i.imgur.com/nd86fN4.png)
 
 Once you have entered all the information you can simply click connect Character.AI.
