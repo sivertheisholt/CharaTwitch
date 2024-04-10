@@ -8,7 +8,7 @@ export const initStorage = () => {
 			? process.env.HOME + "/Library/Preferences"
 			: process.env.HOME + "/.local/share");
 
-	dir += "CharaTwitch/config";
+	dir += "/CharaTwitch/config";
 
 	init({
 		dir: dir,
