@@ -32,7 +32,7 @@ export const authCai = async (): Promise<any> => {
 					console.log(error);
 				});
 		}, 1000);
-		if (tries >= 60) {
+		if (tries >= 120) {
 			resolve(null);
 		}
 	});
