@@ -21,4 +21,6 @@ export type CharacterContextType = {
 	setCharacterContextParameter: React.Dispatch<React.SetStateAction<string>>;
 	characterWelcomeNewViewers: boolean;
 	setCharacterWelcomeNewViewers: React.Dispatch<React.SetStateAction<boolean>>;
+	characterMinimumTimeBetweenTalking: number;
+	setCharacterMinimumTimeBetweenTalking: React.Dispatch<React.SetStateAction<number>>;
 };

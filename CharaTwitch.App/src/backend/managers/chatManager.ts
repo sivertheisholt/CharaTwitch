@@ -9,6 +9,7 @@ export class ChatManager {
 	users: Map<string, string>;
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>;
 	twitchIrcService: TwitchIrcService;
+	timeSinceLastTalkingMinutes: number;
 
 	constructor(
 		socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>,
@@ -18,6 +19,10 @@ export class ChatManager {
 		this.users = new Map<string, string>();
 		this.socket = socket;
 		this.twitchIrcService = twitchIrcService;
+		this.timeSinceLastTalkingMinutes = 0;
+		setInterval(() => {
+			this.timeSinceLastTalkingMinutes++;
+		}, 60000);
 	}
 	eventOccurs = (probability: number): boolean => {
 		const randomNumber = Math.random();
@@ -47,6 +52,7 @@ export class ChatManager {
 		const caiResponse = await startInteraction(this.socket, username, message, context);
 		if (caiResponse == null) return;
 
+		this.timeSinceLastTalkingMinutes = 0;
 		this.twitchIrcService.sendMessage(caiResponse, messageId);
 	};
 	handleMessage = async (username: string, message: string, messageId: string) => {
@@ -65,7 +71,13 @@ export class ChatManager {
 		if (!randomTalking) return;
 
 		const randomTalkingFrequency = await getItem("character_random_talking_frequency");
-		if (this.eventOccurs(randomTalkingFrequency / 100))
+		const minimumTimeBetweenTalking = await getItem(
+			"character_minimum_time_between_talking"
+		);
+		if (
+			this.eventOccurs(randomTalkingFrequency / 100) &&
+			this.timeSinceLastTalkingMinutes >= minimumTimeBetweenTalking
+		)
 			this.randomReply(username, message, messageId);
 	};
 }

@@ -60,7 +60,7 @@ export const startInteraction = async (
 	message: string,
 	context: string = ""
 ) => {
-	if (isPlaying()) return;
+	if (isPlaying()) return null;
 	start();
 	socket.emit(CAI_PROCESSING_REQUEST, true);
 
@@ -70,7 +70,7 @@ export const startInteraction = async (
 	context = context.replace("${username}", username);
 	const finalMessage = `(${context})\n${message}`;
 
-	const caiResponse = await sendChat(username, finalMessage, context);
+	const caiResponse = await sendChat(finalMessage);
 	if (caiResponse == null) {
 		socket.emit(CAI_PROCESSING_REQUEST, false);
 		return null;

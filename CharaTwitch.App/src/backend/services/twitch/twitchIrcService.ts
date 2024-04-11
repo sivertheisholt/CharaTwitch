@@ -57,7 +57,6 @@ export class TwitchIrcService {
 					break;
 				}
 				case "PING":
-					console.log(parsedMessage);
 					this.handlePing(parsedMessage.parameters);
 					break;
 				case "RECONNECT":

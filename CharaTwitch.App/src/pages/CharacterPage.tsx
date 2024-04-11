@@ -23,6 +23,7 @@ import {
 	CHARACTER_ASK_QUESTION,
 	CHARACTER_CONTEXT_PARAMETER,
 	CHARACTER_WELCOME_NEW_VIEWERS_CHANGE,
+	CHARACTER_MINIMUM_TIME_BETWEEN_TALKING_CHANGE,
 } from "../socket/Events";
 import Alert from "react-bootstrap/esm/Alert";
 
@@ -52,6 +53,8 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 		setCharacterContextParameter,
 		characterWelcomeNewViewers,
 		setCharacterWelcomeNewViewers,
+		characterMinimumTimeBetweenTalking,
+		setCharacterMinimumTimeBetweenTalking,
 	} = useContext(CharacterContext) as CharacterContextType;
 	const { socket } = useContext(SocketContext) as SocketContextType;
 
@@ -107,6 +110,10 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 	const handleSelectRedeem = (event: React.ChangeEvent<HTMLSelectElement>) => {
 		const selectedRedeem = event.target.value;
 		setCharacterSelectedRedeem(selectedRedeem);
+	};
+	const handleMinimumTimeBetweenTalkingChange = (value: number) => {
+		socket.emit(CHARACTER_MINIMUM_TIME_BETWEEN_TALKING_CHANGE, value);
+		setCharacterMinimumTimeBetweenTalking(value);
 	};
 
 	const handleDoIntro = () => {
@@ -289,8 +296,8 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 					</Card>
 
 					<Card className="mb-2" data-bs-theme="dark">
-						<Card.Body>
-							<div style={{ display: "none", margin: 0, padding: 0 }}>
+						<Card.Body className="p-2">
+							<div className="m-0 p-0" style={{ display: "none" }}>
 								<label className="fs-6">
 									<strong>Redeems frequency</strong>
 								</label>
@@ -307,14 +314,36 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 							<label className="fs-6">
 								<strong>Talking frequency</strong>
 							</label>
-							<Slider
-								className="h-100 w-100 mt-2"
-								max={100}
-								min={0}
-								step={5}
-								value={characterRandomTalkingFrequency}
-								onChange={handleRandomTalkingFrequencyChange}
-							/>
+							<div className="row w-100 m-0">
+								<span style={{ minWidth: "50px" }} className="col-auto p-0">
+									{characterRandomTalkingFrequency}%
+								</span>
+								<Slider
+									className="mt-2 col"
+									max={100}
+									min={0}
+									step={5}
+									value={characterRandomTalkingFrequency}
+									onChange={handleRandomTalkingFrequencyChange}
+								/>
+							</div>
+
+							<label className="fs-6">
+								<strong>Minimum minutes between talking</strong>
+							</label>
+							<div className="row w-100 m-0">
+								<span style={{ minWidth: "50px" }} className="col-auto p-0">
+									{characterMinimumTimeBetweenTalking}m
+								</span>
+								<Slider
+									className="col mt-2"
+									max={30}
+									min={0}
+									step={1}
+									value={characterMinimumTimeBetweenTalking}
+									onChange={handleMinimumTimeBetweenTalkingChange}
+								/>
+							</div>
 						</Card.Body>
 					</Card>
 

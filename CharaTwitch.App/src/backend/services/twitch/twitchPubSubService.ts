@@ -1,6 +1,7 @@
 import { Message, client as WebSocketClient, connection } from "websocket";
 import { Socket } from "socket.io/dist/socket";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
+import { getItem } from "../config/configService";
 
 export class TwitchPubSubService {
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>;
@@ -24,10 +25,12 @@ export class TwitchPubSubService {
 			return;
 		}
 
+		const channelId = await getItem("twitch_broadcaster_id");
+
 		const subResult = await this.subscribeToChannelPoints(
 			this.connection,
 			this.accessToken,
-			"228957703"
+			channelId
 		);
 		if (!subResult) {
 			this.socket.emit("twitchPubSub", false);

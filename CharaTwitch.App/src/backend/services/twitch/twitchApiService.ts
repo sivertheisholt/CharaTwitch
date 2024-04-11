@@ -32,6 +32,7 @@ export const getUserInfo = async (accessToken: string) => {
 				headers: { Authorization: `Bearer ${accessToken}` },
 			})
 			.then((res) => {
+				console.log(res.data);
 				return res.data;
 			});
 	} catch (error) {

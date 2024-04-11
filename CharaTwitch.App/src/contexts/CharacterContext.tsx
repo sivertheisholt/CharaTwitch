@@ -24,6 +24,8 @@ const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ children }
 	const [characterContextParameter, setCharacterContextParameter] = useState<string>("");
 	const [characterWelcomeNewViewers, setCharacterWelcomeNewViewers] =
 		useState<boolean>(false);
+	const [characterMinimumTimeBetweenTalking, setCharacterMinimumTimeBetweenTalking] =
+		useState<number>(0);
 
 	useEffect(() => {
 		if (socket != null) {
@@ -40,6 +42,7 @@ const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ children }
 					character_random_talking_frequency,
 					character_context_parameter,
 					character_welcome_new_viewers,
+					character_minimum_time_between_talking,
 				} = arg;
 				setCharacterSelectedRedeem(character_selected_redeem);
 				setCharacterQuestion(character_question);
@@ -52,6 +55,7 @@ const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ children }
 				setCharacterRandomTalkingFrequency(character_random_talking_frequency);
 				setCharacterContextParameter(character_context_parameter);
 				setCharacterWelcomeNewViewers(character_welcome_new_viewers);
+				setCharacterMinimumTimeBetweenTalking(character_minimum_time_between_talking);
 			});
 		}
 	}, [socket]);
@@ -81,6 +85,8 @@ const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ children }
 				setCharacterContextParameter,
 				characterWelcomeNewViewers,
 				setCharacterWelcomeNewViewers,
+				characterMinimumTimeBetweenTalking,
+				setCharacterMinimumTimeBetweenTalking,
 			}}
 		>
 			{children}

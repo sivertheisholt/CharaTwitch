@@ -1,5 +1,4 @@
 import { init, setItem as _setItem, getItem as _getItem } from "node-persist";
-import fs from "fs";
 
 export const initStorage = () => {
 	let dir =
@@ -51,6 +50,9 @@ export const initializeConfig = async (configObject) => {
 				break;
 			case "character_random_redeems_frequency":
 				initializedConfig[key] = configObject[key] === undefined ? 5 : configObject[key];
+				break;
+			case "character_minimum_time_between_talking":
+				initializedConfig[key] = configObject[key] === undefined ? 0 : configObject[key];
 				break;
 			case "character_context_parameter":
 				initializedConfig[key] =
@@ -123,6 +125,9 @@ export const getCharacterConfig = async () => {
 			"character_random_talking_frequency"
 		),
 		character_context_parameter: await _getItem("character_context_parameter"),
+		character_minimum_time_between_talking: await _getItem(
+			"character_minimum_time_between_talking"
+		),
 	};
 	return await initializeConfig(configObject);
 };
