@@ -62,8 +62,12 @@ You can find/use my own implementation here: https://github.com/sivertheisholt/C
 
 Create a new application over at: https://dev.twitch.tv/console
 
-Redirect URI should be: http://localhost:8001/twitch
+Redirect URI's should be: 
+```
+http://localhost:8001/twitch
 
+http://localhost:8001/twitch2
+```
 Once you have created a new application you wanna make a note of the following: Client Secret & Client Id
 
 Once you have entered all the information you can simply click connect and log in with you're twitch account.
