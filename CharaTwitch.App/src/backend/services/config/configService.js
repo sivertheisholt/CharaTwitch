@@ -47,12 +47,15 @@ export const initializeConfig = async (configObject) => {
 				break;
 			case "character_random_talking_frequency":
 				initializedConfig[key] = configObject[key] === undefined ? 5 : configObject[key];
+				await _setItem("character_random_talking_frequency", initializedConfig[key]);
 				break;
 			case "character_random_redeems_frequency":
 				initializedConfig[key] = configObject[key] === undefined ? 5 : configObject[key];
+				await _setItem("character_random_redeems_frequency", initializedConfig[key]);
 				break;
 			case "character_minimum_time_between_talking":
 				initializedConfig[key] = configObject[key] === undefined ? 0 : configObject[key];
+				await _setItem("character_minimum_time_between_talking", initializedConfig[key]);
 				break;
 			case "character_context_parameter":
 				initializedConfig[key] =
