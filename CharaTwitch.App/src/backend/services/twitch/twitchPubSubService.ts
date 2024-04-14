@@ -2,6 +2,7 @@ import { Message, client as WebSocketClient, connection } from "websocket";
 import { Socket } from "socket.io/dist/socket";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { getItem } from "../config/configService";
+import { logger } from "../../logging/logger";
 
 export class TwitchPubSubService {
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>;
@@ -62,7 +63,7 @@ export class TwitchPubSubService {
 				});
 				client.connect("wss://pubsub-edge.twitch.tv");
 			} catch (err) {
-				console.log(err);
+				logger.error(err, "Could not connect to twitch pub sub");
 				resolve(false);
 			}
 		});
@@ -79,7 +80,7 @@ export class TwitchPubSubService {
 				this.onRewardCb(redeemDataMessage);
 			});
 		} catch (err) {
-			console.log(err);
+			logger.error(err, "Could not listen to reward redeem");
 		}
 	};
 	subscribeToChannelPoints = (
@@ -103,7 +104,7 @@ export class TwitchPubSubService {
 
 				resolve(true);
 			} catch (err) {
-				console.log(err);
+				logger.error(err, "Could not subscribe to channel points");
 				resolve(false);
 			}
 		});

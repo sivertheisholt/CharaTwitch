@@ -1,3 +1,5 @@
+import { logger } from "../logging/logger";
+
 export function parseMessage(message) {
 	const parsedMessage = {
 		// Contains the component parts.
@@ -215,7 +217,7 @@ function parseCommand(rawCommandComponent) {
 			};
 			break;
 		case "RECONNECT":
-			console.log(
+			logger.warn(
 				"The Twitch IRC server is about to terminate the connection for maintenance."
 			);
 			parsedCommand = {
@@ -223,7 +225,7 @@ function parseCommand(rawCommandComponent) {
 			};
 			break;
 		case "421":
-			console.log(`Unsupported IRC command: ${commandParts[2]}`);
+			logger.error(`Unsupported IRC command: ${commandParts[2]}`);
 			return null;
 		case "001": // Logged in (successfully authenticated).
 			parsedCommand = {
@@ -239,10 +241,10 @@ function parseCommand(rawCommandComponent) {
 		case "372":
 		case "375":
 		case "376":
-			console.log(`numeric message: ${commandParts[0]}`);
+			logger.warn(`numeric message: ${commandParts[0]}`);
 			return null;
 		default:
-			console.log(`\nUnexpected command: ${commandParts[0]}\n`);
+			logger.warn(`\nUnexpected command: ${commandParts[0]}\n`);
 			return null;
 	}
 

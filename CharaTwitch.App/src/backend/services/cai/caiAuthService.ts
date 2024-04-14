@@ -1,4 +1,5 @@
 import { BrowserWindow, session } from "electron";
+import { logger } from "../../logging/logger";
 
 export const authCai = async (): Promise<any> => {
 	const caiUrl = `https://character.ai/`;
@@ -27,9 +28,9 @@ export const authCai = async (): Promise<any> => {
 						}
 					});
 				})
-				.catch((error) => {
+				.catch((err) => {
 					resolve(null);
-					console.log(error);
+					logger.error(err, "Something went wrong on authenticating cai");
 				});
 		}, 1000);
 		if (tries >= 120) {

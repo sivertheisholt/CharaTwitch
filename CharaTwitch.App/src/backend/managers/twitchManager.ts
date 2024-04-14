@@ -9,6 +9,7 @@ import { Socket } from "socket.io/dist/socket";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { ActionManager } from "./actionManager";
 import { TwitchEventSubService } from "../services/twitch/twitchEventSubService";
+import { logger } from "../logging/logger";
 
 export const onTwitchAuth = async (
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>,
@@ -61,6 +62,6 @@ export const onTwitchAuth = async (
 			custom_redeems: customRedeems,
 		});
 	} catch (err) {
-		console.log(err);
+		logger.error(err, "Something went wrong on onTwitchAuth");
 	}
 };

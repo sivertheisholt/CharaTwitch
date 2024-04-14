@@ -3,6 +3,7 @@ import { Socket } from "socket.io/dist/socket";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { ChatManager } from "../../managers/chatManager";
 import { parseMessage } from "../../helpers/twitchIrcMessageParser";
+import { logger } from "../../logging/logger";
 
 export class TwitchIrcService {
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>;
@@ -66,8 +67,8 @@ export class TwitchIrcService {
 				default:
 					break;
 			}
-		} catch (e) {
-			console.log("Could not handle message, skipping... " + e);
+		} catch (err) {
+			logger.error(err, "Could not handle twitch irc message, skipping...");
 		}
 	};
 
@@ -86,8 +87,8 @@ export class TwitchIrcService {
 				this.onMessage(ircMessage);
 			});
 
-			connection.on("error", function (error) {
-				console.log("Connection Error: " + error.toString());
+			connection.on("error", function (err) {
+				logger.error(err, "Could not connect to twitch irc");
 				this.socket.emit("twitchIrc", false);
 			});
 

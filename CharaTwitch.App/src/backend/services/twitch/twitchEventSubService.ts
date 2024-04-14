@@ -3,6 +3,7 @@ import { Socket } from "socket.io/dist/socket";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { subscribeToRaid } from "./twitchEventSubApiService";
 import { getItem } from "../config/configService";
+import { logger } from "../../logging/logger";
 
 export class TwitchEventSubService {
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>;
@@ -37,8 +38,8 @@ export class TwitchEventSubService {
 	onMessage = async (message: any) => {
 		try {
 			console.log(message);
-		} catch (e) {
-			console.log("Could not handle message, skipping... " + e);
+		} catch (err) {
+			logger.error(err, "Could not handle twitch event sub message, skipping...");
 		}
 	};
 
@@ -55,7 +56,7 @@ export class TwitchEventSubService {
 				});
 				client.connect("wss://eventsub.wss.twitch.tv/ws");
 			} catch (err) {
-				console.log(err);
+				logger.error(err, "Could not connext to twitch event sub");
 				resolve(false);
 			}
 		});

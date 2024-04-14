@@ -1,4 +1,5 @@
 import axios from "axios";
+import { logger } from "../../logging/logger";
 
 export const getCustomRewards = async (
 	userId: string,
@@ -19,8 +20,8 @@ export const getCustomRewards = async (
 			.then((res) => {
 				return res.data.data;
 			});
-	} catch (error) {
-		console.log(error);
+	} catch (err) {
+		logger.error(err, "Something went wrong when getting custom rewards");
 		return null;
 	}
 };
@@ -32,11 +33,10 @@ export const getUserInfo = async (accessToken: string) => {
 				headers: { Authorization: `Bearer ${accessToken}` },
 			})
 			.then((res) => {
-				console.log(res.data);
 				return res.data;
 			});
-	} catch (error) {
-		console.log(error);
+	} catch (err) {
+		logger.error(err, "Something went wrong when getting user info");
 		return null;
 	}
 };
