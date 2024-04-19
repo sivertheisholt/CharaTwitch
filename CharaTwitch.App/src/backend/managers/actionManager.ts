@@ -1,7 +1,7 @@
 import { Socket } from "socket.io/dist/socket";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { CHARACTER_ASK_QUESTION, CHARACTER_DO_INTRO } from "../../socket/Events";
-import { setItem } from "../services/config/configService";
+import { getItem, setItem } from "../services/config/configService";
 import { startInteraction, startInteractionAudioOnly } from "./caiManager";
 
 export class ActionManager {
@@ -23,6 +23,7 @@ export class ActionManager {
 	};
 	askQuestion = async (question: string) => {
 		await setItem("character_question", question);
-		startInteraction(this.socket, "host", question);
+		const username = await getItem("twitch_preferred_username");
+		startInteraction(this.socket, username, question);
 	};
 }

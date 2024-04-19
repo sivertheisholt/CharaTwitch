@@ -3,6 +3,7 @@ import { Socket } from "socket.io/dist/socket";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { ChatManager } from "../../managers/chatManager";
 import { parseMessage } from "../../helpers/twitchIrcMessageParser";
+import { RaidManager } from "../../managers/raidManager";
 import { logger } from "../../logging/logger";
 
 export class TwitchIrcService {
@@ -11,6 +12,7 @@ export class TwitchIrcService {
 	username: string;
 	connection: connection;
 	chatManager: ChatManager;
+	raidManager: RaidManager;
 	constructor(
 		socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>,
 		accessToken: string,
@@ -20,6 +22,7 @@ export class TwitchIrcService {
 		this.accessToken = accessToken;
 		this.username = username;
 		this.chatManager = new ChatManager(socket, this);
+		this.raidManager = new RaidManager(socket, this);
 	}
 
 	handlePing = (pingMessage: string) => {
@@ -27,6 +30,11 @@ export class TwitchIrcService {
 	};
 
 	sendMessage = (message: string, messageId: string = "") => {
+		if (message.length > 490) {
+			message = message.substring(0, 490);
+			message += "...";
+		}
+
 		if (messageId === "") {
 			this.connection.sendUTF(`PRIVMSG #${this.username} :${message}`);
 		} else {
@@ -43,9 +51,15 @@ export class TwitchIrcService {
 			const ircMessage = message.utf8Data;
 			const parsedMessage = parseMessage(ircMessage);
 
+			if (parsedMessage.command.command == null) return;
+
 			switch (parsedMessage.command.command) {
 				case "PRIVMSG": {
-					if (this.username === parsedMessage.source.nick) break;
+					if (
+						parsedMessage.tags["display-name"] == "Streamlabs" ||
+						parsedMessage.tags["display-name"] == this.username
+					)
+						break;
 					this.chatManager.handleMessage(
 						parsedMessage.source.nick,
 						parsedMessage.parameters,
@@ -57,6 +71,12 @@ export class TwitchIrcService {
 					});
 					break;
 				}
+				case "USERNOTICE":
+					console.log(parsedMessage);
+					if (parsedMessage.tags == null) break;
+					if (parsedMessage.tags["msg-id"] == "raid")
+						this.raidManager.startRaid(parsedMessage.tags["display-name"]);
+					break;
 				case "PING":
 					this.handlePing(parsedMessage.parameters);
 					break;

@@ -184,6 +184,11 @@ function parseCommand(rawCommandComponent) {
 		case "NOTICE":
 		case "CLEARCHAT":
 		case "HOSTTARGET":
+		case "USERNOTICE":
+			parsedCommand = {
+				command: "USERNOTICE",
+			};
+			break;
 		case "PRIVMSG":
 			parsedCommand = {
 				command: commandParts[0],

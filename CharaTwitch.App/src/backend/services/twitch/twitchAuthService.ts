@@ -25,29 +25,6 @@ export const authTwitch = async (
 	);
 };
 
-export const authTwitchRaid = async (
-	expressApp: Express,
-	clientId: string,
-	clientSecret: string
-): Promise<any> => {
-	const redirectUri = "http://localhost:8001/twitch2";
-	const twitchUrl = `https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&state=c3ab8aa609ea11e793ae92361f002671`;
-
-	const twitchAuthWindow = new BrowserWindow();
-	twitchAuthWindow.removeMenu();
-
-	await twitchAuthWindow.loadURL(twitchUrl);
-
-	return await getToken(
-		expressApp,
-		twitchAuthWindow,
-		clientId,
-		clientSecret,
-		redirectUri,
-		"/twitch2"
-	);
-};
-
 export const getToken = (
 	expressApp: Express,
 	twitchAuthWindow: BrowserWindow,

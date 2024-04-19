@@ -5,11 +5,12 @@ import {
 	sendChat,
 	fetchTTS,
 } from "../services/cai/caiApiService";
-import { getItem, setCaiConfig, setItem } from "../services/config/configService";
+import { getItem, setCaiConfig } from "../services/config/configService";
 import { Socket } from "socket.io/dist/socket";
 import { isPlaying, start } from "./audioManager";
 import { CAI_PROCESSING_REQUEST } from "../../socket/Events";
 import { authCai } from "../services/cai/caiAuthService";
+import { isRaided } from "./raidManager";
 
 export const onCaiAuth = async (
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>,
@@ -58,9 +59,10 @@ export const startInteraction = async (
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>,
 	username: string,
 	message: string,
-	context: string = ""
+	context: string = "",
+	bypassIsRaid: boolean = false
 ) => {
-	if (isPlaying()) return null;
+	if (isPlaying() || (isRaided() && !bypassIsRaid)) return null;
 	start();
 	socket.emit(CAI_PROCESSING_REQUEST, true);
 
