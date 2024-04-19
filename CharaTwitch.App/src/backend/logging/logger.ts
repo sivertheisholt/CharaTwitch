@@ -1,4 +1,3 @@
-import fs from "fs";
 import pino from "pino";
 
 let dir =
