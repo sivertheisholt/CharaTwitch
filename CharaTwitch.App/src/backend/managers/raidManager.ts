@@ -52,7 +52,7 @@ export class RaidManager {
 				this.queue.push(
 					`${username} is currently being raided by ${raidedBy}! Give everyone a warm welcome to the stream and an introduction of yourself and ${username}.`
 				);
-				return;
+				return stop();
 			}
 
 			this.twitchIrcService.sendMessage(caiResponse);

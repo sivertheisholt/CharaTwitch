@@ -3,6 +3,7 @@ import { Socket } from "socket.io";
 import { TwitchIrcService } from "../services/twitch/twitchIrcService";
 import { getItem } from "../services/config/configService";
 import { startInteraction } from "./caiManager";
+import { stop } from "./audioManager";
 
 export class ChatManager {
 	messages: Array<string>;
@@ -31,10 +32,10 @@ export class ChatManager {
 	newViewer = async (username: string, message: string, messageId: string) => {
 		const caiResponse = await startInteraction(
 			this.socket,
-			`Leah, welcome ${username} to the stream! They just popped in with message: ${message}`,
+			`Welcome ${username} to the stream! They just popped in with message: ${message}`,
 			username
 		);
-		if (caiResponse == null) return;
+		if (caiResponse == null) return stop();
 
 		this.twitchIrcService.sendMessage(caiResponse, messageId);
 	};
@@ -49,7 +50,7 @@ export class ChatManager {
 		finalMessaage += `\n${message}`;
 
 		const caiResponse = await startInteraction(this.socket, finalMessaage, username);
-		if (caiResponse == null) return;
+		if (caiResponse == null) return stop();
 
 		this.timeSinceLastTalkingMinutes = 0;
 		this.twitchIrcService.sendMessage(caiResponse, messageId);

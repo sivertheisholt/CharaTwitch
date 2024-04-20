@@ -69,8 +69,6 @@ export const startInteraction = async (
 
 	const finalMessage = `(${characterContext})\n${message}`;
 
-	console.log(finalMessage);
-
 	const caiResponse = await sendChat(finalMessage);
 	if (caiResponse == null) {
 		socket.emit(CAI_PROCESSING_REQUEST, false);

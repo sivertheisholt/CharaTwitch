@@ -11,6 +11,10 @@ export const init = (
 	});
 };
 
+export const stop = () => {
+	audioPlaying = false;
+};
+
 export const start = () => {
 	audioPlaying = true;
 };

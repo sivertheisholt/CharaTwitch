@@ -25,7 +25,7 @@ export class RewardManager {
 			);
 			if (caiResponse == null) {
 				add(reward.username, reward.message);
-				return;
+				return stop();
 			}
 
 			this.twitchIrcService.sendMessage(caiResponse);
@@ -48,7 +48,7 @@ export class RewardManager {
 			const caiResponse = await startInteraction(this.socket, userInput, username);
 			if (caiResponse == null) {
 				add(username, userInput);
-				return;
+				return stop();
 			}
 
 			this.twitchIrcService.sendMessage(caiResponse);
