@@ -5,7 +5,7 @@ import {
 	sendChat,
 	fetchTTS,
 } from "../services/cai/caiApiService";
-import { setCaiConfig } from "../services/config/configService";
+import { getItem, setCaiConfig } from "../services/config/configService";
 import { Socket } from "socket.io/dist/socket";
 import { isPlaying, start } from "./audioManager";
 import { CAI_PROCESSING_REQUEST } from "../../socket/Events";
@@ -61,12 +61,13 @@ export const startInteraction = async (
 	username: string,
 	bypassIsRaid: boolean = false
 ) => {
-	console.log("Running interaction");
 	if (isPlaying() || (isRaided() && !bypassIsRaid)) return null;
 	start();
 	socket.emit(CAI_PROCESSING_REQUEST, true);
+	let characterContext = await getItem("character_context_parameter");
+	characterContext = characterContext.replace("${username}", username);
 
-	const finalMessage = `(This message was sent by ${username} - context is that multiple people are using you to chat on a Twitch stream. You should always reply with several sentences. No: bolding, ooc, brackets, asterisks)\n${message}`;
+	const finalMessage = `(${characterContext})\n${message}`;
 
 	console.log(finalMessage);
 

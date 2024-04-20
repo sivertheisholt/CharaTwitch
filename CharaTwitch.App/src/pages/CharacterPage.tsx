@@ -23,6 +23,7 @@ import {
 	CHARACTER_ASK_QUESTION,
 	CHARACTER_WELCOME_NEW_VIEWERS_CHANGE,
 	CHARACTER_MINIMUM_TIME_BETWEEN_TALKING_CHANGE,
+	CHARACTER_CONTEXT_PARAMETER,
 } from "../socket/Events";
 import Alert from "react-bootstrap/esm/Alert";
 
@@ -125,6 +126,12 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 		socket.emit(CHARACTER_ASK_QUESTION, characterQuestion);
 		setStartQuestion(true);
 		setTimeout(() => setStartQuestion(false), 5000);
+	};
+
+	const handleSaveContextParam = () => {
+		socket.emit(CHARACTER_CONTEXT_PARAMETER, characterContextParameter);
+		setSaveContext(true);
+		setTimeout(() => setSaveContext(false), 3000);
 	};
 
 	return (
@@ -337,6 +344,38 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 									onChange={handleMinimumTimeBetweenTalkingChange}
 								/>
 							</div>
+						</Card.Body>
+					</Card>
+
+					<Card data-bs-theme="dark">
+						<Card.Body>
+							<label className="fs-6">
+								<strong>Context parameter</strong>
+							</label>
+							<p>Variables available: {"${username}"}</p>
+							<InputGroup className="mb-3" size="sm">
+								<Form.Control
+									style={{ height: "200px" }}
+									data-bs-theme="light"
+									as="textarea"
+									maxLength={500}
+									value={characterContextParameter}
+									onChange={handleContextParamChange}
+									placeholder="This message was sent by ${username} - context is that multiple people are using you to chat on a Twitch stream. You should always reply with several sentences. No: bolding, ooc, brackets, asterisks."
+								/>
+							</InputGroup>
+							{saveContext ? (
+								<Alert variant={"success"}>Saved!</Alert>
+							) : (
+								<Button
+									className="w-100"
+									variant="primary"
+									size="sm"
+									onClick={handleSaveContextParam}
+								>
+									Save
+								</Button>
+							)}
 						</Card.Body>
 					</Card>
 				</Col>

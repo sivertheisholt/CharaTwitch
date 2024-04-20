@@ -42,6 +42,7 @@ const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ children }
 					character_random_talking_frequency,
 					character_welcome_new_viewers,
 					character_minimum_time_between_talking,
+					character_context_parameter,
 				} = arg;
 				setCharacterSelectedRedeem(character_selected_redeem);
 				setCharacterQuestion(character_question);
@@ -54,6 +55,7 @@ const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ children }
 				setCharacterRandomTalkingFrequency(character_random_talking_frequency);
 				setCharacterWelcomeNewViewers(character_welcome_new_viewers);
 				setCharacterMinimumTimeBetweenTalking(character_minimum_time_between_talking);
+				setCharacterContextParameter(character_context_parameter);
 			});
 		}
 	}, [socket]);

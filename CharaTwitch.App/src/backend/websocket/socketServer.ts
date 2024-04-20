@@ -19,6 +19,7 @@ import {
 	CHARACTER_CONFIG,
 	CHARACTER_WELCOME_NEW_VIEWERS_CHANGE,
 	CHARACTER_MINIMUM_TIME_BETWEEN_TALKING_CHANGE,
+	CHARACTER_CONTEXT_PARAMETER,
 } from "../../socket/Events";
 
 export const startSocketServer = (server: any, expressApp: Express) => {
@@ -92,6 +93,9 @@ export const startSocketServer = (server: any, expressApp: Express) => {
 		});
 		socket.on(CHARACTER_WELCOME_NEW_VIEWERS_CHANGE, async (arg) => {
 			await setItem("character_welcome_new_viewers", arg);
+		});
+		socket.on(CHARACTER_CONTEXT_PARAMETER, async (arg) => {
+			await setItem("character_context_parameter", arg);
 		});
 		socket.on(CHARACTER_MINIMUM_TIME_BETWEEN_TALKING_CHANGE, async (arg) => {
 			await setItem("character_minimum_time_between_talking", arg);

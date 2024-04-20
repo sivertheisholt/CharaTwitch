@@ -53,6 +53,13 @@ export const initializeConfig = async (configObject) => {
 				initializedConfig[key] = configObject[key] === undefined ? 5 : configObject[key];
 				await _setItem("character_random_redeems_frequency", initializedConfig[key]);
 				break;
+			case "character_context_parameter":
+				initializedConfig[key] =
+					configObject[key] === undefined
+						? "This message was sent by ${username} - context is that multiple people are using you to chat on a Twitch stream. You should always reply with several sentences. No: bolding, ooc, brackets, asterisks."
+						: configObject[key];
+				await _setItem("character_context_parameter", initializedConfig[key]);
+				break;
 			case "character_minimum_time_between_talking":
 				initializedConfig[key] = configObject[key] === undefined ? 0 : configObject[key];
 				await _setItem("character_minimum_time_between_talking", initializedConfig[key]);
@@ -114,6 +121,7 @@ export const getCharacterConfig = async () => {
 		character_welcome_strangers: await _getItem("character_welcome_raiders"),
 		character_welcome_raiders: await _getItem("character_welcome_strangers"),
 		character_welcome_new_viewers: await _getItem("character_welcome_new_viewers"),
+		character_context_parameter: await _getItem("character_context_parameter"),
 		character_random_redeems_frequency: await _getItem(
 			"character_random_redeems_frequency"
 		),
