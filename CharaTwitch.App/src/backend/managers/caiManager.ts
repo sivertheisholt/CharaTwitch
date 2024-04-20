@@ -58,6 +58,7 @@ export const startInteractionAudioOnly = async (
 export const startInteraction = async (
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>,
 	message: string,
+	username: string,
 	bypassIsRaid: boolean = false
 ) => {
 	console.log("Running interaction");
@@ -65,7 +66,11 @@ export const startInteraction = async (
 	start();
 	socket.emit(CAI_PROCESSING_REQUEST, true);
 
-	const caiResponse = await sendChat(message);
+	const finalMessage = `(This message was sent by ${username} - context is that multiple people are using you to chat on a Twitch stream. You should always reply with several sentences. No: bolding, ooc, brackets, asterisks)\n${message}`;
+
+	console.log(finalMessage);
+
+	const caiResponse = await sendChat(finalMessage);
 	if (caiResponse == null) {
 		socket.emit(CAI_PROCESSING_REQUEST, false);
 		return null;

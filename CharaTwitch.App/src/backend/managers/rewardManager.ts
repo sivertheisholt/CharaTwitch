@@ -18,9 +18,11 @@ export class RewardManager {
 			const reward = remove();
 			if (!reward) return;
 
-			const finalMessage = `This message was sent by ${reward.username}: ${reward.message}`;
-
-			const caiResponse = await startInteraction(this.socket, finalMessage);
+			const caiResponse = await startInteraction(
+				this.socket,
+				reward.message,
+				reward.username
+			);
 			if (caiResponse == null) {
 				add(reward.username, reward.message);
 				return;
@@ -43,9 +45,7 @@ export class RewardManager {
 				reward: rewardData.data.redemption.reward.title,
 			});
 
-			const finalMessage = `This message was sent by ${username}: ${userInput}`;
-
-			const caiResponse = await startInteraction(this.socket, finalMessage);
+			const caiResponse = await startInteraction(this.socket, userInput, username);
 			if (caiResponse == null) {
 				add(username, userInput);
 				return;

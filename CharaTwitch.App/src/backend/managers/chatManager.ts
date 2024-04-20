@@ -31,7 +31,8 @@ export class ChatManager {
 	newViewer = async (username: string, message: string, messageId: string) => {
 		const caiResponse = await startInteraction(
 			this.socket,
-			`Leah, welcome ${username} to the stream! They just popped in. This message was sent by ${username}: ${message}`
+			`Leah, welcome ${username} to the stream! They just popped in with message: ${message}`,
+			username
 		);
 		if (caiResponse == null) return;
 
@@ -43,13 +44,11 @@ export class ChatManager {
 			Math.max(this.messages.length - 10, 0)
 		);
 		lastTenMessages.forEach((message) => {
-			finalMessaage += `${message}\n`;
+			finalMessaage += `${message}`;
 		});
-		finalMessaage += `This message was sent by ${username}: ${message}`;
+		finalMessaage += `\n${message}`;
 
-		console.log(finalMessaage);
-
-		const caiResponse = await startInteraction(this.socket, finalMessaage);
+		const caiResponse = await startInteraction(this.socket, finalMessaage, username);
 		if (caiResponse == null) return;
 
 		this.timeSinceLastTalkingMinutes = 0;
