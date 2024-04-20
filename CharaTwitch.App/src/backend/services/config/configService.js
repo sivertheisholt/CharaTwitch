@@ -57,13 +57,6 @@ export const initializeConfig = async (configObject) => {
 				initializedConfig[key] = configObject[key] === undefined ? 0 : configObject[key];
 				await _setItem("character_minimum_time_between_talking", initializedConfig[key]);
 				break;
-			case "character_context_parameter":
-				initializedConfig[key] =
-					configObject[key] === undefined
-						? "This message was sent by ${username} - multiple people are using you to chat on twitch stream. You shall respond excited and express your feelings the most you can. You should remember conversations with different people. You should always reply with several sentences."
-						: configObject[key];
-				await _setItem("character_context_parameter", initializedConfig[key]);
-				break;
 			default:
 				initializedConfig[key] = configObject[key] === undefined ? "" : configObject[key];
 		}
@@ -127,7 +120,6 @@ export const getCharacterConfig = async () => {
 		character_random_talking_frequency: await _getItem(
 			"character_random_talking_frequency"
 		),
-		character_context_parameter: await _getItem("character_context_parameter"),
 		character_minimum_time_between_talking: await _getItem(
 			"character_minimum_time_between_talking"
 		),

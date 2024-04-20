@@ -40,7 +40,6 @@ const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ children }
 					character_welcome_raiders,
 					character_random_redeems_frequency,
 					character_random_talking_frequency,
-					character_context_parameter,
 					character_welcome_new_viewers,
 					character_minimum_time_between_talking,
 				} = arg;
@@ -53,7 +52,6 @@ const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ children }
 				setCharacterWelcomeRaiders(character_welcome_raiders);
 				setCharacterRandomRedeemsFrequency(character_random_redeems_frequency);
 				setCharacterRandomTalkingFrequency(character_random_talking_frequency);
-				setCharacterContextParameter(character_context_parameter);
 				setCharacterWelcomeNewViewers(character_welcome_new_viewers);
 				setCharacterMinimumTimeBetweenTalking(character_minimum_time_between_talking);
 			});

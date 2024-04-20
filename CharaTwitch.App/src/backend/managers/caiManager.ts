@@ -5,7 +5,7 @@ import {
 	sendChat,
 	fetchTTS,
 } from "../services/cai/caiApiService";
-import { getItem, setCaiConfig } from "../services/config/configService";
+import { setCaiConfig } from "../services/config/configService";
 import { Socket } from "socket.io/dist/socket";
 import { isPlaying, start } from "./audioManager";
 import { CAI_PROCESSING_REQUEST } from "../../socket/Events";
@@ -57,22 +57,15 @@ export const startInteractionAudioOnly = async (
 
 export const startInteraction = async (
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>,
-	username: string,
 	message: string,
-	context: string = "",
 	bypassIsRaid: boolean = false
 ) => {
+	console.log("Running interaction");
 	if (isPlaying() || (isRaided() && !bypassIsRaid)) return null;
 	start();
 	socket.emit(CAI_PROCESSING_REQUEST, true);
 
-	if (context == "") {
-		context = await getItem("character_context_parameter");
-	}
-	context = context.replace("${username}", username);
-	const finalMessage = `(${context})\n${message}`;
-
-	const caiResponse = await sendChat(finalMessage);
+	const caiResponse = await sendChat(message);
 	if (caiResponse == null) {
 		socket.emit(CAI_PROCESSING_REQUEST, false);
 		return null;

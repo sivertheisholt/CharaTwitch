@@ -16,7 +16,6 @@ export const CHARACTER_REDEEM_SELECTED = "characterRedeemSelected"; // Redeem se
 export const CHARACTER_REDEEM_RANDOM = "characterRedeemRandom"; // Redeem random redeem
 export const CHARACTER_ASK_QUESTION = "characterAskQuestion"; // Ask question
 export const CHARACTER_DO_INTRO = "characterDoIntro"; // Do intro
-export const CHARACTER_CONTEXT_PARAMETER = "characterContextParameter";
 export const CHARACTER_CONFIG = "characterConfig";
 export const CHARACTER_MINIMUM_TIME_BETWEEN_TALKING_CHANGE =
 	"characterMinimumTimeBetweenTalkingChange";

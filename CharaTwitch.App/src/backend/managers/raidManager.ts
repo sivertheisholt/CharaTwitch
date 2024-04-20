@@ -37,19 +37,16 @@ export class RaidManager {
 			`${username} is currently being raided! Give everyone a warm welcome to the stream and an introduction of yourself and ${username}.`
 		);
 
-		if (this.queueInterval == undefined) return;
-
 		this.queueInterval = setInterval(async () => {
-			const reward = this.queue.pop();
-			if (!reward) return clearInterval(this.queueInterval);
+			const raid = this.queue.pop();
+			if (!raid) return clearInterval(this.queueInterval);
 
 			const caiResponse = await startInteraction(
 				this.socket,
-				username,
-				"",
 				`${username} is currently being raided by ${raidedBy}! Give everyone a warm welcome to the stream and an introduction of yourself and ${username}.`,
 				true
 			);
+
 			if (caiResponse == null) {
 				this.queue.push(
 					`${username} is currently being raided by ${raidedBy}! Give everyone a warm welcome to the stream and an introduction of yourself and ${username}.`

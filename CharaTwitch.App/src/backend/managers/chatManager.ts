@@ -31,25 +31,25 @@ export class ChatManager {
 	newViewer = async (username: string, message: string, messageId: string) => {
 		const caiResponse = await startInteraction(
 			this.socket,
-			username,
-			`Leah, welcome ${username} to the stream! They just popped in.`,
-			`Respond with a quick welcome message to the new viewer ${username}. This was ${username} message: ${message}. You should not include this in the response, this is only for context.`
+			`Leah, welcome ${username} to the stream! They just popped in. This message was sent by ${username}: ${message}`
 		);
 		if (caiResponse == null) return;
 
 		this.twitchIrcService.sendMessage(caiResponse, messageId);
 	};
 	randomReply = async (username: string, message: string, messageId: string) => {
-		let context = await getItem("character_context_parameter");
-		context += `Previous messages for context: `;
+		let finalMessaage = "Previous messages:\n";
 		const lastTenMessages: string[] = this.messages.slice(
 			Math.max(this.messages.length - 10, 0)
 		);
 		lastTenMessages.forEach((message) => {
-			context += message;
+			finalMessaage += `${message}\n`;
 		});
+		finalMessaage += `This message was sent by ${username}: ${message}`;
 
-		const caiResponse = await startInteraction(this.socket, username, message, context);
+		console.log(finalMessaage);
+
+		const caiResponse = await startInteraction(this.socket, finalMessaage);
 		if (caiResponse == null) return;
 
 		this.timeSinceLastTalkingMinutes = 0;
@@ -57,7 +57,7 @@ export class ChatManager {
 	};
 	handleMessage = async (username: string, message: string, messageId: string) => {
 		if (message.startsWith("!")) return;
-		this.messages.push(`username: ${username}, message: ${message}`);
+		this.messages.push(`${username}: ${message}`);
 		const welcomeNewViewers = await getItem("character_welcome_new_viewers");
 		if (welcomeNewViewers && !this.users.has(username)) {
 			this.users.set(username, username);

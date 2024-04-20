@@ -51,13 +51,14 @@ export class TwitchIrcService {
 			const ircMessage = message.utf8Data;
 			const parsedMessage = parseMessage(ircMessage);
 
-			if (parsedMessage.command.command == null) return;
+			if (parsedMessage.command == null || parsedMessage.command.command == null) return;
 
 			switch (parsedMessage.command.command) {
 				case "PRIVMSG": {
 					if (
 						parsedMessage.tags["display-name"] == "Streamlabs" ||
-						parsedMessage.tags["display-name"] == this.username
+						parsedMessage.tags["display-name"] == this.username ||
+						"custom-reward-id" in parsedMessage.tags
 					)
 						break;
 					this.chatManager.handleMessage(
