@@ -65,8 +65,6 @@ Create a new application over at: https://dev.twitch.tv/console
 Redirect URI's should be: 
 ```
 http://localhost:8001/twitch
-
-http://localhost:8001/twitch2
 ```
 Once you have created a new application you wanna make a note of the following: Client Secret & Client Id
 
