@@ -67,7 +67,14 @@ export const startInteraction = async (
 	let characterContext = await getItem("character_context_parameter");
 	characterContext = characterContext.replace("${username}", username);
 
-	const finalMessage = `(${characterContext})\n${message}`;
+	// Cleanup message from symbols to not confuse the AI
+	const pattern = /[*()""]/g;
+	// Replace the matched symbols with an empty string
+	const cleanedMessage = message.replace(pattern, "");
+
+	console.log(cleanedMessage);
+
+	const finalMessage = `(${characterContext})\n${cleanedMessage}`;
 
 	const caiResponse = await sendChat(finalMessage);
 	if (caiResponse == null) {
