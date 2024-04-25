@@ -73,7 +73,6 @@ export class TwitchIrcService {
 					break;
 				}
 				case "USERNOTICE":
-					console.log(parsedMessage);
 					if (parsedMessage.tags == null) break;
 					if (parsedMessage.tags["msg-id"] == "raid")
 						this.raidManager.startRaid(parsedMessage.tags["display-name"]);
@@ -96,7 +95,7 @@ export class TwitchIrcService {
 	connectToTwitchIrc = async () => {
 		const client = new WebSocketClient();
 		client.on("connect", async (connection) => {
-			console.log("WebSocket Client Connected");
+			logger.info("WebSocket Client Connected");
 			this.connection = connection;
 
 			connection.sendUTF(`PASS oauth:${this.accessToken}`);
@@ -114,9 +113,9 @@ export class TwitchIrcService {
 			});
 
 			connection.on("close", function () {
-				console.log("Connection Closed");
-				console.log(`close description: ${connection.closeDescription}`);
-				console.log(`close reason code: ${connection.closeReasonCode}`);
+				logger.info("Connection Closed");
+				logger.info(`close description: ${connection.closeDescription}`);
+				logger.info(`close reason code: ${connection.closeReasonCode}`);
 				this.socket.emit("twitchIrc", false);
 			});
 

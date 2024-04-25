@@ -72,8 +72,6 @@ export const startInteraction = async (
 	// Replace the matched symbols with an empty string
 	const cleanedMessage = message.replace(pattern, "");
 
-	console.log(cleanedMessage);
-
 	const finalMessage = `(${characterContext})\n${cleanedMessage}`;
 
 	const caiResponse = await sendChat(finalMessage);

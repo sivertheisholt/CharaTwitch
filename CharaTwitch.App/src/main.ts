@@ -4,6 +4,7 @@ import { startSocketServer } from "./backend/websocket/socketServer";
 import { initStorage } from "./backend/services/config/configService";
 import express from "express";
 import { createServer } from "node:http";
+import { logger } from "./backend/logging/logger";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
@@ -14,7 +15,7 @@ const expressApp = express();
 const server = createServer(expressApp);
 
 server.listen(8001, () => {
-	console.log("server running at http://localhost:8001");
+	logger.info("server running at http://localhost:8001");
 });
 
 // Spinning the HTTP server and the WebSocket server.

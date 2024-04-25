@@ -21,6 +21,7 @@ import {
 	CHARACTER_MINIMUM_TIME_BETWEEN_TALKING_CHANGE,
 	CHARACTER_CONTEXT_PARAMETER,
 } from "../../socket/Events";
+import { logger } from "../logging/logger";
 
 export const startSocketServer = (server: any, expressApp: Express) => {
 	const io = new Server(server, {
@@ -30,7 +31,7 @@ export const startSocketServer = (server: any, expressApp: Express) => {
 	});
 
 	io.on("connection", async (socket) => {
-		console.log("Client connected");
+		logger.info("Client connected");
 
 		init(socket);
 
