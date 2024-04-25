@@ -23,6 +23,7 @@ You will need to input a bit of information from both Twitch and Character AI.
 
 This document outlines the API endpoints utilized by CharaTwitch.
 You can find/use my own implementation here: https://github.com/sivertheisholt/CustomCharacterAi
+Required header: authorization
 
 #### 1. `/health`
 
