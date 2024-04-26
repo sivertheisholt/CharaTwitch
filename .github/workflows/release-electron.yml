@@ -21,7 +21,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install Dependencies
-        run: npm install
+        run: npm ci
         working-directory: ./CharaTwitch.App
 
       - name: Build Electron App
