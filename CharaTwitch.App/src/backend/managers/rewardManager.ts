@@ -4,6 +4,7 @@ import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { TwitchIrcService } from "../services/twitch/twitchIrcService";
 import { startInteraction } from "./caiManager";
 import { add, remove } from "./rewardQueueManager";
+import { stop } from "./audioManager";
 
 export class RewardManager {
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>;
