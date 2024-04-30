@@ -1,4 +1,4 @@
-export type HomeContextType = {
+export type TwitchDashboardContextType = {
 	twitchMessages: Array<any>;
 	setTwitchMessages: React.Dispatch<React.SetStateAction<any[]>>;
 	twitchRedeems: Array<any>;
@@ -9,13 +9,4 @@ export type HomeContextType = {
 	setTwitchPubSubStatus: React.Dispatch<React.SetStateAction<boolean>>;
 	twitchAccountStatus: boolean;
 	setTwitchAccountStatus: React.Dispatch<React.SetStateAction<boolean>>;
-	twitchCustomRedeems: Array<any>;
-	setTwitchCustomRedeems: React.Dispatch<React.SetStateAction<any[]>>;
-	caiAccountStatus: boolean;
-	setCaiAccountStatus: React.Dispatch<React.SetStateAction<boolean>>;
-	caiVoices: Array<any>;
-	setCaiVoices: React.Dispatch<React.SetStateAction<any[]>>;
-	caiMessages: Array<string>;
-	setCaiMessages: React.Dispatch<React.SetStateAction<string[]>>;
-	caiProcessing: boolean;
 };

@@ -2,8 +2,8 @@ import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { Socket } from "socket.io";
 import { TwitchIrcService } from "../services/twitch/twitchIrcService";
 import { getItem } from "../services/config/configService";
-import { startInteraction } from "./caiManager";
 import { stop } from "./audioManager";
+import { startInteraction } from "./interactionManager";
 
 export class ChatManager {
 	messages: Array<string>;
@@ -41,9 +41,7 @@ export class ChatManager {
 	};
 	randomReply = async (username: string, message: string, messageId: string) => {
 		let finalMessaage = "Previous messages:\n";
-		const lastTenMessages: string[] = this.messages.slice(
-			Math.max(this.messages.length - 10, 0)
-		);
+		const lastTenMessages: string[] = this.messages.slice(Math.max(this.messages.length - 10, 0));
 		lastTenMessages.forEach((message) => {
 			finalMessaage += `${message}`;
 		});
@@ -71,13 +69,8 @@ export class ChatManager {
 		if (!randomTalking) return;
 
 		const randomTalkingFrequency = await getItem("character_random_talking_frequency");
-		const minimumTimeBetweenTalking = await getItem(
-			"character_minimum_time_between_talking"
-		);
-		if (
-			this.eventOccurs(randomTalkingFrequency / 100) &&
-			this.timeSinceLastTalkingMinutes >= minimumTimeBetweenTalking
-		)
+		const minimumTimeBetweenTalking = await getItem("character_minimum_time_between_talking");
+		if (this.eventOccurs(randomTalkingFrequency / 100) && this.timeSinceLastTalkingMinutes >= minimumTimeBetweenTalking)
 			this.randomReply(username, message, messageId);
 	};
 }

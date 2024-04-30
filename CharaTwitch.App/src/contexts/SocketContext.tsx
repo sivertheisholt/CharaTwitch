@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
-import { SocketContextType } from "../types/SocketContextType";
+import { SocketContextType } from "../types/context/SocketContextType";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { Socket, io } from "socket.io-client";
 
@@ -7,9 +7,7 @@ import { Socket, io } from "socket.io-client";
 export const SocketContext = createContext<SocketContextType | null>(null);
 
 const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-	const [socket, setSocket] = useState<Socket<DefaultEventsMap, DefaultEventsMap> | null>(
-		null
-	);
+	const [socket, setSocket] = useState<Socket<DefaultEventsMap, DefaultEventsMap> | null>(null);
 	const serverUrl = "http://localhost:8001";
 
 	useEffect(() => {

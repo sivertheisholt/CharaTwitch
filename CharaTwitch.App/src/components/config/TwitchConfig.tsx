@@ -1,14 +1,15 @@
 import React, { useContext, useState } from "react";
-import { ConfigContext } from "../../contexts/ConfigContext";
-import { HomeContext } from "../../contexts/HomeContext";
-import { ConfigContextType } from "../../types/ConfigContextType";
-import { HomeContextType } from "../../types/HomeContextType";
-import { SocketContextType } from "../../types/SocketContextType";
+import { TwitchConfigContext } from "../../contexts/config/TwitchConfigContext";
+import { TwitchConfigContextType } from "../../types/context/config/TwitchConfigContextType";
+import { SocketContextType } from "../../types/context/SocketContextType";
 import { SocketContext } from "../../contexts/SocketContext";
 import InputGroup from "react-bootstrap/esm/InputGroup";
 import Form from "react-bootstrap/esm/Form";
 import Alert from "react-bootstrap/esm/Alert";
 import Button from "react-bootstrap/esm/Button";
+import { TwitchDashboardContext } from "../../contexts/dashboard/TwitchDashboardContext";
+import { TwitchDashboardContextType } from "../../types/context/dashboard/TwitchDashboardContextType";
+import { TWITCH_AUTH, TWITCH_SELECTED_REDEEM_CHANGE } from "../../socket/TwitchEvents";
 
 export interface TwitchConfigProps {}
 
@@ -16,9 +17,8 @@ export interface TwitchConfigProps {}
 const TwitchConfigComponent = (props: TwitchConfigProps) => {
 	const [connectingTwitch, setConnectingTwitch] = useState(false);
 	const { socket } = useContext(SocketContext) as SocketContextType;
-	const { twitchCustomRedeems, twitchAccountStatus } = useContext(
-		HomeContext
-	) as HomeContextType;
+	const { twitchAccountStatus } = useContext(TwitchDashboardContext) as TwitchDashboardContextType;
+
 	const {
 		twitchClientSecret,
 		setTwitchClientSecret,
@@ -26,7 +26,9 @@ const TwitchConfigComponent = (props: TwitchConfigProps) => {
 		setTwitchClientId,
 		twitchSelectedRedeem,
 		setTwitchSelectedRedeem,
-	} = useContext(ConfigContext) as ConfigContextType;
+		twitchCustomRedeems,
+	} = useContext(TwitchConfigContext) as TwitchConfigContextType;
+
 	const handleTwitchClientSecretChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setTwitchClientSecret(event.target.value);
 	};
@@ -35,13 +37,13 @@ const TwitchConfigComponent = (props: TwitchConfigProps) => {
 	};
 	const handleTwitchSelectRedeem = (event: React.ChangeEvent<HTMLSelectElement>) => {
 		const selectedRedeem = event.target.value;
-		socket?.emit("twitchSelectRedeem", selectedRedeem);
+		socket?.emit(TWITCH_SELECTED_REDEEM_CHANGE, selectedRedeem);
 		setTwitchSelectedRedeem(selectedRedeem);
 	};
 
 	const authTwitch = () => {
 		setConnectingTwitch(true);
-		socket?.emit("twitchAuth", {
+		socket?.emit(TWITCH_AUTH, {
 			client_secret: twitchClientSecret,
 			client_id: twitchClientId,
 		});

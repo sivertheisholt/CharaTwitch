@@ -2,9 +2,10 @@ import { Socket } from "socket.io/dist/socket";
 import { getItem } from "../services/config/configService";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { TwitchIrcService } from "../services/twitch/twitchIrcService";
-import { startInteraction } from "./caiManager";
 import { add, remove } from "./rewardQueueManager";
 import { stop } from "./audioManager";
+import { startInteraction } from "./interactionManager";
+import { TWITCH_REDEEM } from "../../socket/TwitchEvents";
 
 export class RewardManager {
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>;
@@ -19,11 +20,7 @@ export class RewardManager {
 			const reward = remove();
 			if (!reward) return;
 
-			const caiResponse = await startInteraction(
-				this.socket,
-				reward.message,
-				reward.username
-			);
+			const caiResponse = await startInteraction(this.socket, reward.message, reward.username);
 			if (caiResponse == null) {
 				add(reward.username, reward.message);
 				return stop();
@@ -41,7 +38,7 @@ export class RewardManager {
 		) {
 			const username = rewardData.data.redemption.user.display_name;
 			const userInput = rewardData.data.redemption.user_input;
-			this.socket.emit("twitchRedeem", {
+			this.socket.emit(TWITCH_REDEEM, {
 				username: rewardData.data.redemption.user.display_name,
 				reward: rewardData.data.redemption.reward.title,
 			});

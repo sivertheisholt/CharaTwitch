@@ -4,59 +4,34 @@ import Row from "react-bootstrap/esm/Row";
 import { StatusCard } from "../components/cards/StatusCard";
 import Alert from "react-bootstrap/esm/Alert";
 import { v4 as uuidv4 } from "uuid";
-import { HomeContext } from "../contexts/HomeContext";
-import { HomeContextType } from "../types/HomeContextType";
 import RingLoader from "react-spinners/RingLoader";
 import { CustomScroll } from "react-custom-scroll";
 import Container from "react-bootstrap/esm/Container";
+import { TwitchDashboardContext } from "../contexts/dashboard/TwitchDashboardContext";
+import { TwitchDashboardContextType } from "../types/context/dashboard/TwitchDashboardContextType";
+import { OllamaDashboardContext } from "../contexts/dashboard/OllamaDashboardContext";
+import { OllamaDashboardContextType } from "../types/context/dashboard/OllamaDashboardContextType";
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface HomePageProps {}
+export interface DashboardPageProps {}
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const HomePageComponent = (props: HomePageProps) => {
-	const {
-		twitchMessages,
-		twitchRedeems,
-		twitchIrcStatus,
-		twitchPubSubStatus,
-		twitchAccountStatus,
-		caiAccountStatus,
-		caiMessages,
-		caiProcessing,
-	} = useContext(HomeContext) as HomeContextType;
+const DashboardPageComponent = (props: DashboardPageProps) => {
+	const { twitchMessages, twitchRedeems, twitchIrcStatus, twitchPubSubStatus, twitchAccountStatus } = useContext(
+		TwitchDashboardContext
+	) as TwitchDashboardContextType;
+	const { aiProcessing, aiMessages } = useContext(OllamaDashboardContext) as OllamaDashboardContextType;
 
 	return (
 		<>
 			<Container style={{ height: "30%" }}>
 				<Row className="h-100 justify-content-center align-items-center">
 					<Col>
-						<StatusCard
-							active={twitchAccountStatus}
-							title="Twitch Account"
-							pngName="twitch-logo.png"
-						/>
+						<StatusCard active={twitchAccountStatus} title="Twitch Account" pngName="twitch-logo.png" />
 					</Col>
 					<Col>
-						<StatusCard
-							active={twitchIrcStatus}
-							title="Twitch IRC"
-							pngName="twitch-logo.png"
-						/>
+						<StatusCard active={twitchIrcStatus} title="Twitch IRC" pngName="twitch-logo.png" />
 					</Col>
 					<Col>
-						<StatusCard
-							active={twitchPubSubStatus}
-							title="Twitch Redeems"
-							pngName="twitch-logo.png"
-						/>
-					</Col>
-					<Col>
-						<StatusCard
-							active={caiAccountStatus}
-							title="Character AI"
-							pngName="cai.ico"
-						/>
+						<StatusCard active={twitchPubSubStatus} title="Twitch Redeems" pngName="twitch-logo.png" />
 					</Col>
 				</Row>
 			</Container>
@@ -90,10 +65,10 @@ const HomePageComponent = (props: HomePageProps) => {
 				</Row>
 				<Row style={{ height: "50%" }}>
 					<Col style={{ height: "100%" }}>
-						<h1>Character AI</h1>
+						<h1>Character</h1>
 						<hr className="hr" />
 						<CustomScroll heightRelativeToParent="calc(100% - 85px)">
-							{caiMessages.map((message) => (
+							{aiMessages.map((message) => (
 								<Alert key={uuidv4()} variant={"primary"}>
 									{message}
 								</Alert>
@@ -106,16 +81,8 @@ const HomePageComponent = (props: HomePageProps) => {
 					<Col style={{ height: "100%" }}>
 						<h1>Status</h1>
 						<hr className="hr" />
-						<div
-							style={{ height: "calc(100% - 71px)" }}
-							className="d-flex justify-content-center align-items-center"
-						>
-							<RingLoader
-								color="#36d7b7"
-								loading={caiProcessing}
-								size={150}
-								aria-label="Loading Spinner"
-							/>
+						<div style={{ height: "calc(100% - 71px)" }} className="d-flex justify-content-center align-items-center">
+							<RingLoader color="#36d7b7" loading={aiProcessing} size={150} aria-label="Loading Spinner" />
 						</div>
 					</Col>
 				</Row>
@@ -124,4 +91,4 @@ const HomePageComponent = (props: HomePageProps) => {
 	);
 };
 
-export const HomePage = React.memo(HomePageComponent);
+export const DashboardPage = React.memo(DashboardPageComponent);

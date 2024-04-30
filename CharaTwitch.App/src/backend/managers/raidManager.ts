@@ -1,8 +1,8 @@
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
-import { startInteraction } from "./caiManager";
 import { Socket } from "socket.io/dist/socket";
 import { getItem } from "../services/config/configService";
 import { TwitchIrcService } from "../services/twitch/twitchIrcService";
+import { startInteraction } from "./interactionManager";
 
 let isRaid: boolean = false;
 

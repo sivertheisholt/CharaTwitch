@@ -9,6 +9,7 @@ import { Socket } from "socket.io/dist/socket";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { ActionManager } from "./actionManager";
 import { logger } from "../logging/logger";
+import { TWITCH_AUTH_CB, TWITCH_CUSTOM_REDEEMS } from "../../socket/TwitchEvents";
 
 export const onTwitchAuth = async (
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>,
@@ -21,16 +22,16 @@ export const onTwitchAuth = async (
 		await setTwitchConfig(client_id, client_secret);
 
 		const { access_token } = await authTwitch(expressApp, client_id, client_secret);
-		if (access_token == null) return socket.emit("twitchAuthCb", null);
+		if (access_token == null) return socket.emit(TWITCH_AUTH_CB, false);
 
 		const { preferred_username, sub } = await getUserInfo(access_token);
-		if (sub == null) return socket.emit("twitchAuthCb", null);
+		if (sub == null) return socket.emit(TWITCH_AUTH_CB, false);
 
 		await setItem("twitch_preferred_username", preferred_username);
 		await setItem("twitch_broadcaster_id", sub);
 
 		const customRedeems = await getCustomRewards(sub, client_id, access_token);
-		if (customRedeems == null) return socket.emit("twitchAuthCb", null);
+		if (customRedeems == null) return socket.emit(TWITCH_AUTH_CB, false);
 
 		const twitchIrc = new TwitchIrcService(socket, access_token, preferred_username);
 
@@ -38,18 +39,13 @@ export const onTwitchAuth = async (
 
 		const rewardManager = new RewardManager(socket, twitchIrc);
 
-		const twitchPubSubService = new TwitchPubSubService(
-			socket,
-			access_token,
-			rewardManager.onRewardCb
-		);
+		const twitchPubSubService = new TwitchPubSubService(socket, access_token, rewardManager.onRewardCb);
 		await twitchPubSubService.init();
 
 		const actionManager = new ActionManager(socket);
 
-		socket.emit("twitchAuthCb", {
-			custom_redeems: customRedeems,
-		});
+		socket.emit(TWITCH_CUSTOM_REDEEMS, customRedeems);
+		socket.emit(TWITCH_AUTH_CB, true);
 	} catch (err) {
 		logger.error(err, "Something went wrong on onTwitchAuth");
 	}

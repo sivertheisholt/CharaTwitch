@@ -6,7 +6,7 @@ let dir =
 		? process.env.HOME + "/Library/Preferences"
 		: process.env.HOME + "/.local/share");
 
-dir += "/CharaTwitch/";
+dir += "/CharaTwitch";
 
 const fileTransport = pino.transport({
 	targets: [

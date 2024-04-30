@@ -1,4 +1,4 @@
-import { RewardQueueItem } from "../types/RewardQueueItem";
+import { RewardQueueItem } from "../../types/RewardQueueItem";
 
 const queue: Array<RewardQueueItem> = [];
 
