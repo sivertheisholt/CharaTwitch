@@ -1,4 +1,4 @@
-export type CustomRedeem = {
+export type CustomRedeemType = {
 	broadcaster_name: string;
 	broadcaster_login: string;
 	broadcaster_id: string;

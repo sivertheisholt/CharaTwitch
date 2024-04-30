@@ -10,18 +10,19 @@ import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { ActionManager } from "./actionManager";
 import { logger } from "../logging/logger";
 import { TWITCH_AUTH_CB, TWITCH_CUSTOM_REDEEMS } from "../../socket/TwitchEvents";
+import { TwitchAuthType } from "../../types/socket/TwitchAuthType";
 
 export const onTwitchAuth = async (
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>,
-	arg: any,
+	arg: TwitchAuthType,
 	expressApp: Express
 ) => {
 	try {
-		const { client_id, client_secret } = arg;
+		const { twitch_client_id, twitch_client_secret } = arg;
 
-		await setTwitchConfig(client_id, client_secret);
+		await setTwitchConfig(twitch_client_id, twitch_client_secret);
 
-		const { access_token } = await authTwitch(expressApp, client_id, client_secret);
+		const { access_token } = await authTwitch(expressApp, twitch_client_id, twitch_client_secret);
 		if (access_token == null) return socket.emit(TWITCH_AUTH_CB, false);
 
 		const { preferred_username, sub } = await getUserInfo(access_token);
@@ -30,7 +31,7 @@ export const onTwitchAuth = async (
 		await setItem("twitch_preferred_username", preferred_username);
 		await setItem("twitch_broadcaster_id", sub);
 
-		const customRedeems = await getCustomRewards(sub, client_id, access_token);
+		const customRedeems = await getCustomRewards(sub, twitch_client_id, access_token);
 		if (customRedeems == null) return socket.emit(TWITCH_AUTH_CB, false);
 
 		const twitchIrc = new TwitchIrcService(socket, access_token, preferred_username);

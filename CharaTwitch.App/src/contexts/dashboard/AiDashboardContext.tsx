@@ -1,20 +1,20 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { SocketContext } from "../SocketContext";
 import { SocketContextType } from "../../types/context/SocketContextType";
-import { OllamaDashboardContextType } from "../../types/context/dashboard/OllamaDashboardContextType";
 import { AUDIO_ON_ENDED } from "../../socket/AudioEvents";
-import { AI_MESSAGE, AI_PROCESSING_REQUEST } from "../../socket/AiEvents";
+import { AI_CONNECTED, AI_MESSAGE, AI_PROCESSING_REQUEST } from "../../socket/AiEvents";
+import { AiDashboardContextType } from "../../types/context/dashboard/AiDashboardContextType";
 
 // Create a context for the socket
-export const OllamaDashboardContext = createContext<OllamaDashboardContextType | null>(null);
+export const AiDashboardContext = createContext<AiDashboardContextType | null>(null);
 
-const OllamaDashboardProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const AiDashboardProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	const { socket } = useContext(SocketContext) as SocketContextType;
-	const [caiVoices, setCaiVoices] = useState<Array<any>>([]);
 	const [aiMessages, setAiMessages] = useState<Array<string>>([]);
 	const [aiProcessing, setAiProcessing] = useState(false);
+	const [aiConnectedStatus, setAiConnectedStatus] = useState(false);
 
-	const caiMessageListener = (arg: any) => {
+	const aiMessageListener = (arg: any) => {
 		const tempArray = [...aiMessages];
 		tempArray.unshift(arg.message);
 		setAiMessages(tempArray);
@@ -30,35 +30,41 @@ const OllamaDashboardProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 		}
 	};
 
-	const caiProcessingRequestListener = (arg: boolean) => {
+	const aiConnectedListener = (arg: boolean) => {
+		setAiConnectedStatus(arg);
+	};
+
+	const aiProcessingRequestListener = (arg: boolean) => {
 		setAiProcessing(arg);
 	};
 
 	useEffect(() => {
 		if (socket !== null) {
-			socket.on(AI_MESSAGE, caiMessageListener);
-			socket.on(AI_PROCESSING_REQUEST, caiProcessingRequestListener);
+			socket.on(AI_MESSAGE, aiMessageListener);
+			socket.on(AI_PROCESSING_REQUEST, aiProcessingRequestListener);
+			socket.on(AI_CONNECTED, aiConnectedListener);
 
 			return () => {
-				socket.off(AI_MESSAGE, caiMessageListener);
-				socket.off(AI_PROCESSING_REQUEST, caiProcessingRequestListener);
+				socket.off(AI_MESSAGE, aiMessageListener);
+				socket.off(AI_PROCESSING_REQUEST, aiProcessingRequestListener);
 			};
 		}
 	}, [aiMessages, socket]);
 
 	return (
-		<OllamaDashboardContext.Provider
+		<AiDashboardContext.Provider
 			value={{
-				caiVoices,
-				setCaiVoices,
 				aiMessages,
 				setAiMessages,
 				aiProcessing,
+				setAiProcessing,
+				aiConnectedStatus,
+				setAiConnectedStatus,
 			}}
 		>
 			{children}
-		</OllamaDashboardContext.Provider>
+		</AiDashboardContext.Provider>
 	);
 };
 
-export default OllamaDashboardProvider;
+export default AiDashboardProvider;

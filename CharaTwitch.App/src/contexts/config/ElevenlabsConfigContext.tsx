@@ -2,9 +2,9 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { SocketContext } from "../SocketContext";
 import { SocketContextType } from "../../types/context/SocketContextType";
 import { ElevenlabsConfigContextType } from "../../types/context/config/ElevenlabsConfigContextType";
-import { ElevenlabsVoice } from "../../types/elevenlabs/ElevenlabsVoice";
+import { ElevenlabsVoice } from "../../types/elevenlabs/ElevenlabsVoiceType";
 import { ELEVENLABS_CONFIG, ELEVENLABS_VOICES } from "../../socket/ElevenlabsEvents";
-import { ElevenlabsConfig } from "../../types/socket/ElevenlabsConfig";
+import { ElevenlabsConfig } from "../../types/socket/ElevenlabsConfigType";
 
 // Create a context for the socket
 export const ElevenlabsConfigContext = createContext<ElevenlabsConfigContextType | null>(null);

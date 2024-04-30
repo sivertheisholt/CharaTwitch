@@ -1,7 +1,7 @@
 import { Socket } from "socket.io/dist/socket";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { isPlaying, start } from "./audioManager";
-import { fetchTTS } from "../services/elevenlabs/elevenlabsApiService";
+import { fetchTTSBase64 } from "../services/elevenlabs/elevenlabsApiService";
 import { isRaided } from "./raidManager";
 import { sendChat } from "../services/ollama/ollamaApiService";
 import { AI_MESSAGE, AI_PROCESSING_REQUEST } from "../../socket/AiEvents";
@@ -14,7 +14,7 @@ export const startInteractionAudioOnly = async (
 	start();
 	socket.emit(AI_PROCESSING_REQUEST, true);
 
-	const audioBase64 = await fetchTTS(text);
+	const audioBase64 = await fetchTTSBase64(text);
 	if (audioBase64 == null) {
 		socket.emit(AI_PROCESSING_REQUEST, false);
 		return;
@@ -42,7 +42,7 @@ export const startInteraction = async (
 		return null;
 	}
 
-	const audioBase64 = await fetchTTS(ollamaResponse);
+	const audioBase64 = await fetchTTSBase64(ollamaResponse);
 	if (audioBase64 == null) {
 		socket.emit(AI_PROCESSING_REQUEST, false);
 		return null;

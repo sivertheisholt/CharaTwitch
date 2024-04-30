@@ -1,4 +1,4 @@
-export type ElevenlabsVoice = {
+export type ElevenlabsVoiceType = {
 	voice_id: string;
 	name: string;
 	samples: [

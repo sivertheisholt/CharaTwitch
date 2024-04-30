@@ -10,6 +10,7 @@ import Button from "react-bootstrap/esm/Button";
 import { TwitchDashboardContext } from "../../contexts/dashboard/TwitchDashboardContext";
 import { TwitchDashboardContextType } from "../../types/context/dashboard/TwitchDashboardContextType";
 import { TWITCH_AUTH, TWITCH_SELECTED_REDEEM_CHANGE } from "../../socket/TwitchEvents";
+import { TwitchAuthType } from "../../types/socket/TwitchAuthType";
 
 export interface TwitchConfigProps {}
 
@@ -43,16 +44,15 @@ const TwitchConfigComponent = (props: TwitchConfigProps) => {
 
 	const authTwitch = () => {
 		setConnectingTwitch(true);
-		socket?.emit(TWITCH_AUTH, {
-			client_secret: twitchClientSecret,
-			client_id: twitchClientId,
-		});
+		const twitchAuth: TwitchAuthType = {
+			twitch_client_secret: twitchClientSecret,
+			twitch_client_id: twitchClientId,
+		};
+		socket?.emit(TWITCH_AUTH, twitchAuth);
 	};
 
 	return (
 		<>
-			<h1>Twitch config</h1>
-			<hr className="hr" />
 			<label className="fs-4">
 				<strong>Client Secret</strong>
 			</label>

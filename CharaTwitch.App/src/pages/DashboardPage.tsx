@@ -9,8 +9,8 @@ import { CustomScroll } from "react-custom-scroll";
 import Container from "react-bootstrap/esm/Container";
 import { TwitchDashboardContext } from "../contexts/dashboard/TwitchDashboardContext";
 import { TwitchDashboardContextType } from "../types/context/dashboard/TwitchDashboardContextType";
-import { OllamaDashboardContext } from "../contexts/dashboard/OllamaDashboardContext";
-import { OllamaDashboardContextType } from "../types/context/dashboard/OllamaDashboardContextType";
+import { AiDashboardContext } from "../contexts/dashboard/AiDashboardContext";
+import { AiDashboardContextType } from "../types/context/dashboard/AiDashboardContextType";
 
 export interface DashboardPageProps {}
 
@@ -18,7 +18,7 @@ const DashboardPageComponent = (props: DashboardPageProps) => {
 	const { twitchMessages, twitchRedeems, twitchIrcStatus, twitchPubSubStatus, twitchAccountStatus } = useContext(
 		TwitchDashboardContext
 	) as TwitchDashboardContextType;
-	const { aiProcessing, aiMessages } = useContext(OllamaDashboardContext) as OllamaDashboardContextType;
+	const { aiProcessing, aiMessages } = useContext(AiDashboardContext) as AiDashboardContextType;
 
 	return (
 		<>

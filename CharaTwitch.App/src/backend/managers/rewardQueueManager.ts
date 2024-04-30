@@ -1,6 +1,6 @@
-import { RewardQueueItem } from "../../types/RewardQueueItem";
+import { RewardQueueItemType } from "../../types/RewardQueueItemType";
 
-const queue: Array<RewardQueueItem> = [];
+const queue: Array<RewardQueueItemType> = [];
 
 export const add = (username: string, message: string) => {
 	queue.push({ username: username, message: message });

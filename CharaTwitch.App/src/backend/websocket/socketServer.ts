@@ -24,7 +24,11 @@ import {
 	CHARACTER_WELCOME_RAIDERS_CHANGE,
 	CHARACTER_WELCOME_STRANGERS_CHANGE,
 } from "../../socket/CharacterEvents";
-import { ELEVENLABS_CONFIG } from "../../socket/ElevenlabsEvents";
+import { ELEVENLABS_CONFIG, ELEVENLABS_SELECTED_VOICE_CHANGE } from "../../socket/ElevenlabsEvents";
+import { AI_CONNECT } from "../../socket/AiEvents";
+import { AiConnectType } from "../../types/socket/AiConnectType";
+import { TwitchAuthType } from "../../types/socket/TwitchAuthType";
+import { onAiConnect } from "../managers/aiManager";
 
 export const startSocketServer = (server: any, expressApp: Express) => {
 	const io = new Server(server, {
@@ -54,43 +58,53 @@ export const startSocketServer = (server: any, expressApp: Express) => {
 		/************************************************************
 		 * Twitch
 		 ************************************************************/
-		socket.on(TWITCH_AUTH, async (arg) => {
+		socket.on(TWITCH_AUTH, async (arg: TwitchAuthType) => {
 			onTwitchAuth(socket, arg, expressApp);
 		});
 
-		socket.on(TWITCH_SELECTED_REDEEM_CHANGE, async (arg) => {
+		socket.on(TWITCH_SELECTED_REDEEM_CHANGE, async (arg: string) => {
 			await setItem("twitch_selected_redeem", arg);
+		});
+
+		/************************************************************
+		 * AI
+		 ************************************************************/
+		socket.on(AI_CONNECT, (arg: AiConnectType) => {
+			onAiConnect(socket, arg);
 		});
 
 		/************************************************************
 		 * Elevenlabs
 		 ************************************************************/
+		socket.on(ELEVENLABS_SELECTED_VOICE_CHANGE, async (arg: string) => {
+			await setItem("elevenlabs_selected_voice", arg);
+		});
 
 		/************************************************************
 		 * Character
 		 ************************************************************/
-		socket.on(CHARACTER_WELCOME_RAIDERS_CHANGE, async (arg) => {
+		socket.on(CHARACTER_WELCOME_RAIDERS_CHANGE, async (arg: boolean) => {
 			await setItem("character_welcome_raiders", arg);
 		});
-		socket.on(CHARACTER_WELCOME_STRANGERS_CHANGE, async (arg) => {
+		socket.on(CHARACTER_WELCOME_STRANGERS_CHANGE, async (arg: boolean) => {
 			await setItem("character_welcome_strangers", arg);
 		});
-		socket.on(CHARACTER_RANDOM_REDEEMS_CHANGE, async (arg) => {
+		socket.on(CHARACTER_RANDOM_REDEEMS_CHANGE, async (arg: boolean) => {
 			await setItem("character_random_redeems", arg);
 		});
-		socket.on(CHARACTER_RANDOM_TALKING_CHANGE, async (arg) => {
+		socket.on(CHARACTER_RANDOM_TALKING_CHANGE, async (arg: boolean) => {
 			await setItem("character_random_talking", arg);
 		});
-		socket.on(CHARACTER_RANDOM_REDEEMS_FREQUENCY_CHANGE, async (arg) => {
-			await setItem("character_random_redeems_frequency", arg);
-		});
-		socket.on(CHARACTER_RANDOM_TALKING_FREQUENCY_CHANGE, async (arg) => {
-			await setItem("character_random_talking_frequency", arg);
-		});
-		socket.on(CHARACTER_WELCOME_NEW_VIEWERS_CHANGE, async (arg) => {
+		socket.on(CHARACTER_WELCOME_NEW_VIEWERS_CHANGE, async (arg: boolean) => {
 			await setItem("character_welcome_new_viewers", arg);
 		});
-		socket.on(CHARACTER_MINIMUM_TIME_BETWEEN_TALKING_CHANGE, async (arg) => {
+		socket.on(CHARACTER_RANDOM_REDEEMS_FREQUENCY_CHANGE, async (arg: number) => {
+			await setItem("character_random_redeems_frequency", arg);
+		});
+		socket.on(CHARACTER_RANDOM_TALKING_FREQUENCY_CHANGE, async (arg: number) => {
+			await setItem("character_random_talking_frequency", arg);
+		});
+		socket.on(CHARACTER_MINIMUM_TIME_BETWEEN_TALKING_CHANGE, async (arg: number) => {
 			await setItem("character_minimum_time_between_talking", arg);
 		});
 	});

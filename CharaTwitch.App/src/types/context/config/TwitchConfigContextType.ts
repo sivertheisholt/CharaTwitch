@@ -1,4 +1,4 @@
-import { CustomRedeem } from "../../twitch/CustomRedeem";
+import { CustomRedeem } from "../../twitch/CustomRedeemType";
 
 export type TwitchConfigContextType = {
 	twitchClientSecret: string;

@@ -3,7 +3,7 @@ import { SocketContext } from "../SocketContext";
 import { SocketContextType } from "../../types/context/SocketContextType";
 import { OllamaConfigContextType } from "../../types/context/config/OllamaConfigContextType";
 import { OLLAMA_CONFIG } from "../../socket/OllamaEvents";
-import { OllamaConfig } from "../../types/socket/OllamaConfig";
+import { OllamaConfigType } from "../../types/socket/OllamaConfigType";
 
 // Create a context for the socket
 export const OllamaConfigContext = createContext<OllamaConfigContextType | null>(null);
@@ -13,7 +13,7 @@ const OllamaConfigProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 	const [ollamaModelName, setOllamaModelName] = useState<string>("");
 	const [ollamaBaseUrl, setOllamaBaseUrl] = useState<string>("");
 
-	const ollamaConfigListener = (arg: OllamaConfig) => {
+	const ollamaConfigListener = (arg: OllamaConfigType) => {
 		const { ollama_model_name, ollama_base_url } = arg;
 		setOllamaModelName(ollama_model_name);
 		setOllamaBaseUrl(ollama_base_url);

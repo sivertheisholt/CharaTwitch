@@ -1,4 +1,4 @@
-import { ElevenlabsVoice } from "../../elevenlabs/ElevenlabsVoice";
+import { ElevenlabsVoice } from "../../elevenlabs/ElevenlabsVoiceType";
 
 export type ElevenlabsConfigContextType = {
 	elevenlabsApiKey: string;
