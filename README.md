@@ -2,6 +2,7 @@
 
 Welcome to CharaTwitch! This project is still in EARLY DEVELOPMENT! But you are free to try it out if you wish.
 CharacTwitch is a way to integrate Character AI into your stream. By connecting your Twitch and Character AI Account you can listen to redeems and make your character respond by talking.
+I will change the program constantly, and premade for my own wants until I'm happy with a result. Then I might make it universal for others to use.
 
 Few things to note:
 
