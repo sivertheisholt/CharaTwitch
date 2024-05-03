@@ -13,7 +13,7 @@ const NavBarComponent = (props: NavBarProps) => {
 				<Navbar.Brand>CharaTwitch</Navbar.Brand>
 				<Nav className="me-auto">
 					<Nav.Link as={NavLink} to="/">
-						Home
+						Dashboard
 					</Nav.Link>
 					<Nav.Link as={NavLink} to="/character">
 						Character

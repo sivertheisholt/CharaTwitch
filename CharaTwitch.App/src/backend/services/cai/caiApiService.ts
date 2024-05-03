@@ -55,19 +55,3 @@ export const fetchTTS = async (text: string) => {
 		return null;
 	}
 };
-
-export const sendChat = async (message: string) => {
-	try {
-		const caiCharacterId = await getItem("cai_character_id");
-		const client = await axiosClient();
-		const res = await client.post("/chat", {
-			character_id: caiCharacterId,
-			text: message,
-		});
-		if (res.status != 200) return null;
-		return res.data;
-	} catch (err) {
-		logger.error(err, "Could not send chat");
-		return null;
-	}
-};

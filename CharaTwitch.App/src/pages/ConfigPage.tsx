@@ -2,8 +2,8 @@ import React from "react";
 import Col from "react-bootstrap/esm/Col";
 import Row from "react-bootstrap/esm/Row";
 
-import { CaiConfig } from "../components/config/CaiConfig";
 import { TwitchConfig } from "../components/config/TwitchConfig";
+import { AiConfig } from "../components/config/AiConfig";
 
 export interface ConfigPageProps {}
 
@@ -12,13 +12,15 @@ const ConfigPageComponent = (props: ConfigPageProps) => {
 		<>
 			<Row className="h-100">
 				<Col>
+					<h2>Twitch</h2>
+					<hr className="hr" />
 					<TwitchConfig />
 				</Col>
 				<Col md="auto">
 					<div className="vr h-100"></div>
 				</Col>
 				<Col>
-					<CaiConfig />
+					<AiConfig />
 				</Col>
 			</Row>
 		</>

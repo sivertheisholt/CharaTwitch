@@ -1,0 +1,9 @@
+export const TWITCH_IRC_STATUS = "twitchIrcStatus";
+export const TWITCH_PUB_SUB_STATUS = "twitchPubSubStatus";
+export const TWITCH_ACCOUNT_STATUS = "twitchAccountStatus";
+export const TWITCH_CONFIG = "twitchConfig"; // CAI processing
+export const TWITCH_CUSTOM_REDEEMS = "twitchRedeems";
+export const TWITCH_AUTH = "twitchAuth";
+export const TWITCH_SELECTED_REDEEM_CHANGE = "twitchSelectedRedeemChange";
+export const TWITCH_REDEEM = "twitchRedeem";
+export const TWITCH_MESSAGE = "twitchMessage";

@@ -9,28 +9,30 @@ import { Socket } from "socket.io/dist/socket";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { ActionManager } from "./actionManager";
 import { logger } from "../logging/logger";
+import { TWITCH_ACCOUNT_STATUS, TWITCH_CUSTOM_REDEEMS } from "../../socket/TwitchEvents";
+import { TwitchAuthType } from "../../types/socket/TwitchAuthType";
 
 export const onTwitchAuth = async (
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>,
-	arg: any,
+	arg: TwitchAuthType,
 	expressApp: Express
 ) => {
 	try {
-		const { client_id, client_secret } = arg;
+		const { twitch_client_id, twitch_client_secret } = arg;
 
-		await setTwitchConfig(client_id, client_secret);
+		await setTwitchConfig(twitch_client_id, twitch_client_secret);
 
-		const { access_token } = await authTwitch(expressApp, client_id, client_secret);
-		if (access_token == null) return socket.emit("twitchAuthCb", null);
+		const { access_token } = await authTwitch(expressApp, twitch_client_id, twitch_client_secret);
+		if (access_token == null) return socket.emit(TWITCH_ACCOUNT_STATUS, false);
 
 		const { preferred_username, sub } = await getUserInfo(access_token);
-		if (sub == null) return socket.emit("twitchAuthCb", null);
+		if (sub == null) return socket.emit(TWITCH_ACCOUNT_STATUS, false);
 
 		await setItem("twitch_preferred_username", preferred_username);
 		await setItem("twitch_broadcaster_id", sub);
 
-		const customRedeems = await getCustomRewards(sub, client_id, access_token);
-		if (customRedeems == null) return socket.emit("twitchAuthCb", null);
+		const customRedeems = await getCustomRewards(sub, twitch_client_id, access_token);
+		if (customRedeems == null) return socket.emit(TWITCH_ACCOUNT_STATUS, false);
 
 		const twitchIrc = new TwitchIrcService(socket, access_token, preferred_username);
 
@@ -38,18 +40,13 @@ export const onTwitchAuth = async (
 
 		const rewardManager = new RewardManager(socket, twitchIrc);
 
-		const twitchPubSubService = new TwitchPubSubService(
-			socket,
-			access_token,
-			rewardManager.onRewardCb
-		);
+		const twitchPubSubService = new TwitchPubSubService(socket, access_token, rewardManager.onRewardCb);
 		await twitchPubSubService.init();
 
 		const actionManager = new ActionManager(socket);
 
-		socket.emit("twitchAuthCb", {
-			custom_redeems: customRedeems,
-		});
+		socket.emit(TWITCH_CUSTOM_REDEEMS, customRedeems);
+		socket.emit(TWITCH_ACCOUNT_STATUS, true);
 	} catch (err) {
 		logger.error(err, "Something went wrong on onTwitchAuth");
 	}

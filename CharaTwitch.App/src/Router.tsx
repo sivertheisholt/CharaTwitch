@@ -1,7 +1,7 @@
 import React from "react";
 import { RouterProvider, createHashRouter } from "react-router-dom";
 import { ErrorPage } from "./pages/ErrorPage";
-import { HomePage } from "./pages/HomePage";
+import { DashboardPage } from "./pages/DashboardPage";
 import { DefaultLayout } from "./components/layouts/DefaultLayout";
 import { ConfigPage } from "./pages/ConfigPage";
 import { CharacterPage } from "./pages/CharacterPage";
@@ -13,7 +13,7 @@ const RouterComponent = (props: RouterProps) => {
 	const router = createHashRouter([
 		{
 			path: "/",
-			element: <DefaultLayout children={<HomePage />} />,
+			element: <DefaultLayout children={<DashboardPage />} />,
 			errorElement: <ErrorPage />,
 		},
 		{

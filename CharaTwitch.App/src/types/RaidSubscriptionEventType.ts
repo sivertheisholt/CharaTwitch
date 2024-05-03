@@ -1,4 +1,4 @@
-export type SubscriptionEvent = {
+export type SubscriptionEventType = {
 	subscription: {
 		id: string;
 		type: string;

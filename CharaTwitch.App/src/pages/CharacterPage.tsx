@@ -8,24 +8,23 @@ import InputGroup from "react-bootstrap/esm/InputGroup";
 import Row from "react-bootstrap/esm/Row";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
-import { CharacterContext } from "../contexts/CharacterContext";
-import { CharacterContextType } from "../types/CharacterContextType";
+import { CharacterContext } from "../contexts/character/CharacterContext";
+import { CharacterContextType } from "../types/context/character/CharacterContextType";
 import { SocketContext } from "../contexts/SocketContext";
-import { SocketContextType } from "../types/SocketContextType";
+import { SocketContextType } from "../types/context/SocketContextType";
+import Alert from "react-bootstrap/esm/Alert";
 import {
+	CHARACTER_ASK_QUESTION,
+	CHARACTER_MINIMUM_TIME_BETWEEN_TALKING_CHANGE,
+	CHARACTER_RANDOM_REDEEMS_CHANGE,
+	CHARACTER_RANDOM_REDEEMS_FREQUENCY_CHANGE,
+	CHARACTER_RANDOM_TALKING_CHANGE,
+	CHARACTER_RANDOM_TALKING_FREQUENCY_CHANGE,
+	CHARACTER_TTS,
+	CHARACTER_WELCOME_NEW_VIEWERS_CHANGE,
 	CHARACTER_WELCOME_RAIDERS_CHANGE,
 	CHARACTER_WELCOME_STRANGERS_CHANGE,
-	CHARACTER_RANDOM_REDEEMS_CHANGE,
-	CHARACTER_RANDOM_TALKING_CHANGE,
-	CHARACTER_RANDOM_REDEEMS_FREQUENCY_CHANGE,
-	CHARACTER_RANDOM_TALKING_FREQUENCY_CHANGE,
-	CHARACTER_DO_INTRO,
-	CHARACTER_ASK_QUESTION,
-	CHARACTER_WELCOME_NEW_VIEWERS_CHANGE,
-	CHARACTER_MINIMUM_TIME_BETWEEN_TALKING_CHANGE,
-	CHARACTER_CONTEXT_PARAMETER,
-} from "../socket/Events";
-import Alert from "react-bootstrap/esm/Alert";
+} from "../socket/CharacterEvents";
 
 export interface CharacterPageProps {}
 
@@ -35,8 +34,8 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 		setCharacterSelectedRedeem,
 		characterQuestion,
 		setCharacterQuestion,
-		characterIntroParam,
-		setCharacterIntroParam,
+		characterTTS,
+		setCharacterTTS,
 		characterRandomRedeems,
 		setCharacterRandomRedeems,
 		characterRandomTalking,
@@ -49,17 +48,13 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 		setCharacterRandomRedeemsFrequency,
 		characterRandomTalkingFrequency,
 		setCharacterRandomTalkingFrequency,
-		characterContextParameter,
-		setCharacterContextParameter,
 		characterWelcomeNewViewers,
 		setCharacterWelcomeNewViewers,
 		characterMinimumTimeBetweenTalking,
 		setCharacterMinimumTimeBetweenTalking,
 	} = useContext(CharacterContext) as CharacterContextType;
 	const { socket } = useContext(SocketContext) as SocketContextType;
-
-	const [saveContext, setSaveContext] = useState(false);
-	const [startIntro, setStartIntro] = useState(false);
+	const [startTTS, setStartTTS] = useState(false);
 	const [startQuestion, setStartQuestion] = useState(false);
 
 	const handleRandomRedeemChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,13 +90,9 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 		socket.emit(CHARACTER_RANDOM_TALKING_FREQUENCY_CHANGE, value);
 		setCharacterRandomTalkingFrequency(value);
 	};
-	const handleContextParamChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+	const handleTTSChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const value = event.target.value;
-		setCharacterContextParameter(value);
-	};
-	const handleIntroParamChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const value = event.target.value;
-		setCharacterIntroParam(value);
+		setCharacterTTS(value);
 	};
 	const handleQuestionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const value = event.target.value;
@@ -116,22 +107,16 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 		setCharacterMinimumTimeBetweenTalking(value);
 	};
 
-	const handleDoIntro = () => {
-		socket.emit(CHARACTER_DO_INTRO, characterIntroParam);
-		setStartIntro(true);
-		setTimeout(() => setStartIntro(false), 5000);
+	const handleCharacterTTS = () => {
+		socket.emit(CHARACTER_TTS, characterTTS);
+		setStartTTS(true);
+		setTimeout(() => setStartTTS(false), 5000);
 	};
 
 	const handleAskQuestion = () => {
 		socket.emit(CHARACTER_ASK_QUESTION, characterQuestion);
 		setStartQuestion(true);
 		setTimeout(() => setStartQuestion(false), 5000);
-	};
-
-	const handleSaveContextParam = () => {
-		socket.emit(CHARACTER_CONTEXT_PARAMETER, characterContextParameter);
-		setSaveContext(true);
-		setTimeout(() => setSaveContext(false), 3000);
 	};
 
 	return (
@@ -195,7 +180,7 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 					<Card data-bs-theme="dark">
 						<Card.Body>
 							<label className="fs-6">
-								<strong>Intro param</strong>
+								<strong>Text To Speech</strong>
 							</label>
 							<InputGroup className="mb-3" size="sm">
 								<Form.Control
@@ -204,16 +189,16 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 									as="textarea"
 									placeholder="Text to speech"
 									maxLength={1000}
-									value={characterIntroParam}
-									onChange={handleIntroParamChange}
+									value={characterTTS}
+									onChange={handleTTSChange}
 								/>
 							</InputGroup>
 							<div className="d-grid gap-2 mt-4">
-								{startIntro ? (
+								{startTTS ? (
 									<Alert variant={"success"}>Started!</Alert>
 								) : (
-									<Button variant="primary" size="sm" onClick={handleDoIntro}>
-										Do intro
+									<Button variant="primary" size="sm" onClick={handleCharacterTTS}>
+										Start
 									</Button>
 								)}
 							</div>
@@ -236,10 +221,7 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 											<strong>Random redeems (OFF)</strong>
 										</label>
 										<InputGroup data-bs-theme="light" className="mb-3" size="sm">
-											<Form.Check
-												onChange={handleRandomRedeemChange}
-												checked={characterRandomRedeems}
-											/>
+											<Form.Check onChange={handleRandomRedeemChange} checked={characterRandomRedeems} />
 										</InputGroup>
 									</Col>
 									<Col>
@@ -247,10 +229,7 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 											<strong>Random talking</strong>
 										</label>
 										<InputGroup data-bs-theme="light" className="mb-3" size="lg">
-											<Form.Check
-												onChange={handleRandomTalkingChange}
-												checked={characterRandomTalking}
-											/>
+											<Form.Check onChange={handleRandomTalkingChange} checked={characterRandomTalking} />
 										</InputGroup>
 									</Col>
 								</Row>
@@ -260,10 +239,7 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 											<strong>Welcome strangers</strong>
 										</label>
 										<InputGroup data-bs-theme="light" className="mb-3" size="sm">
-											<Form.Check
-												onChange={handleWelcomeStrangersChange}
-												checked={characterWelcomeStrangers}
-											/>
+											<Form.Check onChange={handleWelcomeStrangersChange} checked={characterWelcomeStrangers} />
 										</InputGroup>
 									</Col>
 									<Col>
@@ -271,10 +247,7 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 											<strong>Welcome raiders</strong>
 										</label>
 										<InputGroup data-bs-theme="light" className="mb-3" size="sm">
-											<Form.Check
-												onChange={handleWelcomeRaidersChange}
-												checked={characterWelcomeRaiders}
-											/>
+											<Form.Check onChange={handleWelcomeRaidersChange} checked={characterWelcomeRaiders} />
 										</InputGroup>
 									</Col>
 								</Row>
@@ -284,10 +257,7 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 											<strong>Welcome new viewers</strong>
 										</label>
 										<InputGroup data-bs-theme="light" className="mb-3" size="sm">
-											<Form.Check
-												onChange={handleWelcomeNewViewersChange}
-												checked={characterWelcomeNewViewers}
-											/>
+											<Form.Check onChange={handleWelcomeNewViewersChange} checked={characterWelcomeNewViewers} />
 										</InputGroup>
 									</Col>
 								</Row>
@@ -344,38 +314,6 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 									onChange={handleMinimumTimeBetweenTalkingChange}
 								/>
 							</div>
-						</Card.Body>
-					</Card>
-
-					<Card data-bs-theme="dark">
-						<Card.Body>
-							<label className="fs-6">
-								<strong>Context parameter</strong>
-							</label>
-							<p>Variables available: {"${username}"}</p>
-							<InputGroup className="mb-3" size="sm">
-								<Form.Control
-									style={{ height: "200px" }}
-									data-bs-theme="light"
-									as="textarea"
-									maxLength={500}
-									value={characterContextParameter}
-									onChange={handleContextParamChange}
-									placeholder="This message was sent by ${username} - context is that multiple people are using you to chat on a Twitch stream. You should always reply with several sentences. No: bolding, ooc, brackets, asterisks."
-								/>
-							</InputGroup>
-							{saveContext ? (
-								<Alert variant={"success"}>Saved!</Alert>
-							) : (
-								<Button
-									className="w-100"
-									variant="primary"
-									size="sm"
-									onClick={handleSaveContextParam}
-								>
-									Save
-								</Button>
-							)}
 						</Card.Body>
 					</Card>
 				</Col>

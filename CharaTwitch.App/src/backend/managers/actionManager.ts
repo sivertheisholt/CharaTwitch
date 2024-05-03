@@ -1,25 +1,23 @@
 import { Socket } from "socket.io/dist/socket";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
-import { CHARACTER_ASK_QUESTION, CHARACTER_DO_INTRO } from "../../socket/Events";
 import { getItem, setItem } from "../services/config/configService";
-import { startInteraction, startInteractionAudioOnly } from "./caiManager";
+import { CHARACTER_ASK_QUESTION, CHARACTER_TTS } from "../../socket/CharacterEvents";
+import { startInteraction, startInteractionAudioOnly } from "./interactionManager";
 
 export class ActionManager {
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>;
-	constructor(
-		socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>
-	) {
+	constructor(socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>) {
 		this.socket = socket;
-		socket.on(CHARACTER_DO_INTRO, (arg) => {
-			this.doIntro(arg);
+		socket.on(CHARACTER_TTS, (arg) => {
+			this.tts(arg);
 		});
 		socket.on(CHARACTER_ASK_QUESTION, (arg) => {
 			this.askQuestion(arg);
 		});
 	}
-	doIntro = async (introParam: string) => {
-		await setItem("character_intro_param", introParam);
-		startInteractionAudioOnly(this.socket, introParam);
+	tts = async (text: string) => {
+		await setItem("character_tts", text);
+		startInteractionAudioOnly(this.socket, text);
 	};
 	askQuestion = async (question: string) => {
 		await setItem("character_question", question);

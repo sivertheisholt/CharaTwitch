@@ -1,23 +1,38 @@
 import SocketProvider from "./contexts/SocketContext";
-import HomeProvider from "./contexts/HomeContext";
-import ConfigProvider from "./contexts/ConfigContext";
+import TwitchConfigProvider from "./contexts/config/TwitchConfigContext";
+import OllamaConfigProvider from "./contexts/config/OllamaConfigContext";
 import { Router } from "./Router";
 import { NavBar } from "./components/navbar/NavBar";
-import CharacterProvider from "./contexts/CharacterContext";
+import CharacterProvider from "./contexts/character/CharacterContext";
+import TwitchDashboardProvider from "./contexts/dashboard/TwitchDashboardContext";
+import AiDashboardProvider from "./contexts/dashboard/AiDashboardContext";
+import CaiConfigProvider from "./contexts/config/CaiConfigContext";
+import CaiDashboardProvider from "./contexts/dashboard/CaiDashboardContext";
+import OllamaDashboardProvider from "./contexts/dashboard/OllamaDashboardContext";
 
 function App() {
 	return (
 		<div style={{ backgroundColor: "#212529", height: "100vh", overflowX: "auto" }}>
 			<SocketProvider>
-				<HomeProvider>
-					<ConfigProvider>
-						<CharacterProvider>
-							<Router>
-								<NavBar />
-							</Router>
-						</CharacterProvider>
-					</ConfigProvider>
-				</HomeProvider>
+				<OllamaDashboardProvider>
+					<CaiDashboardProvider>
+						<AiDashboardProvider>
+							<TwitchDashboardProvider>
+								<TwitchConfigProvider>
+									<OllamaConfigProvider>
+										<CharacterProvider>
+											<CaiConfigProvider>
+												<Router>
+													<NavBar />
+												</Router>
+											</CaiConfigProvider>
+										</CharacterProvider>
+									</OllamaConfigProvider>
+								</TwitchConfigProvider>
+							</TwitchDashboardProvider>
+						</AiDashboardProvider>
+					</CaiDashboardProvider>
+				</OllamaDashboardProvider>
 			</SocketProvider>
 		</div>
 	);
