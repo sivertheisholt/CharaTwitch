@@ -3,7 +3,7 @@ import { TwitchDashboardContextType } from "../../types/context/dashboard/Twitch
 import { SocketContextType } from "../../types/context/SocketContextType";
 import { SocketContext } from "../SocketContext";
 import {
-	TWITCH_AUTH_CB,
+	TWITCH_ACCOUNT_STATUS,
 	TWITCH_IRC_STATUS,
 	TWITCH_MESSAGE,
 	TWITCH_PUB_SUB_STATUS,
@@ -21,7 +21,7 @@ const TwitchDashboardProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 	const [twitchIrcStatus, setTwitchIrcStatus] = useState(false);
 	const [twitchPubSubStatus, setTwitchPubSubStatus] = useState(false);
 
-	const twitchAuthCbListener = (arg: boolean) => {
+	const twitchAccountStatusListener = (arg: boolean) => {
 		setTwitchAccountStatus(arg);
 	};
 	const twitchMessageListener = (arg: any) => {
@@ -43,14 +43,14 @@ const TwitchDashboardProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
 	useEffect(() => {
 		if (socket !== null) {
-			socket.on(TWITCH_AUTH_CB, twitchAuthCbListener);
+			socket.on(TWITCH_ACCOUNT_STATUS, twitchAccountStatusListener);
 			socket.on(TWITCH_MESSAGE, twitchMessageListener);
 			socket.on(TWITCH_REDEEM, twitchRedeemListener);
 			socket.on(TWITCH_IRC_STATUS, twitchIrcListener);
 			socket.on(TWITCH_PUB_SUB_STATUS, twitchPubSubListener);
 			return () => {
 				// Clean up event listeners when component unmounts
-				socket.off(TWITCH_AUTH_CB, twitchAuthCbListener);
+				socket.off(TWITCH_ACCOUNT_STATUS, twitchAccountStatusListener);
 				socket.off(TWITCH_MESSAGE, twitchMessageListener);
 				socket.off(TWITCH_REDEEM, twitchRedeemListener);
 				socket.off(TWITCH_IRC_STATUS, twitchIrcListener);

@@ -11,7 +11,7 @@ const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ children }
 	const { socket } = useContext(SocketContext) as SocketContextType;
 	const [characterSelectedRedeem, setCharacterSelectedRedeem] = useState<string>("");
 	const [characterQuestion, setCharacterQuestion] = useState<string>("");
-	const [characterIntroParam, setCharacterIntroParam] = useState<string>("");
+	const [characterTTS, setCharacterTTS] = useState<string>("");
 	const [characterRandomRedeems, setCharacterRandomRedeems] = useState<boolean>(false);
 	const [characterRandomTalking, setCharacterRandomTalking] = useState<boolean>(false);
 	const [characterWelcomeStrangers, setCharacterWelcomeStrangers] = useState<boolean>(false);
@@ -27,7 +27,7 @@ const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ children }
 				const {
 					character_selected_redeem,
 					character_question,
-					character_intro_param,
+					character_tts,
 					character_random_redeems,
 					character_random_talking,
 					character_welcome_strangers,
@@ -39,7 +39,7 @@ const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ children }
 				} = arg;
 				setCharacterSelectedRedeem(character_selected_redeem);
 				setCharacterQuestion(character_question);
-				setCharacterIntroParam(character_intro_param);
+				setCharacterTTS(character_tts);
 				setCharacterRandomRedeems(character_random_redeems);
 				setCharacterRandomTalking(character_random_talking);
 				setCharacterWelcomeStrangers(character_welcome_strangers);
@@ -59,8 +59,8 @@ const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ children }
 				setCharacterSelectedRedeem,
 				characterQuestion,
 				setCharacterQuestion,
-				characterIntroParam,
-				setCharacterIntroParam,
+				characterTTS,
+				setCharacterTTS,
 				characterRandomRedeems,
 				setCharacterRandomRedeems,
 				characterRandomTalking,

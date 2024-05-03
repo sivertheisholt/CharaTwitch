@@ -102,7 +102,7 @@ export const getCharacterConfig = async () => {
 	const configObject = {
 		character_selected_redeem: await _getItem("character_selected_redeem"),
 		character_question: await _getItem("character_question"),
-		character_intro_param: await _getItem("character_intro_param"),
+		character_tts: await _getItem("character_tts"),
 		character_random_redeems: await _getItem("character_random_redeems"),
 		character_random_talking: await _getItem("character_random_talking"),
 		character_welcome_strangers: await _getItem("character_welcome_raiders"),

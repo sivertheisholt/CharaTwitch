@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { SocketContext } from "../SocketContext";
 import { SocketContextType } from "../../types/context/SocketContextType";
 import { AUDIO_ON_ENDED } from "../../socket/AudioEvents";
-import { AI_CONNECTED, AI_MESSAGE, AI_PROCESSING_REQUEST } from "../../socket/AiEvents";
+import { AI_MESSAGE, AI_PROCESSING_REQUEST } from "../../socket/AiEvents";
 import { AiDashboardContextType } from "../../types/context/dashboard/AiDashboardContextType";
 
 // Create a context for the socket
@@ -12,7 +12,6 @@ const AiDashboardProvider: React.FC<{ children: React.ReactNode }> = ({ children
 	const { socket } = useContext(SocketContext) as SocketContextType;
 	const [aiMessages, setAiMessages] = useState<Array<string>>([]);
 	const [aiProcessing, setAiProcessing] = useState(false);
-	const [aiConnectedStatus, setAiConnectedStatus] = useState(false);
 
 	const aiMessageListener = (arg: any) => {
 		const tempArray = [...aiMessages];
@@ -30,10 +29,6 @@ const AiDashboardProvider: React.FC<{ children: React.ReactNode }> = ({ children
 		}
 	};
 
-	const aiConnectedListener = (arg: boolean) => {
-		setAiConnectedStatus(arg);
-	};
-
 	const aiProcessingRequestListener = (arg: boolean) => {
 		setAiProcessing(arg);
 	};
@@ -42,12 +37,10 @@ const AiDashboardProvider: React.FC<{ children: React.ReactNode }> = ({ children
 		if (socket !== null) {
 			socket.on(AI_MESSAGE, aiMessageListener);
 			socket.on(AI_PROCESSING_REQUEST, aiProcessingRequestListener);
-			socket.on(AI_CONNECTED, aiConnectedListener);
 
 			return () => {
 				socket.off(AI_MESSAGE, aiMessageListener);
 				socket.off(AI_PROCESSING_REQUEST, aiProcessingRequestListener);
-				socket.off(AI_CONNECTED, aiConnectedListener);
 			};
 		}
 	}, [aiMessages, socket]);
@@ -59,8 +52,6 @@ const AiDashboardProvider: React.FC<{ children: React.ReactNode }> = ({ children
 				setAiMessages,
 				aiProcessing,
 				setAiProcessing,
-				aiConnectedStatus,
-				setAiConnectedStatus,
 			}}
 		>
 			{children}

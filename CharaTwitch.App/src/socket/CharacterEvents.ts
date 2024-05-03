@@ -9,6 +9,6 @@ export const CHARACTER_RANDOM_TALKING_FREQUENCY_CHANGE = "characterRandomTalking
 export const CHARACTER_REDEEM_SELECTED = "characterRedeemSelected"; // Redeem selected redeem
 export const CHARACTER_REDEEM_RANDOM = "characterRedeemRandom"; // Redeem random redeem
 export const CHARACTER_ASK_QUESTION = "characterAskQuestion"; // Ask question
-export const CHARACTER_DO_INTRO = "characterDoIntro"; // Do intro
+export const CHARACTER_TTS = "characterTTS"; // Do TTS
 export const CHARACTER_CONFIG = "characterConfig"; // Character config
 export const CHARACTER_MINIMUM_TIME_BETWEEN_TALKING_CHANGE = "characterMinimumTimeBetweenTalkingChange"; // On minimum time between talking change

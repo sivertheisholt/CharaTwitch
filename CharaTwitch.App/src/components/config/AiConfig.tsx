@@ -1,12 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { SocketContext } from "../../contexts/SocketContext";
 import { SocketContextType } from "../../types/context/SocketContextType";
 import InputGroup from "react-bootstrap/esm/InputGroup";
 import Form from "react-bootstrap/esm/Form";
 import { OllamaConfigContext } from "../../contexts/config/OllamaConfigContext";
 import { OllamaConfigContextType } from "../../types/context/config/OllamaConfigContextType";
-import { AiDashboardContext } from "../../contexts/dashboard/AiDashboardContext";
-import { AiDashboardContextType } from "../../types/context/dashboard/AiDashboardContextType";
 import Alert from "react-bootstrap/esm/Alert";
 import Button from "react-bootstrap/esm/Button";
 import { AI_CONNECT } from "../../socket/AiEvents";
@@ -14,6 +12,10 @@ import { AiConnectType } from "../../types/socket/AiConnectType";
 import { CAI_SELECTED_VOICE_CHANGE } from "../../socket/CaiEvents";
 import { CaiConfigContextType } from "../../types/context/config/CaiConfigContextType";
 import { CaiConfigContext } from "../../contexts/config/CaiConfigContext";
+import { CaiDashboardContext } from "../../contexts/dashboard/CaiDashboardContext";
+import { CaiDashboardContextType } from "../../types/context/dashboard/CaiDashboardContextType";
+import { OllamaDashboardContext } from "../../contexts/dashboard/OllamaDashboardContext";
+import { OllamaDashboardContextType } from "../../types/context/dashboard/OllamaDashboardContextType";
 
 export interface AiConfigProps {}
 
@@ -25,19 +27,20 @@ const AiConfigComponent = (props: AiConfigProps) => {
 	const { ollamaModelName, setOllamaModelName, ollamaBaseUrl, setOllamaBaseUrl } = useContext(
 		OllamaConfigContext
 	) as OllamaConfigContextType;
-	const { aiConnectedStatus } = useContext(AiDashboardContext) as AiDashboardContextType;
+	const { caiAccountStatus } = useContext(CaiDashboardContext) as CaiDashboardContextType;
+	const { ollamaStatus } = useContext(OllamaDashboardContext) as OllamaDashboardContextType;
 
 	const [connectingAi, setConnectingAi] = useState(false);
 
-	const handleOllamaModelName = (event: React.ChangeEvent<HTMLInputElement>) => {
+	const handleOllamaModelNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setOllamaModelName(event.target.value);
 	};
 
-	const handleOllamaBaseUrl = (event: React.ChangeEvent<HTMLInputElement>) => {
+	const handleOllamaBaseUrlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setOllamaBaseUrl(event.target.value);
 	};
 
-	const handleCaiBaseUrl = (event: React.ChangeEvent<HTMLInputElement>) => {
+	const handleCaiBaseUrlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setCaiBaseUrl(event.target.value);
 	};
 
@@ -67,7 +70,7 @@ const AiConfigComponent = (props: AiConfigProps) => {
 			<InputGroup className="mb-3" size="lg">
 				<Form.Control
 					value={ollamaModelName}
-					onChange={handleOllamaModelName}
+					onChange={handleOllamaModelNameChange}
 					placeholder="Model Name"
 					aria-label="Model Name"
 				/>
@@ -78,7 +81,7 @@ const AiConfigComponent = (props: AiConfigProps) => {
 			<InputGroup className="mb-3" size="lg">
 				<Form.Control
 					value={ollamaBaseUrl}
-					onChange={handleOllamaBaseUrl}
+					onChange={handleOllamaBaseUrlChange}
 					placeholder="Ollama Server"
 					aria-label="Ollama Server"
 				/>
@@ -89,17 +92,17 @@ const AiConfigComponent = (props: AiConfigProps) => {
 				<strong>CAI Server</strong>
 			</label>
 			<InputGroup className="mb-3" size="lg">
-				<Form.Control value={caiBaseUrl} onChange={handleCaiBaseUrl} placeholder="CAI Server" aria-label="CAI Server" />
+				<Form.Control
+					value={caiBaseUrl}
+					onChange={handleCaiBaseUrlChange}
+					placeholder="CAI Server"
+					aria-label="CAI Server"
+				/>
 			</InputGroup>
 			<label className="fs-4">
 				<strong>Voices</strong>
 			</label>
-			<Form.Select
-				size="lg"
-				onChange={handleCaiSelectVoice}
-				value={caiSelectedVoice}
-				aria-label="Default select example"
-			>
+			<Form.Select size="lg" onChange={handleCaiSelectVoice} value={caiSelectedVoice} aria-label="CAI Voices">
 				{caiVoices.map((voice) => (
 					<option key={voice.id} value={voice.id}>
 						{voice.name}
@@ -107,7 +110,7 @@ const AiConfigComponent = (props: AiConfigProps) => {
 				))}
 			</Form.Select>
 			<div className="d-grid gap-2 mt-4">
-				{aiConnectedStatus ? (
+				{ollamaStatus && caiAccountStatus ? (
 					<Alert variant={"success"}>Connected</Alert>
 				) : connectingAi ? (
 					<Alert variant={"warning"}>Connecting...</Alert>

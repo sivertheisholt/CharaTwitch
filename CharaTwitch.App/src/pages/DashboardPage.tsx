@@ -11,6 +11,10 @@ import { TwitchDashboardContext } from "../contexts/dashboard/TwitchDashboardCon
 import { TwitchDashboardContextType } from "../types/context/dashboard/TwitchDashboardContextType";
 import { AiDashboardContext } from "../contexts/dashboard/AiDashboardContext";
 import { AiDashboardContextType } from "../types/context/dashboard/AiDashboardContextType";
+import { CaiDashboardContext } from "../contexts/dashboard/CaiDashboardContext";
+import { CaiDashboardContextType } from "../types/context/dashboard/CaiDashboardContextType";
+import { OllamaDashboardContext } from "../contexts/dashboard/OllamaDashboardContext";
+import { OllamaDashboardContextType } from "../types/context/dashboard/OllamaDashboardContextType";
 
 export interface DashboardPageProps {}
 
@@ -19,19 +23,24 @@ const DashboardPageComponent = (props: DashboardPageProps) => {
 		TwitchDashboardContext
 	) as TwitchDashboardContextType;
 	const { aiProcessing, aiMessages } = useContext(AiDashboardContext) as AiDashboardContextType;
+	const { caiAccountStatus } = useContext(CaiDashboardContext) as CaiDashboardContextType;
+	const { ollamaStatus } = useContext(OllamaDashboardContext) as OllamaDashboardContextType;
 
 	return (
 		<>
 			<Container style={{ height: "30%" }}>
 				<Row className="h-100 justify-content-center align-items-center">
 					<Col>
-						<StatusCard active={twitchAccountStatus} title="Twitch Account" pngName="twitch-logo.png" />
+						<StatusCard
+							active={twitchAccountStatus && twitchIrcStatus && twitchPubSubStatus}
+							pngName="twitch-logo.png"
+						/>
 					</Col>
 					<Col>
-						<StatusCard active={twitchIrcStatus} title="Twitch IRC" pngName="twitch-logo.png" />
+						<StatusCard active={caiAccountStatus} pngName="cai.ico" />
 					</Col>
 					<Col>
-						<StatusCard active={twitchPubSubStatus} title="Twitch Redeems" pngName="twitch-logo.png" />
+						<StatusCard active={ollamaStatus} pngName="ollama.png" />
 					</Col>
 				</Row>
 			</Container>

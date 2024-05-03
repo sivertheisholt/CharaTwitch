@@ -5,6 +5,7 @@ import { ChatManager } from "../../managers/chatManager";
 import { parseMessage } from "../../helpers/twitchIrcMessageParser";
 import { RaidManager } from "../../managers/raidManager";
 import { logger } from "../../logging/logger";
+import { TWITCH_IRC_STATUS } from "../../../socket/TwitchEvents";
 
 export class TwitchIrcService {
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>;
@@ -38,9 +39,7 @@ export class TwitchIrcService {
 		if (messageId === "") {
 			this.connection.sendUTF(`PRIVMSG #${this.username} :${message}`);
 		} else {
-			this.connection.sendUTF(
-				`@reply-parent-msg-id=${messageId} PRIVMSG #${this.username} :${message}`
-			);
+			this.connection.sendUTF(`@reply-parent-msg-id=${messageId} PRIVMSG #${this.username} :${message}`);
 		}
 	};
 
@@ -61,11 +60,7 @@ export class TwitchIrcService {
 						"custom-reward-id" in parsedMessage.tags
 					)
 						break;
-					this.chatManager.handleMessage(
-						parsedMessage.source.nick,
-						parsedMessage.parameters,
-						parsedMessage.tags.id
-					);
+					this.chatManager.handleMessage(parsedMessage.source.nick, parsedMessage.parameters, parsedMessage.tags.id);
 					this.socket.emit("twitchMessage", {
 						username: parsedMessage.source.nick,
 						message: parsedMessage.parameters,
@@ -74,8 +69,7 @@ export class TwitchIrcService {
 				}
 				case "USERNOTICE":
 					if (parsedMessage.tags == null) break;
-					if (parsedMessage.tags["msg-id"] == "raid")
-						this.raidManager.startRaid(parsedMessage.tags["display-name"]);
+					if (parsedMessage.tags["msg-id"] == "raid") this.raidManager.startRaid(parsedMessage.tags["display-name"]);
 					break;
 				case "PING":
 					this.handlePing(parsedMessage.parameters);
@@ -109,17 +103,17 @@ export class TwitchIrcService {
 
 			connection.on("error", function (err) {
 				logger.error(err, "Could not connect to twitch irc");
-				this.socket.emit("twitchIrc", false);
+				this.socket.emit(TWITCH_IRC_STATUS, false);
 			});
 
 			connection.on("close", function () {
 				logger.info("Connection Closed");
 				logger.info(`close description: ${connection.closeDescription}`);
 				logger.info(`close reason code: ${connection.closeReasonCode}`);
-				this.socket.emit("twitchIrc", false);
+				this.socket.emit(TWITCH_IRC_STATUS, false);
 			});
 
-			this.socket.emit("twitchIrc", true);
+			this.socket.emit(TWITCH_IRC_STATUS, true);
 		});
 
 		client.connect("ws://irc-ws.chat.twitch.tv:80");

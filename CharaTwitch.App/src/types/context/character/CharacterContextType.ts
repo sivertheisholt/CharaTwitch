@@ -3,8 +3,8 @@ export type CharacterContextType = {
 	setCharacterSelectedRedeem: React.Dispatch<React.SetStateAction<string>>;
 	characterQuestion: string;
 	setCharacterQuestion: React.Dispatch<React.SetStateAction<string>>;
-	characterIntroParam: string;
-	setCharacterIntroParam: React.Dispatch<React.SetStateAction<string>>;
+	characterTTS: string;
+	setCharacterTTS: React.Dispatch<React.SetStateAction<string>>;
 	characterRandomRedeems: boolean;
 	setCharacterRandomRedeems: React.Dispatch<React.SetStateAction<boolean>>;
 	characterRandomTalking: boolean;

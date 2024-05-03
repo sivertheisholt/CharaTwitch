@@ -3,6 +3,7 @@ import { Socket } from "socket.io/dist/socket";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { getItem } from "../config/configService";
 import { logger } from "../../logging/logger";
+import { TWITCH_PUB_SUB_STATUS } from "../../../socket/TwitchEvents";
 
 export class TwitchPubSubService {
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>;
@@ -22,25 +23,21 @@ export class TwitchPubSubService {
 	init = async () => {
 		const connectResult = await this.connectToTwitchPubSub();
 		if (!connectResult) {
-			this.socket.emit("twitchPubSub", false);
+			this.socket.emit(TWITCH_PUB_SUB_STATUS, false);
 			return;
 		}
 
 		const channelId = await getItem("twitch_broadcaster_id");
 
-		const subResult = await this.subscribeToChannelPoints(
-			this.connection,
-			this.accessToken,
-			channelId
-		);
+		const subResult = await this.subscribeToChannelPoints(this.connection, this.accessToken, channelId);
 		if (!subResult) {
-			this.socket.emit("twitchPubSub", false);
+			this.socket.emit(TWITCH_PUB_SUB_STATUS, false);
 			return;
 		}
 
 		this.listenToRewardRedeem();
 
-		this.socket.emit("twitchPubSub", true);
+		this.socket.emit(TWITCH_PUB_SUB_STATUS, true);
 	};
 
 	handlePing = () => {
@@ -83,11 +80,7 @@ export class TwitchPubSubService {
 			logger.error(err, "Could not listen to reward redeem");
 		}
 	};
-	subscribeToChannelPoints = (
-		connection: connection,
-		accessToken: string,
-		channel_id: string
-	) => {
+	subscribeToChannelPoints = (connection: connection, accessToken: string, channel_id: string) => {
 		return new Promise((resolve) => {
 			try {
 				const topics = [`channel-points-channel-v1.${channel_id}`];

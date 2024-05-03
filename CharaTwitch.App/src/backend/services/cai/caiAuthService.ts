@@ -1,7 +1,7 @@
 import { BrowserWindow, session } from "electron";
 import { logger } from "../../logging/logger";
 
-export const onAuthCai = async (): Promise<any> => {
+export const authCai = async (): Promise<any> => {
 	const caiUrl = `https://character.ai/`;
 
 	const caiAuthWindow = new BrowserWindow({
