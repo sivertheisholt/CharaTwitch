@@ -68,8 +68,17 @@ export const setTwitchConfig = async (clientId, clientSecret) => {
 	await _setItem("twitch_client_secret", clientSecret);
 };
 
-export const setElevenlabsConfig = async (apiKey) => {
-	await _setItem("elevenlabs_api_key", apiKey);
+export const setCaiConfig = async (accessToken, baseUrl) => {
+	await _setItem("cai_access_token", accessToken);
+	await _setItem("cai_base_url", baseUrl);
+};
+
+export const getCaiConfig = async () => {
+	const configObject = {
+		cai_selected_voice: await _getItem("cai_selected_voice"),
+		cai_base_url: await _getItem("cai_base_url"),
+	};
+	return await initializeConfig(configObject);
 };
 
 export const getOllamaConfig = async () => {
@@ -102,14 +111,6 @@ export const getCharacterConfig = async () => {
 		character_random_redeems_frequency: await _getItem("character_random_redeems_frequency"),
 		character_random_talking_frequency: await _getItem("character_random_talking_frequency"),
 		character_minimum_time_between_talking: await _getItem("character_minimum_time_between_talking"),
-	};
-	return await initializeConfig(configObject);
-};
-
-export const getElevenlabsConfig = async () => {
-	const configObject = {
-		elevenlabs_api_key: await _getItem("elevenlabs_api_key"),
-		elevenlabs_selected_voice: await _getItem("elevenlabs_selected_voice"),
 	};
 	return await initializeConfig(configObject);
 };

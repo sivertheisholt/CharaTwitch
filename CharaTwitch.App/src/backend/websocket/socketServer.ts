@@ -3,7 +3,7 @@ import {
 	setItem,
 	getCharacterConfig,
 	getOllamaConfig,
-	getElevenlabsConfig,
+	getCaiConfig,
 } from "../services/config/configService";
 import { onTwitchAuth } from "../managers/twitchManager";
 import { init } from "../managers/audioManager";
@@ -24,11 +24,11 @@ import {
 	CHARACTER_WELCOME_RAIDERS_CHANGE,
 	CHARACTER_WELCOME_STRANGERS_CHANGE,
 } from "../../socket/CharacterEvents";
-import { ELEVENLABS_CONFIG, ELEVENLABS_SELECTED_VOICE_CHANGE } from "../../socket/ElevenlabsEvents";
 import { AI_CONNECT } from "../../socket/AiEvents";
 import { AiConnectType } from "../../types/socket/AiConnectType";
 import { TwitchAuthType } from "../../types/socket/TwitchAuthType";
 import { onAiConnect } from "../managers/aiManager";
+import { CAI_CONFIG, CAI_SELECTED_VOICE_CHANGE } from "../../socket/CaiEvents";
 
 export const startSocketServer = (server: any, expressApp: Express) => {
 	const io = new Server(server, {
@@ -48,12 +48,12 @@ export const startSocketServer = (server: any, expressApp: Express) => {
 		const twitchConfig = await getTwitchConfig();
 		const characterconfig = await getCharacterConfig();
 		const ollamaConfig = await getOllamaConfig();
-		const elevenlabsConfig = await getElevenlabsConfig();
+		const caiConfig = await getCaiConfig();
 
 		socket.emit(TWITCH_CONFIG, twitchConfig);
 		socket.emit(OLLAMA_CONFIG, ollamaConfig);
 		socket.emit(CHARACTER_CONFIG, characterconfig);
-		socket.emit(ELEVENLABS_CONFIG, elevenlabsConfig);
+		socket.emit(CAI_CONFIG, caiConfig);
 
 		/************************************************************
 		 * Twitch
@@ -74,10 +74,10 @@ export const startSocketServer = (server: any, expressApp: Express) => {
 		});
 
 		/************************************************************
-		 * Elevenlabs
+		 * CAI
 		 ************************************************************/
-		socket.on(ELEVENLABS_SELECTED_VOICE_CHANGE, async (arg: string) => {
-			await setItem("elevenlabs_selected_voice", arg);
+		socket.on(CAI_SELECTED_VOICE_CHANGE, async (arg: string) => {
+			await setItem("cai_selected_voice", arg);
 		});
 
 		/************************************************************

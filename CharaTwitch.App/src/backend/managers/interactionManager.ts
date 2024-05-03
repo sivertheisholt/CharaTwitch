@@ -1,10 +1,10 @@
 import { Socket } from "socket.io/dist/socket";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { isPlaying, start } from "./audioManager";
-import { fetchTTSBase64 } from "../services/elevenlabs/elevenlabsApiService";
 import { isRaided } from "./raidManager";
 import { sendChat } from "../services/ollama/ollamaApiService";
 import { AI_MESSAGE, AI_PROCESSING_REQUEST } from "../../socket/AiEvents";
+import { fetchTTS } from "../services/cai/caiApiService";
 
 export const startInteractionAudioOnly = async (
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>,
@@ -14,7 +14,7 @@ export const startInteractionAudioOnly = async (
 	start();
 	socket.emit(AI_PROCESSING_REQUEST, true);
 
-	const audioBase64 = await fetchTTSBase64(text);
+	const audioBase64 = await fetchTTS(text);
 	if (audioBase64 == null) {
 		socket.emit(AI_PROCESSING_REQUEST, false);
 		return;
@@ -36,13 +36,13 @@ export const startInteraction = async (
 	start();
 	socket.emit(AI_PROCESSING_REQUEST, true);
 
-	const ollamaResponse = await sendChat(`This message was sent by ${username}: ${text}`);
+	const ollamaResponse = await sendChat(`${username} said: ${text}`);
 	if (ollamaResponse == null) {
 		socket.emit(AI_PROCESSING_REQUEST, false);
 		return null;
 	}
 
-	const audioBase64 = await fetchTTSBase64(ollamaResponse);
+	const audioBase64 = await fetchTTS(ollamaResponse);
 	if (audioBase64 == null) {
 		socket.emit(AI_PROCESSING_REQUEST, false);
 		return null;

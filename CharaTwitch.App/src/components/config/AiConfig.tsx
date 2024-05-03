@@ -1,8 +1,6 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { SocketContext } from "../../contexts/SocketContext";
 import { SocketContextType } from "../../types/context/SocketContextType";
-import { ElevenlabsConfigContext } from "../../contexts/config/ElevenlabsConfigContext";
-import { ELEVENLABS_SELECTED_VOICE_CHANGE } from "../../socket/ElevenlabsEvents";
 import InputGroup from "react-bootstrap/esm/InputGroup";
 import Form from "react-bootstrap/esm/Form";
 import { OllamaConfigContext } from "../../contexts/config/OllamaConfigContext";
@@ -12,36 +10,24 @@ import { AiDashboardContextType } from "../../types/context/dashboard/AiDashboar
 import Alert from "react-bootstrap/esm/Alert";
 import Button from "react-bootstrap/esm/Button";
 import { AI_CONNECT } from "../../socket/AiEvents";
-import { ElevenlabsConfigContextType } from "../../types/context/config/ElevenlabsConfigContextType";
 import { AiConnectType } from "../../types/socket/AiConnectType";
+import { CAI_SELECTED_VOICE_CHANGE } from "../../socket/CaiEvents";
+import { CaiConfigContextType } from "../../types/context/config/CaiConfigContextType";
+import { CaiConfigContext } from "../../contexts/config/CaiConfigContext";
 
 export interface AiConfigProps {}
 
 const AiConfigComponent = (props: AiConfigProps) => {
 	const { socket } = useContext(SocketContext) as SocketContextType;
-	const {
-		elevenlabsApiKey,
-		setElevenlabsApiKey,
-		elevenlabsVoices,
-		elevenlabsSelectedVoice,
-		setElevenlabsSelectedVoice,
-	} = useContext(ElevenlabsConfigContext) as ElevenlabsConfigContextType;
+	const { caiVoices, caiSelectedVoice, setCaiSelectedVoice, caiBaseUrl, setCaiBaseUrl } = useContext(
+		CaiConfigContext
+	) as CaiConfigContextType;
 	const { ollamaModelName, setOllamaModelName, ollamaBaseUrl, setOllamaBaseUrl } = useContext(
 		OllamaConfigContext
 	) as OllamaConfigContextType;
 	const { aiConnectedStatus } = useContext(AiDashboardContext) as AiDashboardContextType;
 
 	const [connectingAi, setConnectingAi] = useState(false);
-
-	const handleOllamaApiKey = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setElevenlabsApiKey(event.target.value);
-	};
-
-	const handleElevenlabsSelectVoice = (event: React.ChangeEvent<HTMLSelectElement>) => {
-		const selectedRedeem = event.target.value;
-		socket.emit(ELEVENLABS_SELECTED_VOICE_CHANGE, selectedRedeem);
-		setElevenlabsSelectedVoice(selectedRedeem);
-	};
 
 	const handleOllamaModelName = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setOllamaModelName(event.target.value);
@@ -51,19 +37,29 @@ const AiConfigComponent = (props: AiConfigProps) => {
 		setOllamaBaseUrl(event.target.value);
 	};
 
+	const handleCaiBaseUrl = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setCaiBaseUrl(event.target.value);
+	};
+
+	const handleCaiSelectVoice = (event: React.ChangeEvent<HTMLSelectElement>) => {
+		const selectedVoice = event.target.value;
+		socket?.emit(CAI_SELECTED_VOICE_CHANGE, selectedVoice);
+		setCaiSelectedVoice(parseInt(selectedVoice));
+	};
+
 	const handleConnectAi = () => {
-		setConnectingAi(true);
 		let aiConfig: AiConnectType = {
-			elevenlabs_api_key: elevenlabsApiKey,
+			cai_base_url: caiBaseUrl,
 			ollama_base_url: ollamaBaseUrl,
 			ollama_model_name: ollamaModelName,
 		};
-		socket.emit(AI_CONNECT, aiConfig);
+		socket?.emit(AI_CONNECT, aiConfig);
+		setConnectingAi(true);
 	};
 
 	return (
 		<>
-			<h2>Elevenlabs</h2>
+			<h2>Ollama</h2>
 			<hr className="hr" />
 			<label className="fs-4">
 				<strong>Model Name</strong>
@@ -87,31 +83,25 @@ const AiConfigComponent = (props: AiConfigProps) => {
 					aria-label="Ollama Server"
 				/>
 			</InputGroup>
-			<h2>Ollama</h2>
+			<h2>Cai</h2>
 			<hr className="hr" />
 			<label className="fs-4">
-				<strong>API Key</strong>
+				<strong>CAI Server</strong>
 			</label>
 			<InputGroup className="mb-3" size="lg">
-				<Form.Control
-					value={elevenlabsApiKey}
-					onChange={handleOllamaApiKey}
-					placeholder="API Key"
-					aria-label="API Key"
-					type="password"
-				/>
+				<Form.Control value={caiBaseUrl} onChange={handleCaiBaseUrl} placeholder="CAI Server" aria-label="CAI Server" />
 			</InputGroup>
 			<label className="fs-4">
 				<strong>Voices</strong>
 			</label>
 			<Form.Select
 				size="lg"
-				onChange={handleElevenlabsSelectVoice}
-				value={elevenlabsSelectedVoice}
+				onChange={handleCaiSelectVoice}
+				value={caiSelectedVoice}
 				aria-label="Default select example"
 			>
-				{elevenlabsVoices.map((voice) => (
-					<option key={voice.voice_id} value={voice.voice_id}>
+				{caiVoices.map((voice) => (
+					<option key={voice.id} value={voice.id}>
 						{voice.name}
 					</option>
 				))}

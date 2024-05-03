@@ -47,6 +47,7 @@ const AiDashboardProvider: React.FC<{ children: React.ReactNode }> = ({ children
 			return () => {
 				socket.off(AI_MESSAGE, aiMessageListener);
 				socket.off(AI_PROCESSING_REQUEST, aiProcessingRequestListener);
+				socket.off(AI_CONNECTED, aiConnectedListener);
 			};
 		}
 	}, [aiMessages, socket]);
