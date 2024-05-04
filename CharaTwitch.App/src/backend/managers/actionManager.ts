@@ -22,6 +22,6 @@ export class ActionManager {
 	askQuestion = async (question: string) => {
 		await setItem("character_question", question);
 		const username = await getItem("twitch_preferred_username");
-		startInteraction(this.socket, username, question);
+		startInteraction(this.socket, [{ role: "user", content: `${username}: ${question}` }]);
 	};
 }

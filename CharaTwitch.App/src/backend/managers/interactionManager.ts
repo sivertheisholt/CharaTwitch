@@ -28,15 +28,14 @@ export const startInteractionAudioOnly = async (
 
 export const startInteraction = async (
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>,
-	text: string,
-	username: string,
+	messages: Array<{ role: string; content: string }>,
 	bypassIsRaid: boolean = false
 ) => {
 	if (isPlaying() || (isRaided() && !bypassIsRaid)) return null;
 	start();
 	socket.emit(AI_PROCESSING_REQUEST, true);
 
-	const ollamaResponse = await sendChat(`${username} said: ${text}`);
+	const ollamaResponse = await sendChat(messages);
 	if (ollamaResponse == null) {
 		socket.emit(AI_PROCESSING_REQUEST, false);
 		return null;

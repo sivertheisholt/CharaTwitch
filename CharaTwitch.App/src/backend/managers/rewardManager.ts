@@ -20,7 +20,9 @@ export class RewardManager {
 			const reward = remove();
 			if (!reward) return;
 
-			const caiResponse = await startInteraction(this.socket, reward.message, reward.username);
+			const caiResponse = await startInteraction(this.socket, [
+				{ role: "user", content: `${reward.username}: ${reward.message}` },
+			]);
 			if (caiResponse == null) {
 				add(reward.username, reward.message);
 				return stop();
@@ -43,7 +45,7 @@ export class RewardManager {
 				reward: rewardData.data.redemption.reward.title,
 			});
 
-			const caiResponse = await startInteraction(this.socket, userInput, username);
+			const caiResponse = await startInteraction(this.socket, [{ role: "user", content: `${username}: ${userInput}` }]);
 			if (caiResponse == null) {
 				add(username, userInput);
 				return stop();

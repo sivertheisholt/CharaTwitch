@@ -43,8 +43,12 @@ export class RaidManager {
 
 			const caiResponse = await startInteraction(
 				this.socket,
-				`${username} is currently being raided by ${raidedBy}! Give everyone a warm welcome to the stream and an introduction of yourself and ${username}.`,
-				username,
+				[
+					{
+						role: "",
+						content: `${username} is currently being raided by ${raidedBy}! Give everyone a warm welcome to the stream and an introduction of yourself and ${username}.`,
+					},
+				],
 				true
 			);
 

@@ -50,40 +50,16 @@ Required header: authorization
 - **Returns**:
   - Speech data if successful (status code: 200)
 
-#### 4. `/chat`
-
-- **Method**: POST
-- **Description**: Sends a chat message.
-- **Parameters**:
-  - `character_id`: ID of the character
-  - `text`: Message text
-- **Returns**:
-  - Response data if successful (status code: 200)
-
 ### Twitch
 
 Create a new application over at: https://dev.twitch.tv/console
 
-Redirect URI's should be: 
+Redirect URI's should be:
+
 ```
 http://localhost:8001/twitch
 ```
+
 Once you have created a new application you wanna make a note of the following: Client Secret & Client Id
 
 Once you have entered all the information you can simply click connect and log in with you're twitch account.
-
-### Character AI
-
-From Character AI you will need to get the character id and server base URL. Once you have filled in everything, click connect and log in to character AI in the window that pops up.
-
-Once logged in, navigate to a random chat (This is to force the page to set the HTTP_AUTHORIZATION cookie needed)
-
-#### Finding your character's ID
-
-You can find your character ID in the URL of a Character's chat page.
-
-For example, if you go to the chat page of the character `Test Character` you will see the URL `https://character.ai/chat/T9ZeWjFhG6wovhXSWcuxsX310Oj2H6NJnYxH2JJAgu8`.
-
-The last part of the URL is the character ID:
-
-Once you have entered all the information you can simply click connect Character.AI.
