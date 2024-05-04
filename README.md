@@ -16,9 +16,12 @@ Few things to note:
 
 NB: You are required to setup your own Character AI service with a REST API. I might find a better solution for this in the future. See section under for required API docs.
 
+Ollama is used to run the LLM. You can find the docker image here: https://hub.docker.com/r/ollama/ollama/
+
 Download the provided CharaTwitch.zip from [Releases](https://github.com/sivertheisholt/CharaTwitch/releases) and extract it. Run the exe to install the program.
 
 You will need to input a bit of information from both Twitch and Character AI.
+
 
 ### CAI REST API
 
