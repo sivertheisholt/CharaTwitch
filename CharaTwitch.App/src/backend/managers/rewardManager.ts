@@ -6,6 +6,7 @@ import { add, remove } from "./rewardQueueManager";
 import { stop } from "./audioManager";
 import { startInteraction } from "./interactionManager";
 import { TWITCH_REDEEM } from "../../socket/TwitchEvents";
+import { logger } from "../logging/logger";
 
 export class RewardManager {
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>;

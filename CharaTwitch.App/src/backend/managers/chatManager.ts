@@ -62,7 +62,7 @@ export class ChatManager {
 
 		const finalMessage = `${username}: ${message}`;
 		const messagesLength = this.messages.push({ role: "user", content: finalMessage });
-		if (messagesLength > 20) this.messages.shift();
+		if (messagesLength > 10) this.messages.shift();
 
 		const welcomeNewViewers = await getItem("character_welcome_new_viewers");
 		if (welcomeNewViewers && !this.users.has(username)) {
