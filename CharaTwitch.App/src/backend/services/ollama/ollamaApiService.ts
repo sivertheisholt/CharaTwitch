@@ -18,7 +18,6 @@ export const sendChat = async (messages: Array<{ role: string; content: string }
 	try {
 		const modelName = await getItem("ollama_model_name");
 		const client = await axiosClient();
-		logger.warn(messages);
 		const res = await client.post("/api/chat", {
 			model: modelName,
 			messages: messages,

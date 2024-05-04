@@ -20,7 +20,6 @@ const CaiConfigProvider: React.FC<{ children: React.ReactNode }> = ({ children }
 	};
 	const caiConfigListener = (arg: CaiConfigType) => {
 		const { cai_base_url, cai_selected_voice } = arg;
-		console.log(cai_base_url);
 		setCaiBaseUrl(cai_base_url);
 		setCaiSelectedVoice(cai_selected_voice);
 	};
