@@ -1,7 +1,7 @@
 {
   "name": "charatwitch.app",
   "productName": "charatwitch.app",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Integrate Character AI into your stream!",
   "main": ".vite/build/main.js",
   "repository": "https://github.com/sivertheisholt/CharaTwitch",

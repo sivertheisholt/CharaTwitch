@@ -22,9 +22,6 @@ export const sendChat = async (messages: Array<{ role: string; content: string }
 			model: modelName,
 			messages: messages,
 			stream: false,
-			options: {
-				num_predict: 64,
-			},
 		});
 		if (res.status != 200) return null;
 		return res.data.message.content;

@@ -5,6 +5,7 @@ import { isRaided } from "./raidManager";
 import { sendChat } from "../services/ollama/ollamaApiService";
 import { AI_MESSAGE, AI_PROCESSING_REQUEST } from "../../socket/AiEvents";
 import { fetchTTS } from "../services/cai/caiApiService";
+import { logger } from "../logging/logger";
 
 export const startInteractionAudioOnly = async (
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>,

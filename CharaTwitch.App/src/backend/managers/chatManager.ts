@@ -4,6 +4,7 @@ import { TwitchIrcService } from "../services/twitch/twitchIrcService";
 import { getItem } from "../services/config/configService";
 import { stop } from "./audioManager";
 import { startInteraction } from "./interactionManager";
+import { logger } from "../logging/logger";
 
 export class ChatManager {
 	messages: Array<{ role: string; content: string }>;
@@ -35,7 +36,7 @@ export class ChatManager {
 		const caiResponse = await startInteraction(this.socket, [
 			{
 				role: "user",
-				content: `Welcome ${username} to the stream!`,
+				content: `Welcome ${username} to the stream! ${username}: ${message}`,
 			},
 		]);
 		if (caiResponse == null) return stop();
@@ -43,26 +44,29 @@ export class ChatManager {
 		this.twitchIrcService.sendMessage(caiResponse, messageId);
 	};
 
-	randomReply = async (messageId: string) => {
-		let caiResponse = await startInteraction(this.socket, this.messages);
-		if (caiResponse == null) return stop();
+	randomReply = async (username: string, message: string, messageId: string) => {
+		const clonedArray = this.messages.slice();
+		const finalMessage = `${username}: ${message}`;
+		clonedArray.push({ role: "user", content: finalMessage });
 
-		caiResponse = caiResponse.trim();
+		let ollamaResponse = await startInteraction(this.socket, clonedArray);
+		if (ollamaResponse == null) return stop();
 
-		const messagesLength = this.messages.push({ role: "assistant", content: caiResponse });
+		ollamaResponse = ollamaResponse.trim();
+
+		let messagesLength = this.messages.push({ role: "user", content: finalMessage });
+		if (messagesLength > 10) this.messages.shift();
+
+		messagesLength = this.messages.push({ role: "assistant", content: ollamaResponse });
 		if (messagesLength > 10) this.messages.shift();
 
 		this.timeSinceLastTalkingMinutes = 0;
-		this.twitchIrcService.sendMessage(caiResponse, messageId);
+		this.twitchIrcService.sendMessage(ollamaResponse, messageId);
 	};
 
 	handleMessage = async (username: string, message: string, messageId: string) => {
 		if (message.startsWith("!")) return;
 		message = message.trim();
-
-		const finalMessage = `${username}: ${message}`;
-		const messagesLength = this.messages.push({ role: "user", content: finalMessage });
-		if (messagesLength > 10) this.messages.shift();
 
 		const welcomeNewViewers = await getItem("character_welcome_new_viewers");
 		if (welcomeNewViewers && !this.users.has(username)) {
@@ -79,6 +83,6 @@ export class ChatManager {
 		const randomTalkingFrequency = await getItem("character_random_talking_frequency");
 		const minimumTimeBetweenTalking = await getItem("character_minimum_time_between_talking");
 		if (this.eventOccurs(randomTalkingFrequency / 100) && this.timeSinceLastTalkingMinutes >= minimumTimeBetweenTalking)
-			this.randomReply(messageId);
+			this.randomReply(username, message, messageId);
 	};
 }
