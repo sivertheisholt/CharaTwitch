@@ -37,7 +37,7 @@ jobs:
         with:
           path: "./CharaTwitch.App/out/make/squirrel.windows/x64/"
           type: "zip"
-          filename: "CharaTwitch.zip"
+          filename: CharaTwitch-${{steps.version.outputs.version}}.zip
 
       - uses: ncipollo/release-action@v1
         with:
