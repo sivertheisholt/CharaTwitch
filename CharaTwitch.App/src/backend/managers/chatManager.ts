@@ -33,15 +33,16 @@ export class ChatManager {
 	};
 
 	newViewer = async (username: string, message: string, messageId: string) => {
-		const caiResponse = await startInteraction(this.socket, [
+		const ollamaResponse = await startInteraction(this.socket, [
 			{
 				role: "user",
 				content: `Welcome ${username} to the stream! ${username}: ${message}`,
 			},
 		]);
-		if (caiResponse == null) return stop();
+		if (ollamaResponse === undefined) return;
+		if (ollamaResponse === null) return stop();
 
-		this.twitchIrcService.sendMessage(caiResponse, messageId);
+		this.twitchIrcService.sendMessage(ollamaResponse, messageId);
 	};
 
 	randomReply = async (username: string, message: string, messageId: string) => {
@@ -50,7 +51,8 @@ export class ChatManager {
 		clonedArray.push({ role: "user", content: finalMessage });
 
 		let ollamaResponse = await startInteraction(this.socket, clonedArray);
-		if (ollamaResponse == null) return stop();
+		if (ollamaResponse === undefined) return;
+		if (ollamaResponse === null) return stop();
 
 		ollamaResponse = ollamaResponse.trim();
 

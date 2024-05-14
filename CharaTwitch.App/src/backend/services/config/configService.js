@@ -43,6 +43,50 @@ export const initializeConfig = async (configObject) => {
 				initializedConfig[key] = configObject[key] === undefined ? 0 : configObject[key];
 				await _setItem("character_minimum_time_between_talking", initializedConfig[key]);
 				break;
+			case "mirostat":
+				initializedConfig[key] = configObject[key] === undefined ? 0 : configObject[key];
+				await _setItem("ollama_parameters_mirostat", 1);
+				break;
+			case "mirostat_eta":
+				initializedConfig[key] = configObject[key] === undefined ? 0 : configObject[key];
+				await _setItem("ollama_parameters_mirostat_eta", 0.1);
+				break;
+			case "num_ctx":
+				initializedConfig[key] = configObject[key] === undefined ? 0 : configObject[key];
+				await _setItem("ollama_parameters_num_ctx", 2048);
+				break;
+			case "repeat_last_n":
+				initializedConfig[key] = configObject[key] === undefined ? 0 : configObject[key];
+				await _setItem("ollama_parameters_repeat_last_n", 64);
+				break;
+			case "repeat_penalty":
+				initializedConfig[key] = configObject[key] === undefined ? 0 : configObject[key];
+				await _setItem("ollama_parameters_repeat_penalty", 1.1);
+				break;
+			case "temperature":
+				initializedConfig[key] = configObject[key] === undefined ? 0 : configObject[key];
+				await _setItem("ollama_parameters_temperature", 0.8);
+				break;
+			case "seed":
+				initializedConfig[key] = configObject[key] === undefined ? 0 : configObject[key];
+				await _setItem("ollama_parameters_seed", 0);
+				break;
+			case "tfs_z":
+				initializedConfig[key] = configObject[key] === undefined ? 0 : configObject[key];
+				await _setItem("ollama_parameters_tfs_z", 1);
+				break;
+			case "num_predict":
+				initializedConfig[key] = configObject[key] === undefined ? 0 : configObject[key];
+				await _setItem("ollama_parameters_num_predict", 128);
+				break;
+			case "top_k":
+				initializedConfig[key] = configObject[key] === undefined ? 0 : configObject[key];
+				await _setItem("ollama_parameters_top_k", 40);
+				break;
+			case "top_p":
+				initializedConfig[key] = configObject[key] === undefined ? 0 : configObject[key];
+				await _setItem("ollama_parameters_top_k", 0.9);
+				break;
 			default:
 				initializedConfig[key] = configObject[key] === undefined ? "" : configObject[key];
 		}
@@ -111,6 +155,23 @@ export const getCharacterConfig = async () => {
 		character_random_redeems_frequency: await _getItem("character_random_redeems_frequency"),
 		character_random_talking_frequency: await _getItem("character_random_talking_frequency"),
 		character_minimum_time_between_talking: await _getItem("character_minimum_time_between_talking"),
+	};
+	return await initializeConfig(configObject);
+};
+
+export const getOllamaParameters = async () => {
+	const configObject = {
+		mirostat: await _getItem("ollama_parameters_mirostat"),
+		mirostat_eta: await _getItem("ollama_parameters_mirostat_eta"),
+		num_ctx: await _getItem("ollama_parameters_num_ctx"),
+		repeat_last_n: await _getItem("ollama_parameters_repeat_last_n"),
+		repeat_penalty: await _getItem("ollama_parameters_repeat_penalty"),
+		temperature: await _getItem("ollama_parameters_temperature"),
+		seed: await _getItem("ollama_parameters_seed"),
+		tfs_z: await _getItem("ollama_parameters_tfs_z"),
+		num_predict: await _getItem("ollama_parameters_num_predict"),
+		top_k: await _getItem("ollama_parameters_top_k"),
+		top_p: await _getItem("ollama_parameters_top_p"),
 	};
 	return await initializeConfig(configObject);
 };

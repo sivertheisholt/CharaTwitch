@@ -41,7 +41,7 @@ export class RaidManager {
 			const raid = this.queue.pop();
 			if (!raid) return clearInterval(this.queueInterval);
 
-			const caiResponse = await startInteraction(
+			const ollamaResponse = await startInteraction(
 				this.socket,
 				[
 					{
@@ -51,15 +51,16 @@ export class RaidManager {
 				],
 				true
 			);
+			if (ollamaResponse === undefined) return;
 
-			if (caiResponse == null) {
+			if (ollamaResponse === null) {
 				this.queue.push(
 					`${username} is currently being raided by ${raidedBy}! Give everyone a warm welcome to the stream and an introduction of yourself and ${username}.`
 				);
 				return stop();
 			}
 
-			this.twitchIrcService.sendMessage(caiResponse);
+			this.twitchIrcService.sendMessage(ollamaResponse);
 			clearInterval(this.queueInterval);
 		}, 5000);
 	};

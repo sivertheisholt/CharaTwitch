@@ -71,7 +71,7 @@ export class TwitchPubSubService {
 				if (message.type !== "utf8") return;
 
 				const parsedMessage = JSON.parse(message.utf8Data);
-				if (parsedMessage.data == undefined) return;
+				if (parsedMessage.data === undefined) return;
 
 				const redeemDataMessage = JSON.parse(parsedMessage.data.message);
 				this.onRewardCb(redeemDataMessage);

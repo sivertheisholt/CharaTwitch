@@ -12,8 +12,6 @@ const ConfigPageComponent = (props: ConfigPageProps) => {
 		<>
 			<Row className="h-100">
 				<Col>
-					<h2>Twitch</h2>
-					<hr className="hr" />
 					<TwitchConfig />
 				</Col>
 				<Col md="auto">

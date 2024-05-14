@@ -53,6 +53,8 @@ const TwitchConfigComponent = (props: TwitchConfigProps) => {
 
 	return (
 		<>
+			<h2>Twitch</h2>
+			<hr className="hr" />
 			<label className="fs-4">
 				<strong>Client Secret</strong>
 			</label>

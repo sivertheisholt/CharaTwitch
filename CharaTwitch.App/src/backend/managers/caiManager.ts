@@ -10,12 +10,12 @@ export const onCaiAuth = async (
 	caiBaseUrl: string
 ) => {
 	const caiAccessToken = await authCai();
-	if (caiAccessToken == null) return socket.emit(CAI_ACCOUNT_STATUS, false);
+	if (caiAccessToken === null) return socket.emit(CAI_ACCOUNT_STATUS, false);
 
 	await setCaiConfig(caiAccessToken, caiBaseUrl);
 
 	const voices = await fetchVoices();
-	if (voices == null) return socket.emit(CAI_ACCOUNT_STATUS, false);
+	if (voices === null) return socket.emit(CAI_ACCOUNT_STATUS, false);
 
 	socket.emit(CAI_VOICES, voices);
 	socket.emit(CAI_ACCOUNT_STATUS, true);

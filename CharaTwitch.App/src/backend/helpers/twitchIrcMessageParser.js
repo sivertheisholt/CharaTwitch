@@ -78,10 +78,7 @@ export function parseMessage(message) {
 		parsedMessage.parameters = rawParametersComponent;
 		if (rawParametersComponent && rawParametersComponent[0] === "!") {
 			// The user entered a bot command in the chat window.
-			parsedMessage.command = parseParameters(
-				rawParametersComponent,
-				parsedMessage.command
-			);
+			parsedMessage.command = parseParameters(rawParametersComponent, parsedMessage.command);
 		}
 	}
 
@@ -222,9 +219,7 @@ function parseCommand(rawCommandComponent) {
 			};
 			break;
 		case "RECONNECT":
-			logger.warn(
-				"The Twitch IRC server is about to terminate the connection for maintenance."
-			);
+			logger.warn("The Twitch IRC server is about to terminate the connection for maintenance.");
 			parsedCommand = {
 				command: commandParts[0],
 			};
@@ -270,8 +265,6 @@ function parseSource(rawSourceComponent) {
 		};
 	}
 }
-
-// Parsing the IRC parameters component if it contains a command (e.g., !dice).
 
 function parseParameters(rawParametersComponent, command) {
 	let idx = 0;

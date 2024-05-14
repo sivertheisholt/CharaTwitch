@@ -23,16 +23,16 @@ export const onTwitchAuth = async (
 		await setTwitchConfig(twitch_client_id, twitch_client_secret);
 
 		const { access_token } = await authTwitch(expressApp, twitch_client_id, twitch_client_secret);
-		if (access_token == null) return socket.emit(TWITCH_ACCOUNT_STATUS, false);
+		if (access_token === null) return socket.emit(TWITCH_ACCOUNT_STATUS, false);
 
 		const { preferred_username, sub } = await getUserInfo(access_token);
-		if (sub == null) return socket.emit(TWITCH_ACCOUNT_STATUS, false);
+		if (sub === null) return socket.emit(TWITCH_ACCOUNT_STATUS, false);
 
 		await setItem("twitch_preferred_username", preferred_username);
 		await setItem("twitch_broadcaster_id", sub);
 
 		const customRedeems = await getCustomRewards(sub, twitch_client_id, access_token);
-		if (customRedeems == null) return socket.emit(TWITCH_ACCOUNT_STATUS, false);
+		if (customRedeems === null) return socket.emit(TWITCH_ACCOUNT_STATUS, false);
 
 		const twitchIrc = new TwitchIrcService(socket, access_token, preferred_username);
 

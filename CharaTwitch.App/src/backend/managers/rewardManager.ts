@@ -6,7 +6,6 @@ import { add, remove } from "./rewardQueueManager";
 import { stop } from "./audioManager";
 import { startInteraction } from "./interactionManager";
 import { TWITCH_REDEEM } from "../../socket/TwitchEvents";
-import { logger } from "../logging/logger";
 
 export class RewardManager {
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>;
@@ -21,15 +20,19 @@ export class RewardManager {
 			const reward = remove();
 			if (!reward) return;
 
-			const caiResponse = await startInteraction(this.socket, [
+			const ollamaResponse = await startInteraction(this.socket, [
 				{ role: "user", content: `${reward.username}: ${reward.message}` },
 			]);
-			if (caiResponse == null) {
+			if (ollamaResponse === undefined) {
+				add(reward.username, reward.message);
+				return;
+			}
+			if (ollamaResponse === null) {
 				add(reward.username, reward.message);
 				return stop();
 			}
 
-			this.twitchIrcService.sendMessage(caiResponse);
+			this.twitchIrcService.sendMessage(ollamaResponse);
 		}, 10000);
 	}
 	onRewardCb = async (rewardData: any) => {
@@ -46,13 +49,19 @@ export class RewardManager {
 				reward: rewardData.data.redemption.reward.title,
 			});
 
-			const caiResponse = await startInteraction(this.socket, [{ role: "user", content: `${username}: ${userInput}` }]);
-			if (caiResponse == null) {
+			const ollamaResponse = await startInteraction(this.socket, [
+				{ role: "user", content: `${username}: ${userInput}` },
+			]);
+			if (ollamaResponse === undefined) {
+				add(username, userInput);
+				return;
+			}
+			if (ollamaResponse === null) {
 				add(username, userInput);
 				return stop();
 			}
 
-			this.twitchIrcService.sendMessage(caiResponse);
+			this.twitchIrcService.sendMessage(ollamaResponse);
 		}
 	};
 }

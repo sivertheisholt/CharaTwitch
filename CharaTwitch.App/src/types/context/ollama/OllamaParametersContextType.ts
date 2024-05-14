@@ -1,0 +1,24 @@
+export type OllamaParametersContextType = {
+	ollamaParametersMiroStat: number;
+	setOllamaParametersMiroStat: React.Dispatch<React.SetStateAction<number>>;
+	ollamaParametersMiroStatEta: number;
+	setOllamaParametersMiroStatEta: React.Dispatch<React.SetStateAction<number>>;
+	ollamaParametersNumCtx: number;
+	setOllamaParametersNumCtx: React.Dispatch<React.SetStateAction<number>>;
+	ollamaParametersRepeatLastN: number;
+	setOllamaParametersRepeatLastN: React.Dispatch<React.SetStateAction<number>>;
+	ollamaParametersRepeatPenalty: number;
+	setOllamaParametersRepeatPenalty: React.Dispatch<React.SetStateAction<number>>;
+	ollamaParametersTemperature: number;
+	setOllamaParametersTemperature: React.Dispatch<React.SetStateAction<number>>;
+	ollamaParametersSeed: number;
+	setOllamaParametersSeed: React.Dispatch<React.SetStateAction<number>>;
+	ollamaParametersTfsZ: number;
+	setOllamaParametersTfsZ: React.Dispatch<React.SetStateAction<number>>;
+	ollamaParametersNumPredict: number;
+	setOllamaParametersNumPredict: React.Dispatch<React.SetStateAction<number>>;
+	ollamaParametersTopK: number;
+	setOllamaParametersTopK: React.Dispatch<React.SetStateAction<number>>;
+	ollamaParametersTopP: number;
+	setOllamaParametersTopP: React.Dispatch<React.SetStateAction<number>>;
+};

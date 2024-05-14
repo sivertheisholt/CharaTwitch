@@ -22,7 +22,7 @@ export const authCai = async (): Promise<any> => {
 				.get({ httpOnly: true })
 				.then((cookies) => {
 					cookies.forEach((cookie) => {
-						if (cookie.name == "HTTP_AUTHORIZATION") {
+						if (cookie.name === "HTTP_AUTHORIZATION") {
 							const cleanTokenStr = cookie.value.replace(/"/g, "");
 							resolve(cleanTokenStr.split(/\s+/)[1]);
 						}

@@ -50,13 +50,13 @@ export class TwitchIrcService {
 			const ircMessage = message.utf8Data;
 			const parsedMessage = parseMessage(ircMessage);
 
-			if (parsedMessage.command == null || parsedMessage.command.command == null) return;
+			if (parsedMessage.command === null || parsedMessage.command.command === null) return;
 
 			switch (parsedMessage.command.command) {
 				case "PRIVMSG": {
 					if (
-						parsedMessage.tags["display-name"] == "Streamlabs" ||
-						parsedMessage.tags["display-name"] == this.username ||
+						parsedMessage.tags["display-name"] === "Streamlabs" ||
+						parsedMessage.tags["display-name"] === this.username ||
 						"custom-reward-id" in parsedMessage.tags
 					)
 						break;
@@ -68,8 +68,8 @@ export class TwitchIrcService {
 					break;
 				}
 				case "USERNOTICE":
-					if (parsedMessage.tags == null) break;
-					if (parsedMessage.tags["msg-id"] == "raid") this.raidManager.startRaid(parsedMessage.tags["display-name"]);
+					if (parsedMessage.tags === null) break;
+					if (parsedMessage.tags["msg-id"] === "raid") this.raidManager.startRaid(parsedMessage.tags["display-name"]);
 					break;
 				case "PING":
 					this.handlePing(parsedMessage.parameters);

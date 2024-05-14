@@ -5,6 +5,7 @@ import { DashboardPage } from "./pages/DashboardPage";
 import { DefaultLayout } from "./components/layouts/DefaultLayout";
 import { ConfigPage } from "./pages/ConfigPage";
 import { CharacterPage } from "./pages/CharacterPage";
+import { OllamaPage } from "./pages/OllamaPage";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface RouterProps {}
@@ -19,6 +20,11 @@ const RouterComponent = (props: RouterProps) => {
 		{
 			path: "/character",
 			element: <DefaultLayout children={<CharacterPage />} />,
+			errorElement: <ErrorPage />,
+		},
+		{
+			path: "/ollama",
+			element: <DefaultLayout children={<OllamaPage />} />,
 			errorElement: <ErrorPage />,
 		},
 		{

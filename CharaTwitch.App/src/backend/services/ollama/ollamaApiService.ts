@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getItem } from "../config/configService";
+import { getItem, getOllamaParameters } from "../config/configService";
 import { logger } from "../../logging/logger";
 
 const axiosClient = async () => {
@@ -18,10 +18,12 @@ export const sendChat = async (messages: Array<{ role: string; content: string }
 	try {
 		const modelName = await getItem("ollama_model_name");
 		const client = await axiosClient();
+		const ollama_parameters = await getOllamaParameters();
 		const res = await client.post("/api/chat", {
 			model: modelName,
 			messages: messages,
 			stream: false,
+			options: ollama_parameters,
 		});
 		if (res.status != 200) return null;
 		return res.data.message.content;

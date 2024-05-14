@@ -4,6 +4,7 @@ import {
 	getCharacterConfig,
 	getOllamaConfig,
 	getCaiConfig,
+	getOllamaParameters,
 } from "../services/config/configService";
 import { onTwitchAuth } from "../managers/twitchManager";
 import { init } from "../managers/audioManager";
@@ -29,6 +30,20 @@ import { AiConnectType } from "../../types/socket/AiConnectType";
 import { TwitchAuthType } from "../../types/socket/TwitchAuthType";
 import { onAiConnect } from "../managers/aiManager";
 import { CAI_CONFIG, CAI_SELECTED_VOICE_CHANGE } from "../../socket/CaiEvents";
+import {
+	OLLAMA_PARAMETERS,
+	OLLAMA_PARAMETERS_MIROSTAT_CHANGE,
+	OLLAMA_PARAMETERS_MIROSTAT_ETA_CHANGE,
+	OLLAMA_PARAMETERS_NUM_CTX_CHANGE,
+	OLLAMA_PARAMETERS_NUM_PREDICT,
+	OLLAMA_PARAMETERS_REPEAT_LAST_N_CHANGE,
+	OLLAMA_PARAMETERS_REPEAT_PENALTY_CHANGE,
+	OLLAMA_PARAMETERS_SEED_CHANGE,
+	OLLAMA_PARAMETERS_TEMPERATURE_CHANGE,
+	OLLAMA_PARAMETERS_TFS_Z_CHANGE,
+	OLLAMA_PARAMETERS_TOP_K,
+	OLLAMA_PARAMETERS_TOP_P,
+} from "../../socket/OllamaParametersEvents";
 
 export const startSocketServer = (server: any, expressApp: Express) => {
 	const io = new Server(server, {
@@ -49,11 +64,13 @@ export const startSocketServer = (server: any, expressApp: Express) => {
 		const characterconfig = await getCharacterConfig();
 		const ollamaConfig = await getOllamaConfig();
 		const caiConfig = await getCaiConfig();
+		const ollamaParameters = await getOllamaParameters();
 
 		socket.emit(TWITCH_CONFIG, twitchConfig);
 		socket.emit(OLLAMA_CONFIG, ollamaConfig);
 		socket.emit(CHARACTER_CONFIG, characterconfig);
 		socket.emit(CAI_CONFIG, caiConfig);
+		socket.emit(OLLAMA_PARAMETERS, ollamaParameters);
 
 		/************************************************************
 		 * Twitch
@@ -106,6 +123,42 @@ export const startSocketServer = (server: any, expressApp: Express) => {
 		});
 		socket.on(CHARACTER_MINIMUM_TIME_BETWEEN_TALKING_CHANGE, async (arg: number) => {
 			await setItem("character_minimum_time_between_talking", arg);
+		});
+		/************************************************************
+		 * Ollama Parameters
+		 ************************************************************/
+		socket.on(OLLAMA_PARAMETERS_MIROSTAT_CHANGE, async (arg: number) => {
+			await setItem("ollama_parameters_mirostat", arg);
+		});
+		socket.on(OLLAMA_PARAMETERS_MIROSTAT_ETA_CHANGE, async (arg: number) => {
+			await setItem("ollama_parameters_mirostat_eta", arg);
+		});
+		socket.on(OLLAMA_PARAMETERS_NUM_CTX_CHANGE, async (arg: number) => {
+			await setItem("ollama_parameters_num_ctx", arg);
+		});
+		socket.on(OLLAMA_PARAMETERS_REPEAT_LAST_N_CHANGE, async (arg: number) => {
+			await setItem("ollama_parameters_repeat_last_n", arg);
+		});
+		socket.on(OLLAMA_PARAMETERS_REPEAT_PENALTY_CHANGE, async (arg: number) => {
+			await setItem("ollama_parameters_repeat_penalty", arg);
+		});
+		socket.on(OLLAMA_PARAMETERS_TEMPERATURE_CHANGE, async (arg: number) => {
+			await setItem("ollama_parameters_temperature", arg);
+		});
+		socket.on(OLLAMA_PARAMETERS_SEED_CHANGE, async (arg: number) => {
+			await setItem("ollama_parameters_seed", arg);
+		});
+		socket.on(OLLAMA_PARAMETERS_TFS_Z_CHANGE, async (arg: number) => {
+			await setItem("ollama_parameters_tfs_z", arg);
+		});
+		socket.on(OLLAMA_PARAMETERS_NUM_PREDICT, async (arg: number) => {
+			await setItem("ollama_parameters_num_predict", arg);
+		});
+		socket.on(OLLAMA_PARAMETERS_TOP_K, async (arg: number) => {
+			await setItem("ollama_parameters_top_k", arg);
+		});
+		socket.on(OLLAMA_PARAMETERS_TOP_P, async (arg: number) => {
+			await setItem("ollama_parameters_top_p", arg);
 		});
 	});
 
