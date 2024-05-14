@@ -85,7 +85,7 @@ export const initializeConfig = async (configObject) => {
 				break;
 			case "top_p":
 				initializedConfig[key] = configObject[key] === undefined ? 0 : configObject[key];
-				await _setItem("ollama_parameters_top_k", 0.9);
+				await _setItem("ollama_parameters_top_p", 0.9);
 				break;
 			default:
 				initializedConfig[key] = configObject[key] === undefined ? "" : configObject[key];
