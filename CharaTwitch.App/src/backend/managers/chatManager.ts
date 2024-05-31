@@ -4,10 +4,9 @@ import { TwitchIrcService } from "../services/twitch/twitchIrcService";
 import { getItem } from "../services/config/configService";
 import { stop } from "./audioManager";
 import { startInteraction } from "./interactionManager";
-import { logger } from "../logging/logger";
 
 export class ChatManager {
-	messages: Array<{ role: string; content: string }>;
+	messages: Array<{ username: string; content: string }>;
 	users: Map<string, string>;
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>;
 	twitchIrcService: TwitchIrcService;
@@ -46,21 +45,23 @@ export class ChatManager {
 	};
 
 	randomReply = async (username: string, message: string, messageId: string) => {
-		const clonedArray = this.messages.slice();
-		const finalMessage = `${username}: ${message}`;
-		clonedArray.push({ role: "user", content: finalMessage });
+		const historyUser = { role: "user", content: "\n" };
+		const historyAssistant = { role: "assistant", content: "\n" };
+		this.messages.forEach((message) => {
+			if (message.username === "assistant") historyAssistant.content += `${message.username}: ${message.content} \n`;
+			else historyUser.content += `${message.content} \n`;
+		});
 
-		let ollamaResponse = await startInteraction(this.socket, clonedArray);
+		const finalArray = [historyUser, historyAssistant, { role: "user", content: `${username}: ${message}` }];
+
+		let ollamaResponse = await startInteraction(this.socket, finalArray);
 		if (ollamaResponse === undefined) return;
 		if (ollamaResponse === null) return stop();
 
 		ollamaResponse = ollamaResponse.trim();
 
-		let messagesLength = this.messages.push({ role: "user", content: finalMessage });
-		if (messagesLength > 10) this.messages.shift();
-
-		messagesLength = this.messages.push({ role: "assistant", content: ollamaResponse });
-		if (messagesLength > 10) this.messages.shift();
+		let messagesLength = this.messages.push({ username: "assistant", content: ollamaResponse });
+		if (messagesLength > 20) this.messages.shift();
 
 		this.timeSinceLastTalkingMinutes = 0;
 		this.twitchIrcService.sendMessage(ollamaResponse, messageId);
@@ -69,6 +70,9 @@ export class ChatManager {
 	handleMessage = async (username: string, message: string, messageId: string) => {
 		if (message.startsWith("!")) return;
 		message = message.trim();
+
+		let messagesLength = this.messages.push({ username: username, content: message });
+		if (messagesLength > 20) this.messages.shift();
 
 		const welcomeNewViewers = await getItem("character_welcome_new_viewers");
 		if (welcomeNewViewers && !this.users.has(username)) {

@@ -39,14 +39,12 @@ export const startInteraction = async (
 	messages: Array<{ role: string; content: string }>,
 	bypassIsRaid: boolean = false
 ) => {
-	console.log(isPlaying());
 	if (isPlaying() || (isRaided() && !bypassIsRaid)) return undefined;
 	start();
 
 	socket.emit(AI_PROCESSING_REQUEST, true);
 
 	const ollamaResponse = await sendChat(messages);
-	logger.warn(ollamaResponse);
 	if (ollamaResponse === null) {
 		socket.emit(AI_PROCESSING_REQUEST, false);
 		return null;

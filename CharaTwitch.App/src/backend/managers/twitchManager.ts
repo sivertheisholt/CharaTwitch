@@ -11,6 +11,7 @@ import { ActionManager } from "./actionManager";
 import { logger } from "../logging/logger";
 import { TWITCH_ACCOUNT_STATUS, TWITCH_CUSTOM_REDEEMS } from "../../socket/TwitchEvents";
 import { TwitchAuthType } from "../../types/socket/TwitchAuthType";
+import { VoiceRecordingManager } from "./voiceRecordingManager";
 
 export const onTwitchAuth = async (
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>,
@@ -34,16 +35,18 @@ export const onTwitchAuth = async (
 		const customRedeems = await getCustomRewards(sub, twitch_client_id, access_token);
 		if (customRedeems === null) return socket.emit(TWITCH_ACCOUNT_STATUS, false);
 
-		const twitchIrc = new TwitchIrcService(socket, access_token, preferred_username);
+		const twitchIrcService = new TwitchIrcService(socket, access_token, preferred_username);
 
-		await twitchIrc.connectToTwitchIrc();
+		await twitchIrcService.connectToTwitchIrc();
 
-		const rewardManager = new RewardManager(socket, twitchIrc);
+		const rewardManager = new RewardManager(socket, twitchIrcService);
 
 		const twitchPubSubService = new TwitchPubSubService(socket, access_token, rewardManager.onRewardCb);
 		await twitchPubSubService.init();
 
 		const actionManager = new ActionManager(socket);
+
+		const voiceRecordingManager = new VoiceRecordingManager(socket, twitchIrcService);
 
 		socket.emit(TWITCH_CUSTOM_REDEEMS, customRedeems);
 		socket.emit(TWITCH_ACCOUNT_STATUS, true);

@@ -41,9 +41,11 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@types/hark": "^1.2.5",
     "axios": "^1.6.8",
     "electron-squirrel-startup": "1.0.0",
     "express": "^4.19.2",
+    "hark": "^1.2.3",
     "node-persist": "4.0.1",
     "pino": "^9.0.0",
     "pino-pretty": "11.0.0",
