@@ -16,6 +16,9 @@ import { CaiDashboardContext } from "../../contexts/dashboard/CaiDashboardContex
 import { CaiDashboardContextType } from "../../types/context/dashboard/CaiDashboardContextType";
 import { OllamaDashboardContext } from "../../contexts/dashboard/OllamaDashboardContext";
 import { OllamaDashboardContextType } from "../../types/context/dashboard/OllamaDashboardContextType";
+import { OpenAiConfigContext } from "../../contexts/config/OpenAiConfigContext";
+import { OpenAiConfigContextType } from "../../types/context/config/OpenAiConfigContextType";
+import { OPENAI_API_KEY_CHANGE } from "../../socket/OpenAiEvents.";
 
 export interface AiConfigProps {}
 
@@ -29,8 +32,14 @@ const AiConfigComponent = (props: AiConfigProps) => {
 	) as OllamaConfigContextType;
 	const { caiAccountStatus } = useContext(CaiDashboardContext) as CaiDashboardContextType;
 	const { ollamaStatus } = useContext(OllamaDashboardContext) as OllamaDashboardContextType;
+	const { openAiApiKey, setOpenAiApiKey } = useContext(OpenAiConfigContext) as OpenAiConfigContextType;
 
 	const [connectingAi, setConnectingAi] = useState(false);
+
+	const handleOpenAiApiKey = (event: React.ChangeEvent<HTMLInputElement>) => {
+		socket.emit(OPENAI_API_KEY_CHANGE, event.target.value);
+		setOpenAiApiKey(event.target.value);
+	};
 
 	const handleOllamaModelNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setOllamaModelName(event.target.value);
@@ -102,13 +111,33 @@ const AiConfigComponent = (props: AiConfigProps) => {
 			<label className="fs-4">
 				<strong>Voices</strong>
 			</label>
-			<Form.Select size="lg" onChange={handleCaiSelectVoice} value={caiSelectedVoice} aria-label="CAI Voices">
+			<Form.Select
+				className="mb-3"
+				size="lg"
+				onChange={handleCaiSelectVoice}
+				value={caiSelectedVoice}
+				aria-label="CAI Voices"
+			>
 				{caiVoices.map((voice) => (
 					<option key={voice.id} value={voice.id}>
 						{voice.name}
 					</option>
 				))}
 			</Form.Select>
+			<h2>Open AI</h2>
+			<hr className="hr" />
+			<label className="fs-4">
+				<strong>API Key</strong>
+			</label>
+			<InputGroup className="mb-3" size="lg">
+				<Form.Control
+					type="password"
+					value={openAiApiKey}
+					onChange={handleOpenAiApiKey}
+					placeholder="API Key"
+					aria-label="API Key"
+				/>
+			</InputGroup>
 			<div className="d-grid gap-2 mt-4">
 				{ollamaStatus && caiAccountStatus ? (
 					<Alert variant={"success"}>Connected</Alert>

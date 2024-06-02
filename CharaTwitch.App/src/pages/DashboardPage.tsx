@@ -15,6 +15,8 @@ import { CaiDashboardContext } from "../contexts/dashboard/CaiDashboardContext";
 import { CaiDashboardContextType } from "../types/context/dashboard/CaiDashboardContextType";
 import { OllamaDashboardContext } from "../contexts/dashboard/OllamaDashboardContext";
 import { OllamaDashboardContextType } from "../types/context/dashboard/OllamaDashboardContextType";
+import { VoiceContextType } from "../types/context/voice/VoiceContextType";
+import { VoiceContext } from "../contexts/voice/VoiceContext";
 
 export interface DashboardPageProps {}
 
@@ -25,10 +27,11 @@ const DashboardPageComponent = (props: DashboardPageProps) => {
 	const { aiProcessing, aiMessages } = useContext(AiDashboardContext) as AiDashboardContextType;
 	const { caiAccountStatus } = useContext(CaiDashboardContext) as CaiDashboardContextType;
 	const { ollamaStatus } = useContext(OllamaDashboardContext) as OllamaDashboardContextType;
+	const { transcript } = useContext(VoiceContext) as VoiceContextType;
 
 	return (
 		<>
-			<Container style={{ height: "30%" }}>
+			<Container style={{ height: "15%" }}>
 				<Row className="h-100 justify-content-center align-items-center">
 					<Col>
 						<StatusCard
@@ -44,10 +47,15 @@ const DashboardPageComponent = (props: DashboardPageProps) => {
 					</Col>
 				</Row>
 			</Container>
-			<Container style={{ height: "70%" }}>
+			<Container className="pb-3" style={{ height: "20%" }}>
+				<h2>Speech to text</h2>
+				<hr className="hr" />
+				<Alert>{transcript}</Alert>
+			</Container>
+			<Container style={{ height: "60%" }}>
 				<Row style={{ height: "50%" }}>
 					<Col style={{ height: "100%" }}>
-						<h1>Twitch chat</h1>
+						<h2>Twitch chat</h2>
 						<hr className="hr" />
 						<CustomScroll heightRelativeToParent="calc(100% - 85px)">
 							{twitchMessages.map((twitch) => (
@@ -61,7 +69,7 @@ const DashboardPageComponent = (props: DashboardPageProps) => {
 						<div style={{ height: "100%" }} className="vr"></div>
 					</Col>
 					<Col style={{ height: "100%", overflowY: "auto" }}>
-						<h1>Twitch Redeems</h1>
+						<h2>Twitch Redeems</h2>
 						<hr className="hr" />
 						<CustomScroll heightRelativeToParent="calc(100% - 85px)">
 							{twitchRedeems.map((redeem) => (
@@ -74,7 +82,7 @@ const DashboardPageComponent = (props: DashboardPageProps) => {
 				</Row>
 				<Row style={{ height: "50%" }}>
 					<Col style={{ height: "100%" }}>
-						<h1>Character</h1>
+						<h2>Character</h2>
 						<hr className="hr" />
 						<CustomScroll heightRelativeToParent="calc(100% - 85px)">
 							{aiMessages.map((message) => (
@@ -88,7 +96,7 @@ const DashboardPageComponent = (props: DashboardPageProps) => {
 						<div style={{ height: "100%" }} className="vr"></div>
 					</Col>
 					<Col style={{ height: "100%" }}>
-						<h1>Status</h1>
+						<h2>Status</h2>
 						<hr className="hr" />
 						<div style={{ height: "calc(100% - 71px)" }} className="d-flex justify-content-center align-items-center">
 							<RingLoader color="#36d7b7" loading={aiProcessing} size={150} aria-label="Loading Spinner" />

@@ -1,9 +1,7 @@
-import { Message, client as WebSocketClient, client, connection } from "websocket";
+import { Message, client as WebSocketClient, connection } from "websocket";
 import { Socket } from "socket.io/dist/socket";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
-import { ChatManager } from "../../managers/chatManager";
 import { parseMessage } from "../../helpers/twitchIrcMessageParser";
-import { RaidManager } from "../../managers/raidManager";
 import { logger } from "../../logging/logger";
 import { TWITCH_IRC_STATUS } from "../../../socket/TwitchEvents";
 
@@ -12,8 +10,10 @@ export class TwitchIrcService {
 	accessToken: string;
 	username: string;
 	connection: connection;
-	chatManager: ChatManager;
-	raidManager: RaidManager;
+
+	handleMessageCb: (username: string, message: string, messageId: string) => {};
+	startRaidCb: (raidedBy: string) => {};
+
 	constructor(
 		socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>,
 		accessToken: string,
@@ -22,9 +22,15 @@ export class TwitchIrcService {
 		this.socket = socket;
 		this.accessToken = accessToken;
 		this.username = username;
-		this.chatManager = new ChatManager(socket, this);
-		this.raidManager = new RaidManager(socket, this);
 	}
+
+	initialize = (
+		handleMessageCb: (username: string, message: string, messageId: string) => {},
+		startRaidCb: (raidedBy: string) => {}
+	) => {
+		this.handleMessageCb = handleMessageCb;
+		this.startRaidCb = startRaidCb;
+	};
 
 	handlePing = (pingMessage: string) => {
 		this.connection.sendUTF(`PONG ${pingMessage}`);
@@ -60,7 +66,7 @@ export class TwitchIrcService {
 						"custom-reward-id" in parsedMessage.tags
 					)
 						break;
-					this.chatManager.handleMessage(parsedMessage.source.nick, parsedMessage.parameters, parsedMessage.tags.id);
+					this.handleMessageCb(parsedMessage.source.nick, parsedMessage.parameters, parsedMessage.tags.id);
 					this.socket.emit("twitchMessage", {
 						username: parsedMessage.source.nick,
 						message: parsedMessage.parameters,
@@ -69,7 +75,7 @@ export class TwitchIrcService {
 				}
 				case "USERNOTICE":
 					if (parsedMessage.tags === null) break;
-					if (parsedMessage.tags["msg-id"] === "raid") this.raidManager.startRaid(parsedMessage.tags["display-name"]);
+					if (parsedMessage.tags["msg-id"] === "raid") this.startRaidCb(parsedMessage.tags["display-name"]);
 					break;
 				case "PING":
 					this.handlePing(parsedMessage.parameters);

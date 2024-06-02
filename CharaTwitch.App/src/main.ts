@@ -1,10 +1,10 @@
 import { app, BrowserWindow } from "electron";
 import path from "path";
-import { startSocketServer } from "./backend/websocket/socketServer";
 import { initStorage } from "./backend/services/config/configService";
 import express from "express";
 import { createServer } from "node:http";
 import { logger } from "./backend/logging/logger";
+import { SocketServer } from "./backend/websocket/socketServer";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
@@ -18,11 +18,11 @@ server.listen(8001, () => {
 	logger.info("server running at http://localhost:8001");
 });
 
-// Spinning the HTTP server and the WebSocket server.
-startSocketServer(server, expressApp);
-
 // Initiate storage
 initStorage();
+
+// Start socket
+const socketServer = new SocketServer(server, expressApp);
 
 const createWindow = async () => {
 	// Create the browser window.

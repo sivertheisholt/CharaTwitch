@@ -19,7 +19,6 @@ import {
 	OLLAMA_PARAMETERS_TOP_K,
 	OLLAMA_PARAMETERS_TOP_P,
 } from "../socket/OllamaParametersEvents";
-import Form from "react-bootstrap/esm/Form";
 
 export interface OllamaPageProps {}
 

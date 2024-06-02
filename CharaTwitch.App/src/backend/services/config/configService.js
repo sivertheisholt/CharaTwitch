@@ -25,19 +25,11 @@ export const initializeConfig = async (configObject) => {
 			case "character_welcome_new_viewers":
 				initializedConfig[key] = configObject[key] === undefined ? false : configObject[key];
 				break;
-			case "character_random_redeems":
-				initializedConfig[key] = configObject[key] === undefined ? false : configObject[key];
-				break;
 			case "character_random_talking":
 				initializedConfig[key] = configObject[key] === undefined ? false : configObject[key];
 				break;
-			case "character_random_talking_frequency":
-				initializedConfig[key] = configObject[key] === undefined ? 5 : configObject[key];
-				await _setItem("character_random_talking_frequency", initializedConfig[key]);
-				break;
-			case "character_random_redeems_frequency":
-				initializedConfig[key] = configObject[key] === undefined ? 5 : configObject[key];
-				await _setItem("character_random_redeems_frequency", initializedConfig[key]);
+			case "character_voice_enabled":
+				initializedConfig[key] = configObject[key] === undefined ? false : configObject[key];
 				break;
 			case "character_minimum_time_between_talking":
 				initializedConfig[key] = configObject[key] === undefined ? 0 : configObject[key];
@@ -147,14 +139,13 @@ export const getCharacterConfig = async () => {
 		character_selected_redeem: await _getItem("character_selected_redeem"),
 		character_question: await _getItem("character_question"),
 		character_tts: await _getItem("character_tts"),
-		character_random_redeems: await _getItem("character_random_redeems"),
 		character_random_talking: await _getItem("character_random_talking"),
 		character_welcome_strangers: await _getItem("character_welcome_raiders"),
 		character_welcome_raiders: await _getItem("character_welcome_strangers"),
 		character_welcome_new_viewers: await _getItem("character_welcome_new_viewers"),
-		character_random_redeems_frequency: await _getItem("character_random_redeems_frequency"),
 		character_random_talking_frequency: await _getItem("character_random_talking_frequency"),
 		character_minimum_time_between_talking: await _getItem("character_minimum_time_between_talking"),
+		character_voice_enabled: await _getItem("character_voice_enabled"),
 	};
 	return await initializeConfig(configObject);
 };
@@ -172,6 +163,13 @@ export const getOllamaParameters = async () => {
 		num_predict: await _getItem("ollama_parameters_num_predict"),
 		top_k: await _getItem("ollama_parameters_top_k"),
 		top_p: await _getItem("ollama_parameters_top_p"),
+	};
+	return await initializeConfig(configObject);
+};
+
+export const getOpenAiConfig = async () => {
+	const configObject = {
+		openai_api_key: await _getItem("openai_api_key"),
 	};
 	return await initializeConfig(configObject);
 };

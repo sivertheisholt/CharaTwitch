@@ -5,16 +5,12 @@ export type CharacterContextType = {
 	setCharacterQuestion: React.Dispatch<React.SetStateAction<string>>;
 	characterTTS: string;
 	setCharacterTTS: React.Dispatch<React.SetStateAction<string>>;
-	characterRandomRedeems: boolean;
-	setCharacterRandomRedeems: React.Dispatch<React.SetStateAction<boolean>>;
 	characterRandomTalking: boolean;
 	setCharacterRandomTalking: React.Dispatch<React.SetStateAction<boolean>>;
 	characterWelcomeStrangers: boolean;
 	setCharacterWelcomeStrangers: React.Dispatch<React.SetStateAction<boolean>>;
 	characterWelcomeRaiders: boolean;
 	setCharacterWelcomeRaiders: React.Dispatch<React.SetStateAction<boolean>>;
-	characterRandomRedeemsFrequency: number;
-	setCharacterRandomRedeemsFrequency: React.Dispatch<React.SetStateAction<number>>;
 	characterRandomTalkingFrequency: number;
 	setCharacterRandomTalkingFrequency: React.Dispatch<React.SetStateAction<number>>;
 	characterWelcomeNewViewers: boolean;
