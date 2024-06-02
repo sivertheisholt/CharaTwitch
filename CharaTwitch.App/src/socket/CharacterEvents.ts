@@ -12,3 +12,5 @@ export const CHARACTER_ASK_QUESTION = "characterAskQuestion"; // Ask question
 export const CHARACTER_TTS = "characterTTS"; // Do TTS
 export const CHARACTER_CONFIG = "characterConfig"; // Character config
 export const CHARACTER_MINIMUM_TIME_BETWEEN_TALKING_CHANGE = "characterMinimumTimeBetweenTalkingChange"; // On minimum time between talking change
+export const CHARACTER_VOICE_ENABLED_CHANGE = "characterVoiceEnabledChange";
+export const CHARACTER_VOICE_ENABLED = "characterVoiceEnabled";

@@ -2,34 +2,36 @@ import { Socket } from "socket.io/dist/socket";
 import { getItem } from "../services/config/configService";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { TwitchIrcService } from "../services/twitch/twitchIrcService";
-import { add, remove } from "./rewardQueueManager";
-import { stop } from "./audioManager";
-import { startInteraction } from "./interactionManager";
 import { TWITCH_REDEEM } from "../../socket/TwitchEvents";
+import { InteractionManager } from "./interactionManager";
+import { RewardQueueItemType } from "../../types/RewardQueueItemType";
 
 export class RewardManager {
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>;
 	twitchIrcService: TwitchIrcService;
+	interactionManager: InteractionManager;
+	queue: Array<RewardQueueItemType> = [];
 	constructor(
 		socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>,
-		twitchIrcService: TwitchIrcService
+		twitchIrcService: TwitchIrcService,
+		interactionManager: InteractionManager
 	) {
 		this.socket = socket;
 		this.twitchIrcService = twitchIrcService;
+		this.interactionManager = interactionManager;
+
 		setInterval(async () => {
-			const reward = remove();
+			const reward = this.removeQueue();
 			if (!reward) return;
 
-			const ollamaResponse = await startInteraction(this.socket, [
-				{ role: "user", content: `${reward.username}: ${reward.message}` },
-			]);
-			if (ollamaResponse === undefined) {
-				add(reward.username, reward.message);
-				return;
-			}
+			const ollamaResponse = await this.interactionManager.startInteraction(
+				this.socket,
+				`${reward.username}: ${reward.message}`
+			);
+
 			if (ollamaResponse === null) {
-				add(reward.username, reward.message);
-				return stop();
+				this.addQueue(reward.username, reward.message);
+				return;
 			}
 
 			this.twitchIrcService.sendMessage(ollamaResponse);
@@ -49,19 +51,19 @@ export class RewardManager {
 				reward: rewardData.data.redemption.reward.title,
 			});
 
-			const ollamaResponse = await startInteraction(this.socket, [
-				{ role: "user", content: `${username}: ${userInput}` },
-			]);
-			if (ollamaResponse === undefined) {
-				add(username, userInput);
-				return;
-			}
+			const ollamaResponse = await this.interactionManager.startInteraction(this.socket, `${username}: ${userInput}`);
 			if (ollamaResponse === null) {
-				add(username, userInput);
-				return stop();
+				this.addQueue(username, userInput);
+				return;
 			}
 
 			this.twitchIrcService.sendMessage(ollamaResponse);
 		}
+	};
+	removeQueue = () => {
+		return this.queue.pop();
+	};
+	addQueue = (username: string, message: string) => {
+		this.queue.push({ username: username, message: message });
 	};
 }

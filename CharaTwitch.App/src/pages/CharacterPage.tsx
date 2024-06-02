@@ -16,19 +16,21 @@ import Alert from "react-bootstrap/esm/Alert";
 import {
 	CHARACTER_ASK_QUESTION,
 	CHARACTER_MINIMUM_TIME_BETWEEN_TALKING_CHANGE,
-	CHARACTER_RANDOM_REDEEMS_CHANGE,
-	CHARACTER_RANDOM_REDEEMS_FREQUENCY_CHANGE,
 	CHARACTER_RANDOM_TALKING_CHANGE,
 	CHARACTER_RANDOM_TALKING_FREQUENCY_CHANGE,
 	CHARACTER_TTS,
+	CHARACTER_VOICE_ENABLED_CHANGE,
 	CHARACTER_WELCOME_NEW_VIEWERS_CHANGE,
 	CHARACTER_WELCOME_RAIDERS_CHANGE,
 	CHARACTER_WELCOME_STRANGERS_CHANGE,
 } from "../socket/CharacterEvents";
+import { VoiceContext } from "../contexts/voice/VoiceContext";
+import { VoiceContextType } from "../types/context/voice/VoiceContextType";
 
 export interface CharacterPageProps {}
 
 const CharacterPageComponent = (props: CharacterPageProps) => {
+	const { socket } = useContext(SocketContext) as SocketContextType;
 	const {
 		characterSelectedRedeem,
 		setCharacterSelectedRedeem,
@@ -36,16 +38,12 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 		setCharacterQuestion,
 		characterTTS,
 		setCharacterTTS,
-		characterRandomRedeems,
-		setCharacterRandomRedeems,
 		characterRandomTalking,
 		setCharacterRandomTalking,
 		characterWelcomeStrangers,
 		setCharacterWelcomeStrangers,
 		characterWelcomeRaiders,
 		setCharacterWelcomeRaiders,
-		characterRandomRedeemsFrequency,
-		setCharacterRandomRedeemsFrequency,
 		characterRandomTalkingFrequency,
 		setCharacterRandomTalkingFrequency,
 		characterWelcomeNewViewers,
@@ -53,15 +51,16 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 		characterMinimumTimeBetweenTalking,
 		setCharacterMinimumTimeBetweenTalking,
 	} = useContext(CharacterContext) as CharacterContextType;
-	const { socket } = useContext(SocketContext) as SocketContextType;
+	const { voiceEnabled, handleVoiceEnabled } = useContext(VoiceContext) as VoiceContextType;
 	const [startTTS, setStartTTS] = useState(false);
 	const [startQuestion, setStartQuestion] = useState(false);
 
-	const handleRandomRedeemChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+	const handleVoiceEnabledChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const checked = event.target.checked;
-		socket.emit(CHARACTER_RANDOM_REDEEMS_CHANGE, checked);
-		setCharacterRandomRedeems(checked);
+		socket.emit(CHARACTER_VOICE_ENABLED_CHANGE, checked);
+		handleVoiceEnabled(checked);
 	};
+
 	const handleRandomTalkingChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const checked = event.target.checked;
 		socket.emit(CHARACTER_RANDOM_TALKING_CHANGE, checked);
@@ -81,10 +80,6 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 		const checked = event.target.checked;
 		socket.emit(CHARACTER_WELCOME_NEW_VIEWERS_CHANGE, checked);
 		setCharacterWelcomeNewViewers(checked);
-	};
-	const handleRandomRedeemFrequencyChange = (value: number) => {
-		socket.emit(CHARACTER_RANDOM_REDEEMS_FREQUENCY_CHANGE, value);
-		setCharacterRandomRedeemsFrequency(value);
 	};
 	const handleRandomTalkingFrequencyChange = (value: number) => {
 		socket.emit(CHARACTER_RANDOM_TALKING_FREQUENCY_CHANGE, value);
@@ -218,10 +213,10 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 								<Row>
 									<Col>
 										<label className="fs-6">
-											<strong>Random redeems (OFF)</strong>
+											<strong>Speech to text</strong>
 										</label>
 										<InputGroup data-bs-theme="light" className="mb-3" size="sm">
-											<Form.Check onChange={handleRandomRedeemChange} checked={characterRandomRedeems} />
+											<Form.Check onChange={handleVoiceEnabledChange} checked={voiceEnabled} />
 										</InputGroup>
 									</Col>
 									<Col>
@@ -267,20 +262,6 @@ const CharacterPageComponent = (props: CharacterPageProps) => {
 
 					<Card className="mb-2" data-bs-theme="dark">
 						<Card.Body className="p-2">
-							<div className="m-0 p-0" style={{ display: "none" }}>
-								<label className="fs-6">
-									<strong>Redeems frequency</strong>
-								</label>
-								<Slider
-									className="h-100 w-100 mt-2"
-									max={100}
-									min={0}
-									step={5}
-									value={characterRandomRedeemsFrequency}
-									onChange={handleRandomRedeemFrequencyChange}
-								/>
-							</div>
-
 							<label className="fs-6">
 								<strong>Talking frequency</strong>
 							</label>

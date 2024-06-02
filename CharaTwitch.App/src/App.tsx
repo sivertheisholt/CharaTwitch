@@ -11,6 +11,7 @@ import CaiDashboardProvider from "./contexts/dashboard/CaiDashboardContext";
 import OllamaDashboardProvider from "./contexts/dashboard/OllamaDashboardContext";
 import OllamaParametersProvider from "./contexts/ollama/OllamaParametersContext";
 import VoiceContextProvider from "./contexts/voice/VoiceContext";
+import OpenAiConfigProvider from "./contexts/config/OpenAiConfigContext";
 
 function App() {
 	return (
@@ -25,11 +26,13 @@ function App() {
 										<OllamaConfigProvider>
 											<CharacterProvider>
 												<CaiConfigProvider>
-													<VoiceContextProvider>
-														<Router>
-															<NavBar />
-														</Router>
-													</VoiceContextProvider>
+													<OpenAiConfigProvider>
+														<VoiceContextProvider>
+															<Router>
+																<NavBar />
+															</Router>
+														</VoiceContextProvider>
+													</OpenAiConfigProvider>
 												</CaiConfigProvider>
 											</CharacterProvider>
 										</OllamaConfigProvider>

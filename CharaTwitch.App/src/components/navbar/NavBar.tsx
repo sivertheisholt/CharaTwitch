@@ -15,9 +15,6 @@ const NavBarComponent = (props: NavBarProps) => {
 					<Nav.Link as={NavLink} to="/">
 						Dashboard
 					</Nav.Link>
-					<Nav.Link as={NavLink} to="/voicerecording">
-						Voice Recording
-					</Nav.Link>
 					<Nav.Link as={NavLink} to="/character">
 						Character
 					</Nav.Link>

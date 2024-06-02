@@ -14,19 +14,19 @@ const axiosClient = async () => {
 	});
 };
 
-export const sendChat = async (messages: Array<{ role: string; content: string }>) => {
+export const sendChat = async (message: string) => {
 	try {
 		const modelName = await getItem("ollama_model_name");
 		const client = await axiosClient();
 		const ollama_parameters = await getOllamaParameters();
-		const res = await client.post("/api/chat", {
+		const res = await client.post("/api/generate", {
 			model: modelName,
-			messages: messages,
+			prompt: message,
 			stream: false,
 			options: ollama_parameters,
 		});
 		if (res.status != 200) return null;
-		return res.data.message.content;
+		return res.data.response;
 	} catch (err) {
 		logger.error(err, "Could not send chat");
 		return null;

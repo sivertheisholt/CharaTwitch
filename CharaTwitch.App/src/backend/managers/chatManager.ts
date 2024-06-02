@@ -2,11 +2,12 @@ import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { Socket } from "socket.io";
 import { TwitchIrcService } from "../services/twitch/twitchIrcService";
 import { getItem } from "../services/config/configService";
-import { stop } from "./audioManager";
-import { startInteraction } from "./interactionManager";
+import { InteractionManager } from "./interactionManager";
 
 export class ChatManager {
-	messages: Array<{ username: string; content: string }>;
+	interactionManager: InteractionManager;
+	messagesUsers: Array<{ username: string; content: string }>;
+	messagesAssistant: Array<string>;
 	users: Map<string, string>;
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>;
 	twitchIrcService: TwitchIrcService;
@@ -14,17 +15,49 @@ export class ChatManager {
 
 	constructor(
 		socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>,
-		twitchIrcService: TwitchIrcService
+		twitchIrcService: TwitchIrcService,
+		interactionManager: InteractionManager
 	) {
-		this.messages = [];
+		this.interactionManager = interactionManager;
+
+		this.messagesUsers = [];
+		this.messagesAssistant = [];
 		this.users = new Map<string, string>();
 		this.socket = socket;
 		this.twitchIrcService = twitchIrcService;
 		this.timeSinceLastTalkingMinutes = 0;
+
 		setInterval(() => {
 			this.timeSinceLastTalkingMinutes++;
 		}, 60000);
 	}
+
+	addUserMessage = (username: string, message: string) => {
+		let messagesLength = this.messagesUsers.push({ username: username, content: message });
+		if (messagesLength > 20) this.messagesUsers.shift();
+	};
+
+	addAssistantMessage = (message: string) => {
+		let messagesLength = this.messagesAssistant.push(message);
+		if (messagesLength > 5) this.messagesAssistant.shift();
+	};
+
+	getChatHistory = () => {
+		let chatHistoryContext = "CONTEXT:\n";
+		let userMessages = "USER MESSAGES:\n";
+		let assistantMessages = "ASSISTANT MESSAGES:\n";
+		this.messagesUsers.forEach((message) => {
+			userMessages += `${message.username}: ${message.content} \n`;
+		});
+		this.messagesAssistant.forEach((message) => {
+			assistantMessages += `${message}\n`;
+		});
+
+		chatHistoryContext += userMessages;
+		chatHistoryContext += assistantMessages;
+
+		return chatHistoryContext;
+	};
 
 	eventOccurs = (probability: number): boolean => {
 		const randomNumber = Math.random();
@@ -32,36 +65,24 @@ export class ChatManager {
 	};
 
 	newViewer = async (username: string, message: string, messageId: string) => {
-		const ollamaResponse = await startInteraction(this.socket, [
-			{
-				role: "user",
-				content: `Welcome ${username} to the stream! ${username}: ${message}`,
-			},
-		]);
-		if (ollamaResponse === undefined) return;
-		if (ollamaResponse === null) return stop();
+		const ollamaResponse = await this.interactionManager.startInteraction(
+			this.socket,
+			`Welcome ${username} to the stream! ${username}: ${message}`
+		);
+		if (ollamaResponse === null) return;
 
 		this.twitchIrcService.sendMessage(ollamaResponse, messageId);
 	};
 
 	randomReply = async (username: string, message: string, messageId: string) => {
-		const historyUser = { role: "user", content: "\n" };
-		const historyAssistant = { role: "assistant", content: "\n" };
-		this.messages.forEach((message) => {
-			if (message.username === "assistant") historyAssistant.content += `${message.username}: ${message.content} \n`;
-			else historyUser.content += `${message.content} \n`;
-		});
+		const finalMessage = this.getChatHistory() + `PROMPT:\n${username}: ${message}`;
 
-		const finalArray = [historyUser, historyAssistant, { role: "user", content: `${username}: ${message}` }];
-
-		let ollamaResponse = await startInteraction(this.socket, finalArray);
-		if (ollamaResponse === undefined) return;
-		if (ollamaResponse === null) return stop();
+		let ollamaResponse = await this.interactionManager.startInteraction(this.socket, finalMessage);
+		if (ollamaResponse === null) return;
 
 		ollamaResponse = ollamaResponse.trim();
 
-		let messagesLength = this.messages.push({ username: "assistant", content: ollamaResponse });
-		if (messagesLength > 20) this.messages.shift();
+		this.addAssistantMessage(ollamaResponse);
 
 		this.timeSinceLastTalkingMinutes = 0;
 		this.twitchIrcService.sendMessage(ollamaResponse, messageId);
@@ -71,8 +92,7 @@ export class ChatManager {
 		if (message.startsWith("!")) return;
 		message = message.trim();
 
-		let messagesLength = this.messages.push({ username: username, content: message });
-		if (messagesLength > 20) this.messages.shift();
+		this.addUserMessage(username, message);
 
 		const welcomeNewViewers = await getItem("character_welcome_new_viewers");
 		if (welcomeNewViewers && !this.users.has(username)) {

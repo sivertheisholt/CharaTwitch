@@ -4,12 +4,13 @@ import { getItem } from "../config/configService";
 const WHISPER_API_URL = "https://api.openai.com/v1/audio/transcriptions";
 
 const axiosClient = async () => {
+	let apiKey = await getItem("openai_api_key");
 	return axios.create({
 		baseURL: WHISPER_API_URL,
 		timeout: 16000,
 		signal: AbortSignal.timeout(16500),
 		headers: {
-			Authorization: "Bearer ",
+			Authorization: `Bearer ${apiKey}`,
 			"Content-Type": "multipart/form-data",
 		},
 	});
@@ -20,15 +21,6 @@ export const transcribeAudio = async (blob: Blob[]): Promise<string> => {
 	try {
 		// Decode the base64 audio to binary
 		const audioBlob = new Blob(blob, { type: "audio/wav" });
-		audioBlob
-			.arrayBuffer()
-			.then((buffer) => {
-				const base64data = Buffer.from(buffer).toString("base64");
-				console.log(base64data);
-			})
-			.catch((err) => {
-				console.error("Error converting Blob to base64:", err);
-			});
 		const client = await axiosClient();
 
 		const form = new FormData();

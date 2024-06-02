@@ -4,6 +4,7 @@ import hark from "hark";
 import { VOICE_RECORDING_TRANSCRIPT, VOICE_RECORDING_BLOBARRAY } from "../../socket/VoiceRecordingEvents";
 import { SocketContextType } from "../../types/context/SocketContextType";
 import { SocketContext } from "../SocketContext";
+import { CHARACTER_VOICE_ENABLED } from "../../socket/CharacterEvents";
 
 export const VoiceContext = createContext<VoiceContextType | null>(null);
 
@@ -12,19 +13,27 @@ const VoiceContextProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 	const initialized = useRef(false);
 	const mediaRecorderRef = useRef<MediaRecorder | null>(null);
 	const audioChunksRef = useRef<Blob[]>([]);
+	const voiceEnabledRef = useRef<boolean>(false);
 	const [recording, setRecording] = useState<boolean>(false);
 	const [transcript, setTranscript] = useState<string>("");
+	const [voiceEnabled, setVoiceEnabled] = useState<boolean>(false);
 
 	const handleVoiceRecordingTranscript = (transcript: string) => {
-		console.log(transcript);
 		setTranscript(transcript);
+	};
+
+	const handleVoiceEnabled = (voiceEnabled: boolean) => {
+		setVoiceEnabled(voiceEnabled);
+		voiceEnabledRef.current = voiceEnabled;
 	};
 
 	useEffect(() => {
 		if (socket !== null) {
+			socket.on(CHARACTER_VOICE_ENABLED, handleVoiceEnabled);
 			socket.on(VOICE_RECORDING_TRANSCRIPT, handleVoiceRecordingTranscript);
 
 			return () => {
+				socket.off(CHARACTER_VOICE_ENABLED, handleVoiceEnabled);
 				socket.off(VOICE_RECORDING_TRANSCRIPT, handleVoiceRecordingTranscript);
 			};
 		}
@@ -37,7 +46,7 @@ const VoiceContextProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 				navigator.mediaDevices
 					.getUserMedia({ audio: true })
 					.then((stream) => {
-						const harkthing = hark(stream);
+						const harkthing = hark(stream, { interval: 50 });
 
 						const mediaRecorder = new MediaRecorder(stream);
 						mediaRecorderRef.current = mediaRecorder;
@@ -47,7 +56,9 @@ const VoiceContextProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 						};
 
 						mediaRecorder.onstop = () => {
-							socket.emit(VOICE_RECORDING_BLOBARRAY, audioChunksRef.current);
+							if (voiceEnabledRef.current) {
+								socket.emit(VOICE_RECORDING_BLOBARRAY, audioChunksRef.current);
+							}
 							audioChunksRef.current = [];
 						};
 
@@ -73,7 +84,9 @@ const VoiceContextProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 			}
 		}
 	}, [recording, socket]);
-	return <VoiceContext.Provider value={{}}>{children}</VoiceContext.Provider>;
+	return (
+		<VoiceContext.Provider value={{ transcript, voiceEnabled, handleVoiceEnabled }}>{children}</VoiceContext.Provider>
+	);
 };
 
 export default VoiceContextProvider;

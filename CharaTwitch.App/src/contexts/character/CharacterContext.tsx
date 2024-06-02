@@ -12,11 +12,9 @@ const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ children }
 	const [characterSelectedRedeem, setCharacterSelectedRedeem] = useState<string>("");
 	const [characterQuestion, setCharacterQuestion] = useState<string>("");
 	const [characterTTS, setCharacterTTS] = useState<string>("");
-	const [characterRandomRedeems, setCharacterRandomRedeems] = useState<boolean>(false);
 	const [characterRandomTalking, setCharacterRandomTalking] = useState<boolean>(false);
 	const [characterWelcomeStrangers, setCharacterWelcomeStrangers] = useState<boolean>(false);
 	const [characterWelcomeRaiders, setCharacterWelcomeRaiders] = useState<boolean>(false);
-	const [characterRandomRedeemsFrequency, setCharacterRandomRedeemsFrequency] = useState<number>(0);
 	const [characterRandomTalkingFrequency, setCharacterRandomTalkingFrequency] = useState<number>(0);
 	const [characterWelcomeNewViewers, setCharacterWelcomeNewViewers] = useState<boolean>(false);
 	const [characterMinimumTimeBetweenTalking, setCharacterMinimumTimeBetweenTalking] = useState<number>(0);
@@ -28,11 +26,9 @@ const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ children }
 					character_selected_redeem,
 					character_question,
 					character_tts,
-					character_random_redeems,
 					character_random_talking,
 					character_welcome_strangers,
 					character_welcome_raiders,
-					character_random_redeems_frequency,
 					character_random_talking_frequency,
 					character_welcome_new_viewers,
 					character_minimum_time_between_talking,
@@ -40,11 +36,9 @@ const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ children }
 				setCharacterSelectedRedeem(character_selected_redeem);
 				setCharacterQuestion(character_question);
 				setCharacterTTS(character_tts);
-				setCharacterRandomRedeems(character_random_redeems);
 				setCharacterRandomTalking(character_random_talking);
 				setCharacterWelcomeStrangers(character_welcome_strangers);
 				setCharacterWelcomeRaiders(character_welcome_raiders);
-				setCharacterRandomRedeemsFrequency(character_random_redeems_frequency);
 				setCharacterRandomTalkingFrequency(character_random_talking_frequency);
 				setCharacterWelcomeNewViewers(character_welcome_new_viewers);
 				setCharacterMinimumTimeBetweenTalking(character_minimum_time_between_talking);
@@ -61,16 +55,12 @@ const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ children }
 				setCharacterQuestion,
 				characterTTS,
 				setCharacterTTS,
-				characterRandomRedeems,
-				setCharacterRandomRedeems,
 				characterRandomTalking,
 				setCharacterRandomTalking,
 				characterWelcomeStrangers,
 				setCharacterWelcomeStrangers,
 				characterWelcomeRaiders,
 				setCharacterWelcomeRaiders,
-				characterRandomRedeemsFrequency,
-				setCharacterRandomRedeemsFrequency,
 				characterRandomTalkingFrequency,
 				setCharacterRandomTalkingFrequency,
 				characterWelcomeNewViewers,
