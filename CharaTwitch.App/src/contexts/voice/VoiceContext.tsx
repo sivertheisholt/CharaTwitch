@@ -62,19 +62,28 @@ const VoiceContextProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 							audioChunksRef.current = [];
 						};
 
+						let stopTimeout: NodeJS.Timeout | null = null;
+
 						harkthing.on("speaking", () => {
 							console.log("speaking");
 							if (mediaRecorder.state !== "recording") {
 								mediaRecorder.start();
 								setRecording(true);
 							}
+							if (stopTimeout) {
+								clearTimeout(stopTimeout);
+								stopTimeout = null;
+							}
 						});
 
 						harkthing.on("stopped_speaking", () => {
 							console.log("stopped_speaking");
 							if (mediaRecorder.state === "recording") {
-								mediaRecorder.stop();
-								setRecording(false);
+								// Add a delay before stopping the recording
+								stopTimeout = setTimeout(() => {
+									mediaRecorder.stop();
+									setRecording(false);
+								}, 1500); // 2 seconds delay
 							}
 						});
 					})
