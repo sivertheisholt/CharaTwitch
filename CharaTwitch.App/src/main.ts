@@ -11,19 +11,6 @@ if (require("electron-squirrel-startup")) {
 	app.quit();
 }
 
-const expressApp = express();
-const server = createServer(expressApp);
-
-server.listen(8001, () => {
-	logger.info("server running at http://localhost:8001");
-});
-
-// Initiate storage
-initStorage();
-
-// Start socket
-const socketServer = new SocketServer(server, expressApp);
-
 const createWindow = async () => {
 	// Create the browser window.
 	const mainWindow = new BrowserWindow({
@@ -51,7 +38,22 @@ const createWindow = async () => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on("ready", createWindow);
+app.on("ready", () => {
+	const expressApp = express();
+	const server = createServer(expressApp);
+
+	server.listen(8001, () => {
+		logger.info("server running at http://localhost:8001");
+	});
+
+	// Initiate storage
+	initStorage();
+
+	// Start socket
+	const socketServer = new SocketServer(server, expressApp);
+
+	createWindow();
+});
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
@@ -69,6 +71,3 @@ app.on("activate", () => {
 		createWindow();
 	}
 });
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
