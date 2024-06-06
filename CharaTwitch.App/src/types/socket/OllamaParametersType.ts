@@ -1,4 +1,5 @@
 export type OllamaParametersType = {
+	enable_override: boolean;
 	mirostat: number;
 	mirostat_eta: number;
 	num_ctx: number;
@@ -10,4 +11,5 @@ export type OllamaParametersType = {
 	num_predict: number;
 	top_k: number;
 	top_p: number;
+	keep_alive: number;
 };

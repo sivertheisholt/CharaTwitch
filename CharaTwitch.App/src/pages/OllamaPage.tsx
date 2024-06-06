@@ -15,10 +15,14 @@ import {
 	OLLAMA_PARAMETERS_TEMPERATURE_CHANGE,
 	OLLAMA_PARAMETERS_SEED_CHANGE,
 	OLLAMA_PARAMETERS_TFS_Z_CHANGE,
-	OLLAMA_PARAMETERS_NUM_PREDICT,
-	OLLAMA_PARAMETERS_TOP_K,
-	OLLAMA_PARAMETERS_TOP_P,
+	OLLAMA_PARAMETERS_KEEP_ALIVE_CHANGE,
+	OLLAMA_PARAMETERS_ENABLE_OVERRIDE_CHANGE,
+	OLLAMA_PARAMETERS_NUM_PREDICT_CHANGE,
+	OLLAMA_PARAMETERS_TOP_K_CHANGE,
+	OLLAMA_PARAMETERS_TOP_P_CHANGE,
 } from "../socket/OllamaParametersEvents";
+import InputGroup from "react-bootstrap/esm/InputGroup";
+import Form from "react-bootstrap/esm/Form";
 
 export interface OllamaPageProps {}
 
@@ -47,7 +51,22 @@ const OllamaPageComponent = (props: OllamaPageProps) => {
 		setOllamaParametersTopK,
 		ollamaParametersTopP,
 		setOllamaParametersTopP,
+		ollamaParametersEnableOverride,
+		setOllamaParametersEnableOverride,
+		ollamaParametersKeepAlive,
+		setOllamaParametersKeepAlive,
 	} = useContext(OllamaParametersContext) as OllamaParametersContextType;
+
+	const handleKeepAliveChange = (value: number) => {
+		setOllamaParametersKeepAlive(value);
+		socket.emit(OLLAMA_PARAMETERS_KEEP_ALIVE_CHANGE, value);
+	};
+
+	const handleEnableOverrideChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const checked = event.target.checked;
+		setOllamaParametersEnableOverride(checked);
+		socket.emit(OLLAMA_PARAMETERS_ENABLE_OVERRIDE_CHANGE, checked);
+	};
 
 	const handleMiroStatChange = (value: number) => {
 		setOllamaParametersMiroStat(value);
@@ -83,24 +102,57 @@ const OllamaPageComponent = (props: OllamaPageProps) => {
 	};
 	const handleNumPredictChange = (value: number) => {
 		setOllamaParametersNumPredict(value);
-		socket.emit(OLLAMA_PARAMETERS_NUM_PREDICT, value);
+		socket.emit(OLLAMA_PARAMETERS_NUM_PREDICT_CHANGE, value);
 	};
 	const handleTopKChange = (value: number) => {
 		setOllamaParametersTopK(value);
-		socket.emit(OLLAMA_PARAMETERS_TOP_K, value);
+		socket.emit(OLLAMA_PARAMETERS_TOP_K_CHANGE, value);
 	};
 	const handleTopPChange = (value: number) => {
 		setOllamaParametersTopP(value);
-		socket.emit(OLLAMA_PARAMETERS_TOP_P, value);
+		socket.emit(OLLAMA_PARAMETERS_TOP_P_CHANGE, value);
 	};
 
 	return (
 		<>
-			<Row className="h-100">
+			<Row className="h-20">
 				<Col>
 					<label className="fs-6 mt-2">
+						<strong>Override modelfile parameters</strong>
+					</label>
+					<InputGroup data-bs-theme="light">
+						<Form.Check onChange={handleEnableOverrideChange} checked={ollamaParametersEnableOverride} />
+					</InputGroup>
+				</Col>
+				<Col md="auto">
+					<div className="vr h-100"></div>
+				</Col>
+				<Col>
+					<label className="fs-6 mt-2">
+						<strong>Keep alive (minutes)</strong>
+					</label>
+					<div className="row w-100 m-0">
+						<span style={{ minWidth: "50px" }} className="col-auto p-0">
+							{ollamaParametersKeepAlive}
+						</span>
+						<Slider
+							className="mt-2 col"
+							max={120}
+							min={0}
+							step={1}
+							onChange={handleKeepAliveChange}
+							value={ollamaParametersKeepAlive}
+						/>
+					</div>
+				</Col>
+			</Row>
+			<hr className="hr" />
+			<Row className="h-80">
+				<Col>
+					<label className="fs-6">
 						<strong>temperature</strong>
 					</label>
+
 					<div className="row w-100 m-0">
 						<span style={{ minWidth: "50px" }} className="col-auto p-0">
 							{ollamaParametersTemperature}
@@ -114,6 +166,7 @@ const OllamaPageComponent = (props: OllamaPageProps) => {
 							onChange={handleTemperatureChange}
 						/>
 					</div>
+
 					<label className="fs-6">
 						<strong>top_k</strong>
 					</label>
@@ -199,7 +252,7 @@ const OllamaPageComponent = (props: OllamaPageProps) => {
 					<div className="vr h-100"></div>
 				</Col>
 				<Col>
-					<label className="fs-6 mt-2">
+					<label className="fs-6">
 						<strong>mirostat</strong>
 					</label>
 					<div className="row w-100 m-0">

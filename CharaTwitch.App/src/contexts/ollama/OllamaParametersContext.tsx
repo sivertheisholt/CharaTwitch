@@ -20,9 +20,12 @@ const OllamaParametersProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 	const [ollamaParametersNumPredict, setOllamaParametersNumPredict] = useState<number>(0);
 	const [ollamaParametersTopK, setOllamaParametersTopK] = useState<number>(0);
 	const [ollamaParametersTopP, setOllamaParametersTopP] = useState<number>(0);
+	const [ollamaParametersEnableOverride, setOllamaParametersEnableOverride] = useState<boolean>(false);
+	const [ollamaParametersKeepAlive, setOllamaParametersKeepAlive] = useState<number>(0);
 
 	const ollamaParametersListener = (arg: OllamaParametersType) => {
 		const {
+			enable_override,
 			mirostat,
 			mirostat_eta,
 			num_ctx,
@@ -34,6 +37,7 @@ const OllamaParametersProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 			num_predict,
 			top_k,
 			top_p,
+			keep_alive,
 		} = arg;
 		setOllamaParametersMiroStat(mirostat);
 		setOllamaParametersMiroStatEta(mirostat_eta);
@@ -46,6 +50,8 @@ const OllamaParametersProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 		setOllamaParametersNumPredict(num_predict);
 		setOllamaParametersTopK(top_k);
 		setOllamaParametersTopP(top_p);
+		setOllamaParametersEnableOverride(enable_override);
+		setOllamaParametersKeepAlive(keep_alive);
 	};
 
 	useEffect(() => {
@@ -80,6 +86,10 @@ const OllamaParametersProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 				setOllamaParametersTopK,
 				ollamaParametersTopP,
 				setOllamaParametersTopP,
+				ollamaParametersEnableOverride,
+				setOllamaParametersEnableOverride,
+				ollamaParametersKeepAlive,
+				setOllamaParametersKeepAlive,
 			}}
 		>
 			{children}

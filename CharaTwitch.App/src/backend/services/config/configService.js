@@ -31,53 +31,60 @@ export const initializeConfig = async (configObject) => {
 			case "character_voice_enabled":
 				initializedConfig[key] = configObject[key] === undefined ? false : configObject[key];
 				break;
+			case "enable_override":
+				initializedConfig[key] = configObject[key] === undefined ? false : configObject[key];
+				break;
 			case "character_minimum_time_between_talking":
 				initializedConfig[key] = configObject[key] === undefined ? 0 : configObject[key];
 				await _setItem("character_minimum_time_between_talking", initializedConfig[key]);
 				break;
 			case "mirostat":
-				initializedConfig[key] = configObject[key] === undefined ? 0 : configObject[key];
-				await _setItem("ollama_parameters_mirostat", 1);
+				initializedConfig[key] = configObject[key] === undefined ? 1 : configObject[key];
+				await _setItem("ollama_parameters_mirostat", initializedConfig[key]);
 				break;
 			case "mirostat_eta":
-				initializedConfig[key] = configObject[key] === undefined ? 0 : configObject[key];
-				await _setItem("ollama_parameters_mirostat_eta", 0.1);
+				initializedConfig[key] = configObject[key] === undefined ? 0.1 : configObject[key];
+				await _setItem("ollama_parameters_mirostat_eta", initializedConfig[key]);
 				break;
 			case "num_ctx":
-				initializedConfig[key] = configObject[key] === undefined ? 0 : configObject[key];
-				await _setItem("ollama_parameters_num_ctx", 2048);
+				initializedConfig[key] = configObject[key] === undefined ? 2048 : configObject[key];
+				await _setItem("ollama_parameters_num_ctx", initializedConfig[key]);
 				break;
 			case "repeat_last_n":
-				initializedConfig[key] = configObject[key] === undefined ? 0 : configObject[key];
-				await _setItem("ollama_parameters_repeat_last_n", 64);
+				initializedConfig[key] = configObject[key] === undefined ? 64 : configObject[key];
+				await _setItem("ollama_parameters_repeat_last_n", initializedConfig[key]);
 				break;
 			case "repeat_penalty":
-				initializedConfig[key] = configObject[key] === undefined ? 0 : configObject[key];
-				await _setItem("ollama_parameters_repeat_penalty", 1.1);
+				initializedConfig[key] = configObject[key] === undefined ? 1.1 : configObject[key];
+				await _setItem("ollama_parameters_repeat_penalty", initializedConfig[key]);
 				break;
 			case "temperature":
-				initializedConfig[key] = configObject[key] === undefined ? 0 : configObject[key];
-				await _setItem("ollama_parameters_temperature", 0.8);
+				initializedConfig[key] = configObject[key] === undefined ? 0.8 : configObject[key];
+				await _setItem("ollama_parameters_temperature", initializedConfig[key]);
 				break;
 			case "seed":
 				initializedConfig[key] = configObject[key] === undefined ? 0 : configObject[key];
-				await _setItem("ollama_parameters_seed", 0);
+				await _setItem("ollama_parameters_seed", initializedConfig[key]);
 				break;
 			case "tfs_z":
-				initializedConfig[key] = configObject[key] === undefined ? 0 : configObject[key];
-				await _setItem("ollama_parameters_tfs_z", 1);
+				initializedConfig[key] = configObject[key] === undefined ? 1 : configObject[key];
+				await _setItem("ollama_parameters_tfs_z", initializedConfig[key]);
 				break;
 			case "num_predict":
-				initializedConfig[key] = configObject[key] === undefined ? 0 : configObject[key];
-				await _setItem("ollama_parameters_num_predict", 128);
+				initializedConfig[key] = configObject[key] === undefined ? 128 : configObject[key];
+				await _setItem("ollama_parameters_num_predict", initializedConfig[key]);
 				break;
 			case "top_k":
-				initializedConfig[key] = configObject[key] === undefined ? 0 : configObject[key];
-				await _setItem("ollama_parameters_top_k", 40);
+				initializedConfig[key] = configObject[key] === undefined ? 40 : configObject[key];
+				await _setItem("ollama_parameters_top_k", initializedConfig[key]);
 				break;
 			case "top_p":
-				initializedConfig[key] = configObject[key] === undefined ? 0 : configObject[key];
-				await _setItem("ollama_parameters_top_p", 0.9);
+				initializedConfig[key] = configObject[key] === undefined ? 0.9 : configObject[key];
+				await _setItem("ollama_parameters_top_p", initializedConfig[key]);
+				break;
+			case "keep_alive":
+				initializedConfig[key] = configObject[key] === undefined ? 30 : configObject[key];
+				await _setItem("ollama_parameters_keep_alive", initializedConfig[key]);
 				break;
 			default:
 				initializedConfig[key] = configObject[key] === undefined ? "" : configObject[key];
@@ -163,6 +170,8 @@ export const getOllamaParameters = async () => {
 		num_predict: await _getItem("ollama_parameters_num_predict"),
 		top_k: await _getItem("ollama_parameters_top_k"),
 		top_p: await _getItem("ollama_parameters_top_p"),
+		enable_override: await _getItem("ollama_parameters_enable_override"),
+		keep_alive: await _getItem("ollama_parameters_keep_alive"),
 	};
 	return await initializeConfig(configObject);
 };

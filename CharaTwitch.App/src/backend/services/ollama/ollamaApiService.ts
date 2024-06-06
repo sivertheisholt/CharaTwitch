@@ -18,12 +18,13 @@ export const sendChat = async (message: string) => {
 	try {
 		const modelName = await getItem("ollama_model_name");
 		const client = await axiosClient();
-		const ollama_parameters = await getOllamaParameters();
+		const ollama_parameters: any = await getOllamaParameters();
 		const res = await client.post("/api/generate", {
 			model: modelName,
 			prompt: message,
 			stream: false,
-			options: ollama_parameters,
+			options: ollama_parameters.enable_override ? ollama_parameters : {},
+			keep_alive: ollama_parameters.keep_alive!,
 		});
 		if (res.status != 200) return null;
 		return res.data.response;

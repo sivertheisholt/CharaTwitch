@@ -30,17 +30,19 @@ import { TwitchAuthType } from "../../types/socket/TwitchAuthType";
 import { CAI_CONFIG, CAI_SELECTED_VOICE_CHANGE } from "../../socket/CaiEvents";
 import {
 	OLLAMA_PARAMETERS,
+	OLLAMA_PARAMETERS_ENABLE_OVERRIDE_CHANGE,
+	OLLAMA_PARAMETERS_KEEP_ALIVE_CHANGE,
 	OLLAMA_PARAMETERS_MIROSTAT_CHANGE,
 	OLLAMA_PARAMETERS_MIROSTAT_ETA_CHANGE,
 	OLLAMA_PARAMETERS_NUM_CTX_CHANGE,
-	OLLAMA_PARAMETERS_NUM_PREDICT,
+	OLLAMA_PARAMETERS_NUM_PREDICT_CHANGE,
 	OLLAMA_PARAMETERS_REPEAT_LAST_N_CHANGE,
 	OLLAMA_PARAMETERS_REPEAT_PENALTY_CHANGE,
 	OLLAMA_PARAMETERS_SEED_CHANGE,
 	OLLAMA_PARAMETERS_TEMPERATURE_CHANGE,
 	OLLAMA_PARAMETERS_TFS_Z_CHANGE,
-	OLLAMA_PARAMETERS_TOP_K,
-	OLLAMA_PARAMETERS_TOP_P,
+	OLLAMA_PARAMETERS_TOP_K_CHANGE,
+	OLLAMA_PARAMETERS_TOP_P_CHANGE,
 } from "../../socket/OllamaParametersEvents";
 import { GlobalManager } from "../managers/globalManager";
 import { OPENAI_API_KEY_CHANGE, OPENAI_CONFIG } from "../../socket/OpenAiEvents.";
@@ -165,14 +167,20 @@ export class SocketServer {
 			socket.on(OLLAMA_PARAMETERS_TFS_Z_CHANGE, async (arg: number) => {
 				await setItem("ollama_parameters_tfs_z", arg);
 			});
-			socket.on(OLLAMA_PARAMETERS_NUM_PREDICT, async (arg: number) => {
+			socket.on(OLLAMA_PARAMETERS_NUM_PREDICT_CHANGE, async (arg: number) => {
 				await setItem("ollama_parameters_num_predict", arg);
 			});
-			socket.on(OLLAMA_PARAMETERS_TOP_K, async (arg: number) => {
+			socket.on(OLLAMA_PARAMETERS_TOP_K_CHANGE, async (arg: number) => {
 				await setItem("ollama_parameters_top_k", arg);
 			});
-			socket.on(OLLAMA_PARAMETERS_TOP_P, async (arg: number) => {
+			socket.on(OLLAMA_PARAMETERS_TOP_P_CHANGE, async (arg: number) => {
 				await setItem("ollama_parameters_top_p", arg);
+			});
+			socket.on(OLLAMA_PARAMETERS_ENABLE_OVERRIDE_CHANGE, async (arg: boolean) => {
+				await setItem("ollama_parameters_enable_override", arg);
+			});
+			socket.on(OLLAMA_PARAMETERS_KEEP_ALIVE_CHANGE, async (arg: number) => {
+				await setItem("ollama_parameters_keep_alive", arg);
 			});
 		});
 	}

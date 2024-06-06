@@ -43,7 +43,7 @@ app.on("ready", () => {
 	const server = createServer(expressApp);
 
 	server.listen(8001, () => {
-		logger.info("server running at http://localhost:8001");
+		console.log("Express server is listening on port: 8001");
 	});
 
 	// Initiate storage

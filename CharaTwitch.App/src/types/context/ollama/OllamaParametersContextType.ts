@@ -21,4 +21,8 @@ export type OllamaParametersContextType = {
 	setOllamaParametersTopK: React.Dispatch<React.SetStateAction<number>>;
 	ollamaParametersTopP: number;
 	setOllamaParametersTopP: React.Dispatch<React.SetStateAction<number>>;
+	ollamaParametersEnableOverride: boolean;
+	setOllamaParametersEnableOverride: React.Dispatch<React.SetStateAction<boolean>>;
+	ollamaParametersKeepAlive: number;
+	setOllamaParametersKeepAlive: React.Dispatch<React.SetStateAction<number>>;
 };
