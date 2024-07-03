@@ -11,8 +11,8 @@ import { TwitchDashboardContext } from "../contexts/dashboard/TwitchDashboardCon
 import { TwitchDashboardContextType } from "../types/context/dashboard/TwitchDashboardContextType";
 import { AiDashboardContext } from "../contexts/dashboard/AiDashboardContext";
 import { AiDashboardContextType } from "../types/context/dashboard/AiDashboardContextType";
-import { CaiDashboardContext } from "../contexts/dashboard/CaiDashboardContext";
-import { CaiDashboardContextType } from "../types/context/dashboard/CaiDashboardContextType";
+import { CoquiDashboardContext } from "../contexts/dashboard/CoquiDashboardContext";
+import { CoquiDashboardContextType } from "../types/context/dashboard/CoquiDashboardContextType";
 import { OllamaDashboardContext } from "../contexts/dashboard/OllamaDashboardContext";
 import { OllamaDashboardContextType } from "../types/context/dashboard/OllamaDashboardContextType";
 import { VoiceContextType } from "../types/context/voice/VoiceContextType";
@@ -25,7 +25,7 @@ const DashboardPageComponent = (props: DashboardPageProps) => {
 		TwitchDashboardContext
 	) as TwitchDashboardContextType;
 	const { aiProcessing, aiMessages } = useContext(AiDashboardContext) as AiDashboardContextType;
-	const { caiAccountStatus } = useContext(CaiDashboardContext) as CaiDashboardContextType;
+	const { coquiStatus } = useContext(CoquiDashboardContext) as CoquiDashboardContextType;
 	const { ollamaStatus } = useContext(OllamaDashboardContext) as OllamaDashboardContextType;
 	const { transcript } = useContext(VoiceContext) as VoiceContextType;
 
@@ -40,7 +40,7 @@ const DashboardPageComponent = (props: DashboardPageProps) => {
 						/>
 					</Col>
 					<Col>
-						<StatusCard active={caiAccountStatus} pngName="cai.ico" />
+						<StatusCard active={coquiStatus} pngName="cai.ico" />
 					</Col>
 					<Col>
 						<StatusCard active={ollamaStatus} pngName="ollama.png" />

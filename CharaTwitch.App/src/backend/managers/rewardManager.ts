@@ -51,7 +51,10 @@ export class RewardManager {
 				reward: rewardData.data.redemption.reward.title,
 			});
 
-			const ollamaResponse = await this.interactionManager.startInteraction(this.socket, `${username}: ${userInput}`);
+			const ollamaResponse = await this.interactionManager.startInteraction(
+				this.socket,
+				`### Task:\n ${username}: ${userInput}`
+			);
 			if (ollamaResponse === null) {
 				this.addQueue(username, userInput);
 				return;

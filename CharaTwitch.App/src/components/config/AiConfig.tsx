@@ -9,11 +9,10 @@ import Alert from "react-bootstrap/esm/Alert";
 import Button from "react-bootstrap/esm/Button";
 import { AI_CONNECT } from "../../socket/AiEvents";
 import { AiConnectType } from "../../types/socket/AiConnectType";
-import { CAI_SELECTED_VOICE_CHANGE } from "../../socket/CaiEvents";
-import { CaiConfigContextType } from "../../types/context/config/CaiConfigContextType";
-import { CaiConfigContext } from "../../contexts/config/CaiConfigContext";
-import { CaiDashboardContext } from "../../contexts/dashboard/CaiDashboardContext";
-import { CaiDashboardContextType } from "../../types/context/dashboard/CaiDashboardContextType";
+import { CoquiContextType } from "../../types/context/config/CoquiContextType";
+import { CoquiConfigContext } from "../../contexts/config/CoquiConfigContext";
+import { CoquiDashboardContext } from "../../contexts/dashboard/CoquiDashboardContext";
+import { CoquiDashboardContextType } from "../../types/context/dashboard/CoquiDashboardContextType";
 import { OllamaDashboardContext } from "../../contexts/dashboard/OllamaDashboardContext";
 import { OllamaDashboardContextType } from "../../types/context/dashboard/OllamaDashboardContextType";
 import { OpenAiConfigContext } from "../../contexts/config/OpenAiConfigContext";
@@ -24,13 +23,11 @@ export interface AiConfigProps {}
 
 const AiConfigComponent = (props: AiConfigProps) => {
 	const { socket } = useContext(SocketContext) as SocketContextType;
-	const { caiVoices, caiSelectedVoice, setCaiSelectedVoice, caiBaseUrl, setCaiBaseUrl } = useContext(
-		CaiConfigContext
-	) as CaiConfigContextType;
+	const { coquiBaseUrl, setCoquiBaseUrl } = useContext(CoquiConfigContext) as CoquiContextType;
 	const { ollamaModelName, setOllamaModelName, ollamaBaseUrl, setOllamaBaseUrl } = useContext(
 		OllamaConfigContext
 	) as OllamaConfigContextType;
-	const { caiAccountStatus } = useContext(CaiDashboardContext) as CaiDashboardContextType;
+	const { coquiStatus } = useContext(CoquiDashboardContext) as CoquiDashboardContextType;
 	const { ollamaStatus } = useContext(OllamaDashboardContext) as OllamaDashboardContextType;
 	const { openAiApiKey, setOpenAiApiKey } = useContext(OpenAiConfigContext) as OpenAiConfigContextType;
 
@@ -49,19 +46,13 @@ const AiConfigComponent = (props: AiConfigProps) => {
 		setOllamaBaseUrl(event.target.value);
 	};
 
-	const handleCaiBaseUrlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setCaiBaseUrl(event.target.value);
-	};
-
-	const handleCaiSelectVoice = (event: React.ChangeEvent<HTMLSelectElement>) => {
-		const selectedVoice = event.target.value;
-		socket?.emit(CAI_SELECTED_VOICE_CHANGE, selectedVoice);
-		setCaiSelectedVoice(parseInt(selectedVoice));
+	const handleCoquiBaseUrlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setCoquiBaseUrl(event.target.value);
 	};
 
 	const handleConnectAi = () => {
 		let aiConfig: AiConnectType = {
-			cai_base_url: caiBaseUrl,
+			coqui_base_url: coquiBaseUrl,
 			ollama_base_url: ollamaBaseUrl,
 			ollama_model_name: ollamaModelName,
 		};
@@ -95,35 +86,19 @@ const AiConfigComponent = (props: AiConfigProps) => {
 					aria-label="Ollama Server"
 				/>
 			</InputGroup>
-			<h2>Cai</h2>
+			<h2>Coqui</h2>
 			<hr className="hr" />
 			<label className="fs-4">
-				<strong>CAI Server</strong>
+				<strong>Coqui Server</strong>
 			</label>
 			<InputGroup className="mb-3" size="lg">
 				<Form.Control
-					value={caiBaseUrl}
-					onChange={handleCaiBaseUrlChange}
-					placeholder="CAI Server"
-					aria-label="CAI Server"
+					value={coquiBaseUrl}
+					onChange={handleCoquiBaseUrlChange}
+					placeholder="Coqui Server"
+					aria-label="Coqui Server"
 				/>
 			</InputGroup>
-			<label className="fs-4">
-				<strong>Voices</strong>
-			</label>
-			<Form.Select
-				className="mb-3"
-				size="lg"
-				onChange={handleCaiSelectVoice}
-				value={caiSelectedVoice}
-				aria-label="CAI Voices"
-			>
-				{caiVoices.map((voice) => (
-					<option key={voice.id} value={voice.id}>
-						{voice.name}
-					</option>
-				))}
-			</Form.Select>
 			<h2>Open AI</h2>
 			<hr className="hr" />
 			<label className="fs-4">
@@ -139,7 +114,7 @@ const AiConfigComponent = (props: AiConfigProps) => {
 				/>
 			</InputGroup>
 			<div className="d-grid gap-2 mt-4">
-				{ollamaStatus && caiAccountStatus ? (
+				{ollamaStatus && coquiStatus ? (
 					<Alert variant={"success"}>Connected</Alert>
 				) : connectingAi ? (
 					<Alert variant={"warning"}>Connecting...</Alert>

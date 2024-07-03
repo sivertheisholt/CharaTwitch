@@ -6,8 +6,7 @@ import { InteractionManager } from "./interactionManager";
 
 export class ChatManager {
 	interactionManager: InteractionManager;
-	messagesUsers: Array<{ username: string; content: string }>;
-	messagesAssistant: Array<string>;
+	interactions: Array<{ username: string; content: string }>;
 	users: Map<string, string>;
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>;
 	twitchIrcService: TwitchIrcService;
@@ -20,8 +19,7 @@ export class ChatManager {
 	) {
 		this.interactionManager = interactionManager;
 
-		this.messagesUsers = [];
-		this.messagesAssistant = [];
+		this.interactions = [];
 		this.users = new Map<string, string>();
 		this.socket = socket;
 		this.twitchIrcService = twitchIrcService;
@@ -32,31 +30,18 @@ export class ChatManager {
 		}, 60000);
 	}
 
-	addUserMessage = (username: string, message: string) => {
-		let messagesLength = this.messagesUsers.push({ username: username, content: message });
-		if (messagesLength > 20) this.messagesUsers.shift();
+	addMessage = (username: string, message: string) => {
+		let messagesLength = this.interactions.push({ username: username, content: message });
+		if (messagesLength > 20) this.interactions.shift();
 	};
 
-	addAssistantMessage = (message: string) => {
-		let messagesLength = this.messagesAssistant.push(message);
-		if (messagesLength > 5) this.messagesAssistant.shift();
-	};
-
-	getChatHistory = () => {
-		let chatHistoryContext = "CONTEXT:\n";
-		let userMessages = "USER MESSAGES:\n";
-		let assistantMessages = "ASSISTANT MESSAGES:\n";
-		this.messagesUsers.forEach((message) => {
-			userMessages += `${message.username}: ${message.content} \n`;
-		});
-		this.messagesAssistant.forEach((message) => {
-			assistantMessages += `${message}\n`;
+	getRecentInteractions = () => {
+		let recentInteractions = "### Recent Interactions \n";
+		this.interactions.forEach((message) => {
+			recentInteractions += `- ${message.username}: "${message.content}" \n`;
 		});
 
-		chatHistoryContext += userMessages;
-		chatHistoryContext += assistantMessages;
-
-		return chatHistoryContext;
+		return recentInteractions;
 	};
 
 	eventOccurs = (probability: number): boolean => {
@@ -75,14 +60,14 @@ export class ChatManager {
 	};
 
 	randomReply = async (username: string, message: string, messageId: string) => {
-		const finalMessage = this.getChatHistory() + `PROMPT:\n${username}: ${message}`;
+		const finalMessage = this.getRecentInteractions() + `### Task:\n ${username}: ${message}.`;
 
 		let ollamaResponse = await this.interactionManager.startInteraction(this.socket, finalMessage);
 		if (ollamaResponse === null) return;
 
 		ollamaResponse = ollamaResponse.trim();
 
-		this.addAssistantMessage(ollamaResponse);
+		this.addMessage("Assistant", ollamaResponse);
 
 		this.timeSinceLastTalkingMinutes = 0;
 		this.twitchIrcService.sendMessage(ollamaResponse, messageId);
@@ -92,7 +77,7 @@ export class ChatManager {
 		if (message.startsWith("!")) return;
 		message = message.trim();
 
-		this.addUserMessage(username, message);
+		this.addMessage(username, message);
 
 		const welcomeNewViewers = await getItem("character_welcome_new_viewers");
 		if (welcomeNewViewers && !this.users.has(username)) {

@@ -3,10 +3,10 @@ import {
 	setItem,
 	getCharacterConfig,
 	getOllamaConfig,
-	getCaiConfig,
 	getOllamaParameters,
 	getOpenAiConfig,
 	getItem,
+	getCoquiConfig,
 } from "../services/config/configService";
 import { Express } from "express";
 import { Server } from "socket.io";
@@ -27,7 +27,6 @@ import {
 import { AI_CONNECT } from "../../socket/AiEvents";
 import { AiConnectType } from "../../types/socket/AiConnectType";
 import { TwitchAuthType } from "../../types/socket/TwitchAuthType";
-import { CAI_CONFIG, CAI_SELECTED_VOICE_CHANGE } from "../../socket/CaiEvents";
 import {
 	OLLAMA_PARAMETERS,
 	OLLAMA_PARAMETERS_ENABLE_OVERRIDE_CHANGE,
@@ -46,6 +45,7 @@ import {
 } from "../../socket/OllamaParametersEvents";
 import { GlobalManager } from "../managers/globalManager";
 import { OPENAI_API_KEY_CHANGE, OPENAI_CONFIG } from "../../socket/OpenAiEvents.";
+import { COQUI_CONFIG } from "../../socket/CoquiEvents";
 
 export class SocketServer {
 	server: any;
@@ -70,15 +70,15 @@ export class SocketServer {
 			const twitchConfig = await getTwitchConfig();
 			const characterconfig = await getCharacterConfig();
 			const ollamaConfig = await getOllamaConfig();
-			const caiConfig = await getCaiConfig();
+			const coquiConfig = await getCoquiConfig();
 			const ollamaParameters = await getOllamaParameters();
 			const openAiConfig = await getOpenAiConfig();
 			const voiceEnabled = await getItem("character_voice_enabled");
 
+			socket.emit(COQUI_CONFIG, coquiConfig);
 			socket.emit(TWITCH_CONFIG, twitchConfig);
 			socket.emit(OLLAMA_CONFIG, ollamaConfig);
 			socket.emit(CHARACTER_CONFIG, characterconfig);
-			socket.emit(CAI_CONFIG, caiConfig);
 			socket.emit(OLLAMA_PARAMETERS, ollamaParameters);
 			socket.emit(OPENAI_CONFIG, openAiConfig);
 			socket.emit(CHARACTER_VOICE_ENABLED, voiceEnabled);
@@ -98,9 +98,9 @@ export class SocketServer {
 			 * AI
 			 ************************************************************/
 			socket.on(AI_CONNECT, (arg: AiConnectType) => {
-				const { cai_base_url, ollama_base_url, ollama_model_name } = arg;
+				const { coqui_base_url, ollama_base_url, ollama_model_name } = arg;
 				this.globalManager.onOllamaAuth(ollama_model_name, ollama_base_url);
-				this.globalManager.onCaiAuth(cai_base_url);
+				this.globalManager.onCoquiAuth(coqui_base_url);
 			});
 			/************************************************************
 			 * OpenAi
@@ -110,11 +110,8 @@ export class SocketServer {
 			});
 
 			/************************************************************
-			 * CAI
+			 * COQUI
 			 ************************************************************/
-			socket.on(CAI_SELECTED_VOICE_CHANGE, async (arg: string) => {
-				await setItem("cai_selected_voice", arg);
-			});
 
 			/************************************************************
 			 * Character
