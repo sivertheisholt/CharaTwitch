@@ -27,7 +27,7 @@ const axiosClient = async () => {
 export const fetchTTS = async (text: string) => {
 	try {
 		const client = await axiosClient();
-		const response = await client.get(`/api/tts?text=${encodeURIComponent(text)}&speaker_id=p376`);
+		const response = await client.get(`/api/tts?text=${encodeURIComponent(text)}`);
 		const base64String = arrayBufferToBase64(response.data);
 		return base64String;
 	} catch (err) {

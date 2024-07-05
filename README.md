@@ -2,52 +2,23 @@
 
 Welcome to CharaTwitch! This project is still in EARLY DEVELOPMENT! But you are free to try it out if you wish.
 
-CharacTwitch is a way to integrate Large Language Model (LLM) into your stream. By connecting your Twitch and Character AI Account you can listen to redeems and make your character respond by talking.
+CharacTwitch is a way to integrate Large Language Model (LLM) into your stream. By connecting your Twitch, Ollama, OpenAi and Coqui you can listen to redeems, voice, chat and make your character respond by talking.
 
 I will change the program constantly, and premade for my own wants until I'm happy with a result. Then I might make it universal for others to use. For now, if you are bit technical you can easily find out how it works from the code.
+
+CharaTwitch is built in Electron with React. Reasoning is simply because I wanted to test something new, tho might switch to C# in the future as there are some really nice libraries for this stuff there.
 
 ![Imgur](https://github.com/sivertheisholt/CharaTwitch/blob/main/assets/CharaTwitchFull.png)
 
 ## Setup
 
-You are required to setup your own Character AI service with a REST API, this is for their TTS system, as it is free.
-
 Ollama is used to run the LLM. You can find the docker image here: https://hub.docker.com/r/ollama/ollama/
 
-Download the latest zip from [Releases](https://github.com/sivertheisholt/CharaTwitch/releases) and extract it. Run the exe to install the program. (There is an error on startup for now, just ignore it)
+Coqui is used to run the TTS. You can find the docker image here(CPU VERSION): https://github.com/coqui-ai/TTS/pkgs/container/tts-cpu
 
-You will need to input a bit of information from both Twitch and Character AI.
+Download the latest zip from [Releases](https://github.com/sivertheisholt/CharaTwitch/releases) and extract it. Run the exe to install the program. (There is an error on startup for now, just ignore it, dont click anything)
 
-### CAI REST API
-
-This document outlines the API endpoints utilized by CharaTwitch.
-You can find/use my own implementation here: https://github.com/sivertheisholt/CustomCharacterAi
-
-Required header: authorization
-
-#### 1. `/health`
-
-- **Method**: GET
-- **Description**: Checks the health status of the server.
-- **Returns**:
-  - if the server is healthy (status code: 200)
-
-#### 2. `/voices`
-
-- **Method**: GET
-- **Description**: Fetches the available voices.
-- **Returns**:
-  - An array of voice data if successful (status code: 200)
-
-#### 3. `/tts`
-
-- **Method**: POST
-- **Description**: Converts text to speech (TTS) using the selected voice.
-- **Parameters**:
-  - `voice_id`: ID of the selected voice
-  - `text`: Text to be converted to speech
-- **Returns**:
-  - Speech data if successful (status code: 200)
+You will need to input a bit of information from Twitch.
 
 ### Twitch
 
@@ -59,7 +30,7 @@ Redirect URI should be:
 http://localhost:8001/twitch
 ```
 
-NB: If you change the port in the application, remember to change the Redirect URI port too.
+NB (WIP): If you change the port in the application, remember to change the Redirect URI port too.
 
 Once you have created a new application you wanna make a note of the following: Client Secret & Client Id
 
@@ -67,7 +38,7 @@ Once you have entered all the information you can simply click connect and log i
 
 ### Ollama
 
-This part is mostly up to the user. This is where you design and run the character of your choice. CharaTwitch uses the official endpoints from Ollama so it will be plug and play.
+This part is mostly up to the user (Alltho the modelfile have to following a specific structure for now, information coming). This is where you design and run the character of your choice. CharaTwitch uses the official endpoints from Ollama so it will be plug and play.
 
 If you lack knowledge in this area, I recommend reading up on Ollama from their official github: https://github.com/ollama/ollama
 
@@ -104,3 +75,9 @@ You are CHARACTERNAMEHERE, a friendly and engaging VTuber streamer. Your role is
 - Do NOT use asterisks.
 """
 ```
+
+### Coqui
+
+This part is mostly up to the user. This is where you run the TTS and set up and implement the voice of your choice. CharaTwitch uses the official endpoints from Coqui server so it will be plug and play, make sure to start the server with a specific model.
+
+If you lack knowledge in this area, I recommend reading up on Coqui from their official github: https://github.com/coqui-ai/TTS

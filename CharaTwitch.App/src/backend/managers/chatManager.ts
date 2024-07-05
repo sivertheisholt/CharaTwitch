@@ -32,7 +32,7 @@ export class ChatManager {
 
 	addMessage = (username: string, message: string) => {
 		let messagesLength = this.interactions.push({ username: username, content: message });
-		if (messagesLength > 20) this.interactions.shift();
+		if (messagesLength > 10) this.interactions.shift();
 	};
 
 	getRecentInteractions = () => {

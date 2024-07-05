@@ -35,8 +35,6 @@ export class InteractionManager {
 		if (this.audioPlaying || (isRaided() && !bypassIsRaid)) return null;
 		this.audioPlaying = true;
 
-		console.log(message);
-
 		socket.emit(AI_PROCESSING_REQUEST, true);
 
 		const ollamaResponse = await sendChat(message);
@@ -45,8 +43,6 @@ export class InteractionManager {
 			this.audioPlaying = false;
 			return null;
 		}
-
-		console.log(ollamaResponse);
 
 		const cleanedResponse = this.removePrefix(ollamaResponse);
 
