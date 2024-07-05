@@ -111,15 +111,13 @@ export const setTwitchConfig = async (clientId, clientSecret) => {
 	await _setItem("twitch_client_secret", clientSecret);
 };
 
-export const setCaiConfig = async (accessToken, baseUrl) => {
-	await _setItem("cai_access_token", accessToken);
-	await _setItem("cai_base_url", baseUrl);
+export const setCoquiConfig = async (baseUrl) => {
+	await _setItem("coqui_base_url", baseUrl);
 };
 
-export const getCaiConfig = async () => {
+export const getCoquiConfig = async () => {
 	const configObject = {
-		cai_selected_voice: await _getItem("cai_selected_voice"),
-		cai_base_url: await _getItem("cai_base_url"),
+		coqui_base_url: await _getItem("coqui_base_url"),
 	};
 	return await initializeConfig(configObject);
 };

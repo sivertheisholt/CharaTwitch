@@ -7,7 +7,7 @@ import { VoiceRecordingManager } from "./voiceRecordingManager";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { TwitchAuthType } from "../../types/socket/TwitchAuthType";
 import { Express } from "express";
-import { setCaiConfig, setItem, setOllamaConfig, setTwitchConfig } from "../services/config/configService";
+import { setCoquiConfig, setItem, setOllamaConfig, setTwitchConfig } from "../services/config/configService";
 import { authTwitch } from "../services/twitch/twitchAuthService";
 import { getCustomRewards, getUserInfo } from "../services/twitch/twitchApiService";
 import { TwitchIrcService } from "../services/twitch/twitchIrcService";
@@ -15,9 +15,7 @@ import { TWITCH_ACCOUNT_STATUS, TWITCH_CUSTOM_REDEEMS } from "../../socket/Twitc
 import { logger } from "../logging/logger";
 import { TwitchPubSubService } from "../services/twitch/twitchPubSubService";
 import { InteractionManager } from "./interactionManager";
-import { authCai } from "../services/cai/caiAuthService";
-import { CAI_ACCOUNT_STATUS, CAI_VOICES } from "../../socket/CaiEvents";
-import { fetchVoices } from "../services/cai/caiApiService";
+import { COQUI_STATUS } from "../../socket/CoquiEvents";
 import { OLLAMA_STATUS } from "../../socket/OllamaEvents";
 
 // This class handles the each manager/service and the communication between them
@@ -82,21 +80,13 @@ export class GlobalManager {
 		}
 	};
 
-	onCaiAuth = async (caiBaseUrl: string) => {
-		const caiAccessToken = await authCai();
-		if (caiAccessToken === null) return this.socket.emit(CAI_ACCOUNT_STATUS, false);
-
-		await setCaiConfig(caiAccessToken, caiBaseUrl);
-
-		const voices = await fetchVoices();
-		if (voices === null) return this.socket.emit(CAI_ACCOUNT_STATUS, false);
-
-		this.socket.emit(CAI_VOICES, voices);
-		this.socket.emit(CAI_ACCOUNT_STATUS, true);
-	};
-
 	onOllamaAuth = async (ollamaModelName: string, ollamaBaseUrl: string) => {
 		await setOllamaConfig(ollamaModelName, ollamaBaseUrl);
 		this.socket.emit(OLLAMA_STATUS, true);
+	};
+
+	onCoquiAuth = async (coquiBaseUrl: string) => {
+		await setCoquiConfig(coquiBaseUrl);
+		this.socket.emit(COQUI_STATUS, true);
 	};
 }

@@ -3,11 +3,11 @@ import { getItem, getOllamaParameters } from "../config/configService";
 import { logger } from "../../logging/logger";
 
 const axiosClient = async () => {
-	const caiBaseUrl = await getItem("ollama_base_url");
+	const ollamaBaseUrl = await getItem("ollama_base_url");
 	return axios.create({
-		baseURL: caiBaseUrl,
-		timeout: 100000,
-		signal: AbortSignal.timeout(105000),
+		baseURL: ollamaBaseUrl,
+		timeout: 120000,
+		signal: AbortSignal.timeout(125000),
 		headers: {
 			"Content-Type": "application/json",
 		},
@@ -24,7 +24,7 @@ export const sendChat = async (message: string) => {
 			prompt: message,
 			stream: false,
 			options: ollama_parameters.enable_override ? ollama_parameters : {},
-			keep_alive: ollama_parameters.keep_alive!,
+			keep_alive: ollama_parameters.keep_alive,
 		});
 		if (res.status != 200) return null;
 		return res.data.response;

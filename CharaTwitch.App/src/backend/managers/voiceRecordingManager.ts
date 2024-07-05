@@ -36,13 +36,13 @@ export class VoiceRecordingManager {
 		this.socket.emit(VOICE_RECORDING_TRANSCRIPT, transcript);
 
 		const username = await getItem("twitch_preferred_username");
-		const finalMessage = this.chatManager.getChatHistory() + `PROMPT:\n${username}: ${transcript}`;
+		const finalMessage = this.chatManager.getRecentInteractions() + `### Task:\n ${username}: ${transcript}`;
 		let ollamaResponse = await this.interactionManager.startInteraction(this.socket, finalMessage);
 
 		if (ollamaResponse === null) return;
 
-		this.chatManager.addUserMessage(username, transcript);
-		this.chatManager.addAssistantMessage(ollamaResponse);
+		this.chatManager.addMessage(username, transcript);
+		this.chatManager.addMessage("Assistant", ollamaResponse);
 
 		this.twitchIrcService.sendMessage(ollamaResponse);
 	}

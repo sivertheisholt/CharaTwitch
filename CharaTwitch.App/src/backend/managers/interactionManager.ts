@@ -3,8 +3,8 @@ import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { isRaided } from "./raidManager";
 import { sendChat } from "../services/ollama/ollamaApiService";
 import { AI_MESSAGE, AI_PROCESSING_REQUEST } from "../../socket/AiEvents";
-import { fetchTTS } from "../services/cai/caiApiService";
 import { AUDIO_ON_ENDED } from "../../socket/AudioEvents";
+import { fetchTTS } from "../services/coqui/coquiApiService";
 
 export class InteractionManager {
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>;

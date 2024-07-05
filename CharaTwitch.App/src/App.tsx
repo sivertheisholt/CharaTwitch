@@ -6,8 +6,8 @@ import { NavBar } from "./components/navbar/NavBar";
 import CharacterProvider from "./contexts/character/CharacterContext";
 import TwitchDashboardProvider from "./contexts/dashboard/TwitchDashboardContext";
 import AiDashboardProvider from "./contexts/dashboard/AiDashboardContext";
-import CaiConfigProvider from "./contexts/config/CaiConfigContext";
-import CaiDashboardProvider from "./contexts/dashboard/CaiDashboardContext";
+import CoquiConfigProvider from "./contexts/config/CoquiConfigContext";
+import CoquiDashboardProvider from "./contexts/dashboard/CoquiDashboardContext";
 import OllamaDashboardProvider from "./contexts/dashboard/OllamaDashboardContext";
 import OllamaParametersProvider from "./contexts/ollama/OllamaParametersContext";
 import VoiceContextProvider from "./contexts/voice/VoiceContext";
@@ -19,13 +19,13 @@ function App() {
 			<SocketProvider>
 				<OllamaParametersProvider>
 					<OllamaDashboardProvider>
-						<CaiDashboardProvider>
+						<CoquiDashboardProvider>
 							<AiDashboardProvider>
 								<TwitchDashboardProvider>
 									<TwitchConfigProvider>
 										<OllamaConfigProvider>
 											<CharacterProvider>
-												<CaiConfigProvider>
+												<CoquiConfigProvider>
 													<OpenAiConfigProvider>
 														<VoiceContextProvider>
 															<Router>
@@ -33,13 +33,13 @@ function App() {
 															</Router>
 														</VoiceContextProvider>
 													</OpenAiConfigProvider>
-												</CaiConfigProvider>
+												</CoquiConfigProvider>
 											</CharacterProvider>
 										</OllamaConfigProvider>
 									</TwitchConfigProvider>
 								</TwitchDashboardProvider>
 							</AiDashboardProvider>
-						</CaiDashboardProvider>
+						</CoquiDashboardProvider>
 					</OllamaDashboardProvider>
 				</OllamaParametersProvider>
 			</SocketProvider>

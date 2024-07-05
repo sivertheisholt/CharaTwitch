@@ -19,6 +19,7 @@ const AiDashboardProvider: React.FC<{ children: React.ReactNode }> = ({ children
 		setAiMessages(tempArray);
 		if (arg.audio) {
 			// eslint-disable-next-line prefer-const
+			console.log(arg.audio);
 			let audio = new Audio(`data:audio/wav;base64,${arg.audio}`);
 			// Add an event listener for the 'ended' event
 			audio.onended = function () {
