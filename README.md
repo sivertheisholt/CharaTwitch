@@ -8,7 +8,7 @@ I will change the program constantly, and premade for my own wants until I'm hap
 
 CharaTwitch is built in Electron with React. Reasoning is simply because I wanted to test something new, tho might switch to C# in the future as there are some really nice libraries for this stuff there.
 
-![Imgur](https://github.com/sivertheisholt/CharaTwitch/blob/main/assets/CharaTwitchFull.png)
+![Imgur](https://github.com/sivertheisholt/CharaTwitch/blob/main/assets/CharaTwitch.png)
 
 ## Setup
 
@@ -16,7 +16,7 @@ Ollama is used to run the LLM. You can find the docker image here: https://hub.d
 
 Coqui is used to run the TTS. You can find the docker image here(CPU VERSION): https://github.com/coqui-ai/TTS/pkgs/container/tts-cpu
 
-Download the latest zip from [Releases](https://github.com/sivertheisholt/CharaTwitch/releases) and extract it. Run the exe to install the program. (There is an error on startup for now, just ignore it, dont click anything)
+Download the latest zip from [Releases](https://github.com/sivertheisholt/CharaTwitch/releases) and extract it. Run the exe to install the program.
 
 You will need to input a bit of information from Twitch.
 
