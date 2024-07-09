@@ -47,8 +47,7 @@ export class RaidManager {
 			if (!raid) return clearInterval(this.queueInterval);
 
 			const ollamaResponse = await this.interactionManager.startInteraction(
-				this.socket,
-				`### Task:\n ${username} is currently being raided by ${raidedBy}! Give everyone a warm welcome to the stream and an introduction of yourself and ${username}.`,
+				`${username} is currently being raided by ${raidedBy}! Give everyone a warm welcome to the stream and an introduction of yourself and ${username}.`,
 				true
 			);
 

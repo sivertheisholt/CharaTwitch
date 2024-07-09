@@ -38,6 +38,7 @@ import {
 	OLLAMA_PARAMETERS_REPEAT_LAST_N_CHANGE,
 	OLLAMA_PARAMETERS_REPEAT_PENALTY_CHANGE,
 	OLLAMA_PARAMETERS_SEED_CHANGE,
+	OLLAMA_PARAMETERS_SYSTEM_MESSAGE_CHANGE,
 	OLLAMA_PARAMETERS_TEMPERATURE_CHANGE,
 	OLLAMA_PARAMETERS_TFS_Z_CHANGE,
 	OLLAMA_PARAMETERS_TOP_K_CHANGE,
@@ -95,7 +96,7 @@ export class SocketServer {
 			});
 
 			/************************************************************
-			 * AI
+			 * Ai
 			 ************************************************************/
 			socket.on(AI_CONNECT, (arg: AiConnectType) => {
 				const { coqui_base_url, ollama_base_url, ollama_model_name } = arg;
@@ -110,7 +111,7 @@ export class SocketServer {
 			});
 
 			/************************************************************
-			 * COQUI
+			 * Coqui
 			 ************************************************************/
 
 			/************************************************************
@@ -178,6 +179,9 @@ export class SocketServer {
 			});
 			socket.on(OLLAMA_PARAMETERS_KEEP_ALIVE_CHANGE, async (arg: number) => {
 				await setItem("ollama_parameters_keep_alive", arg);
+			});
+			socket.on(OLLAMA_PARAMETERS_SYSTEM_MESSAGE_CHANGE, async (arg: number) => {
+				await setItem("ollama_parameters_system_message", arg);
 			});
 		});
 	}

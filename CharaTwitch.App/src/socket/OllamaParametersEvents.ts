@@ -12,3 +12,4 @@ export const OLLAMA_PARAMETERS_TOP_K_CHANGE = "ollamaParametersTopKChange";
 export const OLLAMA_PARAMETERS_TOP_P_CHANGE = "ollamaParametersTopPChange";
 export const OLLAMA_PARAMETERS_KEEP_ALIVE_CHANGE = "ollamaParametersKeepAliveChange";
 export const OLLAMA_PARAMETERS_ENABLE_OVERRIDE_CHANGE = "ollamaParametersEnableOverrideChange";
+export const OLLAMA_PARAMETERS_SYSTEM_MESSAGE_CHANGE = "ollamaParametersSystemMessageChange";

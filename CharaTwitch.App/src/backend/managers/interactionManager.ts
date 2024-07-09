@@ -5,13 +5,19 @@ import { sendChat } from "../services/ollama/ollamaApiService";
 import { AI_MESSAGE, AI_PROCESSING_REQUEST } from "../../socket/AiEvents";
 import { AUDIO_ON_ENDED } from "../../socket/AudioEvents";
 import { fetchTTS } from "../services/coqui/coquiApiService";
+import { PromptManager } from "./promptManager";
 
 export class InteractionManager {
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>;
+	promptManager: PromptManager;
 	audioPlaying: boolean;
 
-	constructor(socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>) {
+	constructor(
+		socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>,
+		promptManager: PromptManager
+	) {
 		this.socket = socket;
+		this.promptManager = promptManager;
 		this.audioPlaying = false;
 
 		socket.on(AUDIO_ON_ENDED, () => {
@@ -19,64 +25,43 @@ export class InteractionManager {
 		});
 	}
 
-	removePrefix(text: string): string {
-		const colonIndex = text.indexOf(":");
-		if (colonIndex !== -1) {
-			return text.slice(colonIndex + 1).trim();
-		}
-		return text;
-	}
-
-	startInteraction = async (
-		socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>,
-		message: string,
-		bypassIsRaid: boolean = false
-	) => {
-		if (this.audioPlaying || (isRaided() && !bypassIsRaid)) return null;
-		this.audioPlaying = true;
-
-		socket.emit(AI_PROCESSING_REQUEST, true);
-
-		const ollamaResponse = await sendChat(message);
-		if (ollamaResponse === null) {
-			socket.emit(AI_PROCESSING_REQUEST, false);
-			this.audioPlaying = false;
-			return null;
-		}
-
-		const cleanedResponse = this.removePrefix(ollamaResponse);
-
-		const audioBase64 = await fetchTTS(cleanedResponse);
-		if (audioBase64 === null) {
-			socket.emit(AI_PROCESSING_REQUEST, false);
-			this.audioPlaying = false;
-			return null;
-		}
-
-		socket.emit(AI_MESSAGE, {
-			audio: audioBase64,
-			message: cleanedResponse,
-		});
-
-		return cleanedResponse;
+	stopInteraction = (): null => {
+		this.socket.emit(AI_PROCESSING_REQUEST, false);
+		this.audioPlaying = false;
+		return null;
 	};
 
-	startInteractionAudioOnly = async (
-		socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>,
-		text: string
-	) => {
+	startInteraction = async (message: string, bypassIsRaid: boolean = false) => {
+		if (this.audioPlaying || (isRaided() && !bypassIsRaid)) return null;
+		this.audioPlaying = true;
+		this.socket.emit(AI_PROCESSING_REQUEST, true);
+
+		const systemPrompt = await this.promptManager.getPrompt();
+		if (systemPrompt == null) return this.stopInteraction();
+
+		const ollamaResponse = await sendChat(message, systemPrompt);
+		if (ollamaResponse === null) return this.stopInteraction();
+
+		const audioBase64 = await fetchTTS(ollamaResponse);
+		if (audioBase64 === null) return this.stopInteraction();
+
+		this.socket.emit(AI_MESSAGE, {
+			audio: audioBase64,
+			message: ollamaResponse,
+		});
+
+		return ollamaResponse;
+	};
+
+	startInteractionAudioOnly = async (text: string) => {
 		if (this.audioPlaying) return null;
 		this.audioPlaying = true;
-
-		socket.emit(AI_PROCESSING_REQUEST, true);
+		this.socket.emit(AI_PROCESSING_REQUEST, true);
 
 		const audioBase64 = await fetchTTS(text);
-		if (audioBase64 === null) {
-			socket.emit(AI_PROCESSING_REQUEST, false);
-			return null;
-		}
+		if (audioBase64 === null) return this.stopInteraction();
 
-		socket.emit(AI_MESSAGE, {
+		this.socket.emit(AI_MESSAGE, {
 			audio: audioBase64,
 			message: text,
 		});

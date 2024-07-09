@@ -170,6 +170,7 @@ export const getOllamaParameters = async () => {
 		top_p: await _getItem("ollama_parameters_top_p"),
 		enable_override: await _getItem("ollama_parameters_enable_override"),
 		keep_alive: await _getItem("ollama_parameters_keep_alive"),
+		system_message: await _getItem("ollama_parameters_system_message"),
 	};
 	return await initializeConfig(configObject);
 };

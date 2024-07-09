@@ -12,4 +12,5 @@ export type OllamaParametersType = {
 	top_k: number;
 	top_p: number;
 	keep_alive: number;
+	system_message: string;
 };

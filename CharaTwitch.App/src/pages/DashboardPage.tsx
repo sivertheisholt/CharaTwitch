@@ -40,7 +40,7 @@ const DashboardPageComponent = (props: DashboardPageProps) => {
 						/>
 					</Col>
 					<Col>
-						<StatusCard active={coquiStatus} pngName="cai.ico" />
+						<StatusCard active={coquiStatus} pngName="coqui.png" />
 					</Col>
 					<Col>
 						<StatusCard active={ollamaStatus} pngName="ollama.png" />

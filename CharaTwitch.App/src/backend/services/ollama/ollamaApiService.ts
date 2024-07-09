@@ -14,20 +14,31 @@ const axiosClient = async () => {
 	});
 };
 
-export const sendChat = async (message: string) => {
+export const sendChat = async (message: string, systemPrompt: string) => {
 	try {
 		const modelName = await getItem("ollama_model_name");
 		const client = await axiosClient();
 		const ollama_parameters: any = await getOllamaParameters();
-		const res = await client.post("/api/generate", {
+		logger.warn(message);
+		logger.warn(systemPrompt);
+		const res = await client.post("/api/chat", {
 			model: modelName,
-			prompt: message,
+			messages: [
+				{
+					role: "system",
+					content: systemPrompt,
+				},
+				{
+					role: "user",
+					content: message,
+				},
+			],
 			stream: false,
 			options: ollama_parameters.enable_override ? ollama_parameters : {},
 			keep_alive: ollama_parameters.keep_alive,
 		});
 		if (res.status != 200) return null;
-		return res.data.response;
+		return res.data.message.content;
 	} catch (err) {
 		logger.error(err, "Could not send chat");
 		return null;

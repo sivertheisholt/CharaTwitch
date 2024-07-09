@@ -3,10 +3,11 @@ import { Socket } from "socket.io";
 import { TwitchIrcService } from "../services/twitch/twitchIrcService";
 import { getItem } from "../services/config/configService";
 import { InteractionManager } from "./interactionManager";
+import { PromptManager } from "./promptManager";
 
 export class ChatManager {
 	interactionManager: InteractionManager;
-	interactions: Array<{ username: string; content: string }>;
+	promptManager: PromptManager;
 	users: Map<string, string>;
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>;
 	twitchIrcService: TwitchIrcService;
@@ -15,34 +16,21 @@ export class ChatManager {
 	constructor(
 		socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>,
 		twitchIrcService: TwitchIrcService,
-		interactionManager: InteractionManager
+		interactionManager: InteractionManager,
+		promptManager: PromptManager
 	) {
-		this.interactionManager = interactionManager;
-
-		this.interactions = [];
-		this.users = new Map<string, string>();
 		this.socket = socket;
+		this.interactionManager = interactionManager;
+		this.promptManager = promptManager;
 		this.twitchIrcService = twitchIrcService;
+
+		this.users = new Map<string, string>();
 		this.timeSinceLastTalkingMinutes = 0;
 
 		setInterval(() => {
 			this.timeSinceLastTalkingMinutes++;
 		}, 60000);
 	}
-
-	addMessage = (username: string, message: string) => {
-		let messagesLength = this.interactions.push({ username: username, content: message });
-		if (messagesLength > 10) this.interactions.shift();
-	};
-
-	getRecentInteractions = () => {
-		let recentInteractions = "### Recent Interactions \n";
-		this.interactions.forEach((message) => {
-			recentInteractions += `- ${message.username}: "${message.content}" \n`;
-		});
-
-		return recentInteractions;
-	};
 
 	eventOccurs = (probability: number): boolean => {
 		const randomNumber = Math.random();
@@ -51,7 +39,6 @@ export class ChatManager {
 
 	newViewer = async (username: string, message: string, messageId: string) => {
 		const ollamaResponse = await this.interactionManager.startInteraction(
-			this.socket,
 			`Welcome ${username} to the stream! ${username}: ${message}`
 		);
 		if (ollamaResponse === null) return;
@@ -60,14 +47,12 @@ export class ChatManager {
 	};
 
 	randomReply = async (username: string, message: string, messageId: string) => {
-		const finalMessage = this.getRecentInteractions() + `### Task:\n ${username}: ${message}.`;
-
-		let ollamaResponse = await this.interactionManager.startInteraction(this.socket, finalMessage);
+		let ollamaResponse = await this.interactionManager.startInteraction(`${username}: ${message}`);
 		if (ollamaResponse === null) return;
 
 		ollamaResponse = ollamaResponse.trim();
 
-		this.addMessage("Assistant", ollamaResponse);
+		this.promptManager.addAssistantMessage(ollamaResponse);
 
 		this.timeSinceLastTalkingMinutes = 0;
 		this.twitchIrcService.sendMessage(ollamaResponse, messageId);
@@ -77,7 +62,7 @@ export class ChatManager {
 		if (message.startsWith("!")) return;
 		message = message.trim();
 
-		this.addMessage(username, message);
+		this.promptManager.addTwitchChatMessage(username, message);
 
 		const welcomeNewViewers = await getItem("character_welcome_new_viewers");
 		if (welcomeNewViewers && !this.users.has(username)) {

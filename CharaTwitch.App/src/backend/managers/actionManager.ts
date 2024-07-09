@@ -24,11 +24,11 @@ export class ActionManager {
 	}
 	tts = async (text: string) => {
 		await setItem("character_tts", text);
-		this.interactionManager.startInteractionAudioOnly(this.socket, text);
+		this.interactionManager.startInteractionAudioOnly(text);
 	};
 	askQuestion = async (question: string) => {
 		await setItem("character_question", question);
-		const username = await getItem("twitch_preferred_username");
-		this.interactionManager.startInteraction(this.socket, `### Task:\n ${username}: ${question}`);
+		const twitchPreferredUsername = await getItem("twitch_preferred_username");
+		this.interactionManager.startInteraction(`${twitchPreferredUsername}: ${question}`);
 	};
 }

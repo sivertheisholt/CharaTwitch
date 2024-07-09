@@ -22,6 +22,7 @@ const OllamaParametersProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 	const [ollamaParametersTopP, setOllamaParametersTopP] = useState<number>(0);
 	const [ollamaParametersEnableOverride, setOllamaParametersEnableOverride] = useState<boolean>(false);
 	const [ollamaParametersKeepAlive, setOllamaParametersKeepAlive] = useState<number>(0);
+	const [ollamaSystemMessage, setOllamaSystemMessage] = useState<string>();
 
 	const ollamaParametersListener = (arg: OllamaParametersType) => {
 		const {
@@ -38,6 +39,7 @@ const OllamaParametersProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 			top_k,
 			top_p,
 			keep_alive,
+			system_message,
 		} = arg;
 		setOllamaParametersMiroStat(mirostat);
 		setOllamaParametersMiroStatEta(mirostat_eta);
@@ -52,6 +54,7 @@ const OllamaParametersProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 		setOllamaParametersTopP(top_p);
 		setOllamaParametersEnableOverride(enable_override);
 		setOllamaParametersKeepAlive(keep_alive);
+		setOllamaSystemMessage(system_message);
 	};
 
 	useEffect(() => {
@@ -90,6 +93,8 @@ const OllamaParametersProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 				setOllamaParametersEnableOverride,
 				ollamaParametersKeepAlive,
 				setOllamaParametersKeepAlive,
+				ollamaSystemMessage,
+				setOllamaSystemMessage,
 			}}
 		>
 			{children}

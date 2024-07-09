@@ -17,6 +17,7 @@ import { TwitchPubSubService } from "../services/twitch/twitchPubSubService";
 import { InteractionManager } from "./interactionManager";
 import { COQUI_STATUS } from "../../socket/CoquiEvents";
 import { OLLAMA_STATUS } from "../../socket/OllamaEvents";
+import { PromptManager } from "./promptManager";
 
 // This class handles the each manager/service and the communication between them
 export class GlobalManager {
@@ -27,13 +28,15 @@ export class GlobalManager {
 	rewardManager: RewardManager;
 	voiceRecordingManager: VoiceRecordingManager;
 	interactionManager: InteractionManager;
+	promptManager: PromptManager;
 
 	twitchIrcService: TwitchIrcService;
 	twitchPubSubService: TwitchPubSubService;
 
 	constructor(socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown>) {
 		this.socket = socket;
-		this.interactionManager = new InteractionManager(socket);
+		this.promptManager = new PromptManager();
+		this.interactionManager = new InteractionManager(socket, this.promptManager);
 		this.actionManager = new ActionManager(this.socket, this.interactionManager);
 	}
 
@@ -57,14 +60,19 @@ export class GlobalManager {
 
 			this.twitchIrcService = new TwitchIrcService(this.socket, access_token, preferred_username);
 
-			this.chatManager = new ChatManager(this.socket, this.twitchIrcService, this.interactionManager);
+			this.chatManager = new ChatManager(
+				this.socket,
+				this.twitchIrcService,
+				this.interactionManager,
+				this.promptManager
+			);
 			this.raidManager = new RaidManager(this.socket, this.twitchIrcService, this.interactionManager);
 			this.rewardManager = new RewardManager(this.socket, this.twitchIrcService, this.interactionManager);
 			this.voiceRecordingManager = new VoiceRecordingManager(
 				this.socket,
 				this.twitchIrcService,
 				this.interactionManager,
-				this.chatManager
+				this.promptManager
 			);
 
 			this.twitchIrcService.initialize(this.chatManager.handleMessage, this.raidManager.startRaid);

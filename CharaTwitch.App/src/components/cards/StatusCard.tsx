@@ -11,7 +11,7 @@ const StatusCardComponent = ({ pngName, active = false }: StatusCardProps) => {
 		<Card data-bs-theme="dark" style={{ padding: "8px" }}>
 			<Card.Img
 				style={{
-					width: "50px",
+					width: "auto",
 					height: "30px",
 					marginLeft: "auto",
 					marginRight: "auto",

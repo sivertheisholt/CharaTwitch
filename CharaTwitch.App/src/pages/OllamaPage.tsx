@@ -20,6 +20,7 @@ import {
 	OLLAMA_PARAMETERS_NUM_PREDICT_CHANGE,
 	OLLAMA_PARAMETERS_TOP_K_CHANGE,
 	OLLAMA_PARAMETERS_TOP_P_CHANGE,
+	OLLAMA_PARAMETERS_SYSTEM_MESSAGE_CHANGE,
 } from "../socket/OllamaParametersEvents";
 import InputGroup from "react-bootstrap/esm/InputGroup";
 import Form from "react-bootstrap/esm/Form";
@@ -55,6 +56,8 @@ const OllamaPageComponent = (props: OllamaPageProps) => {
 		setOllamaParametersEnableOverride,
 		ollamaParametersKeepAlive,
 		setOllamaParametersKeepAlive,
+		ollamaSystemMessage,
+		setOllamaSystemMessage,
 	} = useContext(OllamaParametersContext) as OllamaParametersContextType;
 
 	const handleKeepAliveChange = (value: number) => {
@@ -111,6 +114,11 @@ const OllamaPageComponent = (props: OllamaPageProps) => {
 	const handleTopPChange = (value: number) => {
 		setOllamaParametersTopP(value);
 		socket.emit(OLLAMA_PARAMETERS_TOP_P_CHANGE, value);
+	};
+	const handleSystemMessageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const value = event.target.value;
+		setOllamaSystemMessage(value);
+		socket.emit(OLLAMA_PARAMETERS_SYSTEM_MESSAGE_CHANGE, value);
 	};
 
 	return (
@@ -240,18 +248,13 @@ const OllamaPageComponent = (props: OllamaPageProps) => {
 						</span>
 						<Slider
 							className="mt-2 col"
-							max={4096}
+							max={8192}
 							min={0}
 							step={256}
 							value={ollamaParametersNumCtx}
 							onChange={handleNumCtxChange}
 						/>
 					</div>
-				</Col>
-				<Col md="auto">
-					<div className="vr h-100"></div>
-				</Col>
-				<Col>
 					<label className="fs-6">
 						<strong>mirostat</strong>
 					</label>
@@ -334,6 +337,25 @@ const OllamaPageComponent = (props: OllamaPageProps) => {
 							onChange={handleTfsZChange}
 						/>
 					</div>
+				</Col>
+				<Col md="auto">
+					<div className="vr h-100"></div>
+				</Col>
+				<Col>
+					<label className="fs-6">
+						<strong>System message</strong>
+					</label>
+					<InputGroup className="mb-3" size="sm">
+						<Form.Control
+							data-bs-theme="light"
+							style={{ height: "500px" }}
+							as="textarea"
+							placeholder="You are CHARACTERNAMEHERE, a friendly and engaging VTuber streamer."
+							maxLength={1000}
+							value={ollamaSystemMessage}
+							onChange={handleSystemMessageChange}
+						/>
+					</InputGroup>
 				</Col>
 			</Row>
 		</>
