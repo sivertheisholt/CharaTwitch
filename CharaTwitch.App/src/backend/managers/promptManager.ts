@@ -48,32 +48,32 @@ export class PromptManager {
 	createPrompt = async () => {
 		let systemPrompt = "# Context\n";
 
-		let twitchChatMessages = "Twitch chat messages:\n";
+		let twitchChatMessages = "## Twitch chat message history\n";
 		this.twitchChatMessages.forEach((message) => {
 			twitchChatMessages += `${message.username}: ${message.content} \n`;
 		});
 
 		// Add twitch chat messages
-		systemPrompt += twitchChatMessages;
+		if (this.twitchChatMessages.length > 0) systemPrompt += twitchChatMessages;
 
-		let assistantMessages = "Assistant messages:\n";
+		let assistantMessages = "## Assistant message history\n";
 		this.assistantMessages.forEach((message) => {
 			assistantMessages += `${message} \n`;
 		});
 
 		// Add aassistantMessages
-		systemPrompt += assistantMessages;
+		if (this.assistantMessages.length > 0) systemPrompt += assistantMessages;
 
-		let hostMessages = "Host messages:\n";
+		let hostMessages = "## Host message history\n";
 		this.hostMessages.forEach((message) => {
 			hostMessages += `${message} \n`;
 		});
 
 		// Add host messages
-		systemPrompt += hostMessages;
+		if (this.hostMessages.length > 0) systemPrompt += hostMessages;
 
 		let systemMessage = await getItem("ollama_parameters_system_message");
-		systemPrompt += `\n${systemMessage}`;
+		systemPrompt += `\n# Instructions for the Assistant\n${systemMessage}`;
 
 		return systemPrompt;
 	};
